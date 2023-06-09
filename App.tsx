@@ -1,16 +1,19 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { PaperProvider } from 'react-native-paper';
 import RootNav from './navigation/RootNav';
+import { ThemeProvider } from '@rneui/themed';
+import { PaperProvider } from 'react-native-paper';
 
 const App = () => {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <RootNav />
-      </NavigationContainer>
-    </PaperProvider>
+    <ThemeProvider>
+      <PaperProvider>
+        <NavigationContainer>
+          <RootNav />
+        </NavigationContainer>
+      </PaperProvider>
+    </ThemeProvider>
   );
 };
 

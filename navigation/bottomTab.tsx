@@ -84,7 +84,11 @@ const BottomTabNavigation = () => {
           headerLeft: props => homeHeaderLeft({ ...props, navigation }),
         })}
       />
-      <Tab.Screen name={PageNames.Map} component={MapScreen} />
+      <Tab.Screen
+        name={PageNames.Map}
+        component={MapScreen}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name={PageNames.Add} component={AddScreen} />
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />
       <Tab.Screen name={PageNames.Activity} component={ActivityScreen} />
