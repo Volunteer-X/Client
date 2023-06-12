@@ -5,8 +5,6 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import { View } from 'react-native';
-import { styled } from 'nativewind';
 
 import BottomTabNavigation from '../navigation/BottomTab';
 import { ProfileScreen, SettingScreen } from '../screens';
