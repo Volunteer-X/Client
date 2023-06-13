@@ -72,19 +72,25 @@ export default NearbyActivityCardView;
 
 const styles = StyleSheet.create({
   container: {
-    height: height / 4,
-    width: width / 1.5,
     backgroundColor: '#FFF',
     borderRadius: 10,
-    marginVertical: 10,
-    marginHorizontal: 5,
+    width: width * 0.6,
+    height: '100%',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    gap: 10,
+    elevation: 2,
   },
   mapSnapshotContainer: {
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingTop: 5,
+    height: height * 0.2,
+    width: '100%',
   },
   mapSnapshot: {
     width: '100%',
-    height: height / 6.5,
+    height: '100%',
     aspectRatio: 1,
     borderRadius: 10,
   },

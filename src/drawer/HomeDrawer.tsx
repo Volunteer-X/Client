@@ -5,12 +5,13 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
+import { Avatar, Divider } from 'react-native-paper';
 
 import BottomTabNavigation from '../navigation/BottomTab';
 import { ProfileScreen, SettingScreen } from '../screens';
 import { PageNames } from '../constants';
-import { Avatar, Divider } from 'react-native-paper';
 import { StyledText, StyledView } from '../style/styledComponents';
+import { HeaderBackBtnComponent } from '../components';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   return (
@@ -47,7 +48,16 @@ const HomeDrawer = (): React.JSX.Element => {
         component={BottomTabNavigation}
         options={{ drawerItemStyle: { display: 'none' } }}
       />
-      <Drawer.Screen name={PageNames.Profile} component={ProfileScreen} />
+      <Drawer.Screen
+        name={PageNames.Profile}
+        component={ProfileScreen}
+        options={{
+          headerShown: true,
+          headerLeft(props) {
+            return HeaderBackBtnComponent(props);
+          },
+        }}
+      />
       <Drawer.Screen name={PageNames.Settings} component={SettingScreen} />
     </Drawer.Navigator>
   );

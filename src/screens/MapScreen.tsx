@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import { SearchBar } from '@rneui/base';
-import NearbyActivityCardView from '../components/NearbyActivityCardView';
+import CarouselMapCard from '../components/carousel/Carousel';
 
 const MapScreen = (): React.JSX.Element => {
   return (
@@ -26,13 +26,7 @@ const MapScreen = (): React.JSX.Element => {
         />
       </View>
       <View style={styles.cardContainer}>
-        <NearbyActivityCardView
-          mapSnapshotSource="https://images.unsplash.com/photo-1682686581484-a220483e6291?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxOTcyMTN8MXwxfGFsbHwxfHx8fHx8Mnx8MTY4NjUyOTY3N3w&ixlib=rb-4.0.3&q=80&w=400"
-          userName="Docren155"
-          activityFollowers={2.14}
-          activityName="Activity Name"
-          activityCreatedOn="23 Jul 2023"
-        />
+        <CarouselMapCard />
       </View>
     </>
   );
