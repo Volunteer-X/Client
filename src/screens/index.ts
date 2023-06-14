@@ -5,3 +5,4 @@ export { default as ActivityScreen } from './ActivityScreen';
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as SearchScreen } from './SearchScreen';
 export { default as SettingScreen } from './SettingScreen';
+export { default as UserFeeds } from './UserFeeds';

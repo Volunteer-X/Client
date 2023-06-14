@@ -1,7 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Avatar, Button } from '@rneui/themed';
+import { Avatar, Button, Icon } from '@rneui/themed';
+import { PageNames } from '../constants';
+import UserFeeds from './UserFeeds';
+import ActivityScreen from './ActivityScreen';
+import { ParamListBase, RouteProp } from '@react-navigation/native';
 
 const StatView = ({
   statCount,
@@ -18,6 +22,34 @@ const StatView = ({
   );
 };
 
+const TabIcon = (
+  {
+    color,
+    focused,
+  }: {
+    color: string;
+    focused: boolean;
+  },
+  routeName: string,
+): React.JSX.Element => {
+  let iconName: string, iconType: string;
+  switch (routeName) {
+    case PageNames.UserFeeds:
+      iconName = 'home';
+      iconType = 'feather';
+      break;
+    case PageNames.Activity:
+      iconName = 'activity';
+      iconType = 'feather';
+      break;
+    default:
+      iconName = '';
+      iconType = '';
+      break;
+  }
+  return <Icon name={iconName} type={iconType} color={color} />;
+};
+
 const ProfileScreen = () => {
   const Tab = createMaterialTopTabNavigator();
 
@@ -25,6 +57,21 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       {/* Profile Header */}
       <View style={styles.profileHeaderContainer}>
+        <Button
+          title={'Hello world'}
+          icon={{
+            name: 'infinite',
+            type: 'ionicon',
+            size: 15,
+            color: '#FFF',
+          }}
+          radius="md"
+          iconContainerStyle={actionStyle.iconContainerStyle}
+          titleStyle={actionStyle.titleStyle}
+          buttonStyle={actionStyle.buttonStyle}
+          containerStyle={actionStyle.containerStyle}
+          type="outline"
+        />
         <Avatar
           rounded
           size={'large'}
@@ -52,14 +99,14 @@ const ProfileScreen = () => {
             buttonStyle={actionStyle.buttonStyle}
             containerStyle={actionStyle.containerStyle}
           />
-          {/* If the account is accessed by the account-owner */}
+
           <Button
-            title={'Profile'}
+            title={'Characters'}
             icon={{
-              name: 'edit',
-              type: 'feather',
+              name: 'infinite',
+              type: 'ionicon',
               size: 15,
-              color: '#5b5b5b',
+              color: '#FFF',
             }}
             radius="md"
             iconContainerStyle={actionStyle.iconContainerStyle}
@@ -71,6 +118,17 @@ const ProfileScreen = () => {
         </View>
       </View>
       {/* Profile tabs */}
+      <Tab.Navigator
+        initialRouteName={PageNames.Activity}
+        initialLayout={{ width: Dimensions.get('window').width }}
+        screenOptions={({ route }) => ({
+          tabBarShowLabel: false,
+          tabBarShowIcon: true,
+          tabBarIcon: props => TabIcon(props, route.name),
+        })}>
+        <Tab.Screen name={PageNames.Activity} component={ActivityScreen} />
+        <Tab.Screen name={PageNames.UserFeeds} component={UserFeeds} />
+      </Tab.Navigator>
     </View>
   );
 };
@@ -87,7 +145,7 @@ const actionStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: '#012' },
+  container: { backgroundColor: '#012', height: '100%' },
   profileHeaderContainer: {
     width: '100%',
     padding: 10,

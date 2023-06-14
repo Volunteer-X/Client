@@ -7,4 +7,5 @@ export const PageNames = {
   Add: 'Add',
   Search: 'Search',
   Activity: 'Activity',
+  UserFeeds: 'UserFeeds',
 };
