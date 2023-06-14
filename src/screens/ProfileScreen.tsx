@@ -51,27 +51,35 @@ const TabIcon = (
 };
 
 const ProfileScreen = () => {
+  let isOwner: boolean = true; //state which controlls if the user viewing is the owner or not
+
   const Tab = createMaterialTopTabNavigator();
 
   return (
     <View style={styles.container}>
       {/* Profile Header */}
       <View style={styles.profileHeaderContainer}>
-        <Button
-          title={'Hello world'}
-          icon={{
-            name: 'infinite',
-            type: 'ionicon',
-            size: 15,
-            color: '#FFF',
-          }}
-          radius="md"
-          iconContainerStyle={actionStyle.iconContainerStyle}
-          titleStyle={actionStyle.titleStyle}
-          buttonStyle={actionStyle.buttonStyle}
-          containerStyle={actionStyle.containerStyle}
-          type="outline"
-        />
+        {/* If the account is accessed by the account-owner */}
+        {isOwner ? (
+          <Button
+            icon={{
+              name: 'square-edit-outline',
+              type: 'material-community',
+              size: 24,
+              color: '#FFF',
+            }}
+            radius="md"
+            containerStyle={{
+              position: 'absolute',
+              right: 0,
+              top: 0,
+              padding: 10,
+            }}
+            type="clear"
+          />
+        ) : (
+          ''
+        )}
         <Avatar
           rounded
           size={'large'}
@@ -145,7 +153,7 @@ const actionStyle = StyleSheet.create({
 });
 
 const styles = StyleSheet.create({
-  container: { backgroundColor: '#012', height: '100%' },
+  container: { backgroundColor: '#012', flex: 1 },
   profileHeaderContainer: {
     width: '100%',
     padding: 10,
