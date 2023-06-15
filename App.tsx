@@ -8,11 +8,12 @@ import {
 import { ThemeProvider } from '@rneui/themed';
 import { PaperProvider } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
-import { BottomSheetComponent } from './src/components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
+
 import { store } from './app/store';
 import RootNav from './src/navigation/RootNav';
+import { BottomSheetComponent } from './src/components';
 
 const App = () => {
   const scheme = useColorScheme();
@@ -23,8 +24,8 @@ const App = () => {
           <PaperProvider>
             <NavigationContainer
               theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-              {/* <RootNav /> */}
-              <BottomSheetComponent />
+              <RootNav />
+              {/* <BottomSheetComponent /> */}
             </NavigationContainer>
           </PaperProvider>
         </ThemeProvider>

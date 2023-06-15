@@ -11,7 +11,7 @@ import BottomTabNavigation from '../navigation/BottomTab';
 import { ProfileScreen, SettingScreen } from '../screens';
 import { PageNames } from '../constants';
 import { StyledText, StyledView } from '../style/styledComponents';
-import { HeaderBackBtnComponent } from '../components';
+import { BackButon } from '../components';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   return (
@@ -54,7 +54,7 @@ const HomeDrawer = (): React.JSX.Element => {
         options={{
           headerShown: true,
           headerLeft(props) {
-            return HeaderBackBtnComponent(props);
+            return BackButon(props);
           },
         }}
       />

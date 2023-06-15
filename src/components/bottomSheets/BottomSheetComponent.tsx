@@ -3,7 +3,6 @@ import React, {
   useMemo,
   useCallback,
   useState,
-  memo,
   useEffect,
 } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
@@ -13,47 +12,12 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-import { Button, Chip, Divider } from '@rneui/themed';
+import { Button, Divider } from '@rneui/themed';
 
-import { DefaultValue, ECharacter, characterSampleData } from '../constants';
-import { shuffleArray } from '../utils';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { onSelection } from '../features/character/characterSlice';
-
-type CharacterChipProps = {
-  label: string;
-  icon: string;
-  isSelected: boolean | undefined;
-  onSelect: Function;
-};
-
-const CharacterChip = ({
-  label,
-  icon,
-  isSelected,
-  onSelect,
-}: CharacterChipProps) => {
-  console.log(`rendering ${label}`);
-
-  return (
-    <>
-      <Chip
-        title={label}
-        titleStyle={{ fontSize: 13 }}
-        containerStyle={{ marginHorizontal: 2, marginTop: 5 }}
-        type={isSelected ? 'solid' : 'outline'}
-        icon={{
-          name: icon,
-          type: 'feather',
-          size: 15,
-        }}
-        onPress={() => {
-          onSelect(label);
-        }}
-      />
-    </>
-  );
-};
+import { DefaultValue, characterSampleData } from '../../constants';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { onSelection } from '../../features/character/characterSlice';
+import { CharacterChip } from '../chips';
 
 const BottomSheetComponent = () => {
   // State to control the selected label locally
@@ -86,7 +50,7 @@ const BottomSheetComponent = () => {
         <Text style={styles.listHeaderTextStyle}>
           Pick some topics related to your mind
         </Text>
-        <Divider style={{ width: '100%', marginTop: 10 }} />
+        <Divider style={styles.divider} />
       </>
     );
   }, []);
@@ -129,7 +93,7 @@ const BottomSheetComponent = () => {
     <View style={styles.container}>
       <Button
         title={`Expand:: ${selectedCount}`}
-        style={{ flex: 1 }}
+        style={styles.flex}
         onPress={handleExpand}
       />
       <BottomSheet
@@ -171,6 +135,7 @@ const BottomSheetComponent = () => {
 export default BottomSheetComponent;
 
 const styles = StyleSheet.create({
+  flex: { flex: 1 },
   container: { flex: 1, padding: 24, backgroundColor: 'white' },
   contentContainer: { flex: 1, alignItems: 'center' },
   listContentContainer: {
@@ -193,4 +158,5 @@ const styles = StyleSheet.create({
   },
   listFooterComponentStyle: { width: '90%', marginVertical: 50 },
   footerButton: { flex: 1 },
+  divider: { width: '100%', marginTop: 10 },
 });

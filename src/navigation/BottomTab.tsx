@@ -89,7 +89,11 @@ const BottomTabNavigation = () => {
         component={MapScreen}
         options={{ headerShown: false }}
       />
-      <Tab.Screen name={PageNames.Add} component={AddScreen} />
+      <Tab.Screen
+        name={PageNames.Add}
+        component={AddScreen}
+        options={{ headerShown: false }}
+      />
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />
       <Tab.Screen name={PageNames.Activity} component={ActivityScreen} />
     </Tab.Navigator>
