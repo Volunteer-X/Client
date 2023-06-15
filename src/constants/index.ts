@@ -5,3 +5,5 @@ export {
   characterSampleData,
   CharacterArr,
 } from './character';
+
+export { default as DefaultValue } from './values';

@@ -15,7 +15,7 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { Button, Chip, Divider } from '@rneui/themed';
 
-import { ECharacter, characterSampleData } from '../constants';
+import { DefaultValue, ECharacter, characterSampleData } from '../constants';
 import { shuffleArray } from '../utils';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { onSelection } from '../features/character/characterSlice';
@@ -23,20 +23,23 @@ import { onSelection } from '../features/character/characterSlice';
 type CharacterChipProps = {
   label: string;
   icon: string;
+  isSelected: boolean | undefined;
+  onSelect: Function;
 };
 
-const CharacterChip = ({ label, icon }: CharacterChipProps) => {
-  const isSelected: boolean | undefined = useAppSelector(
-    state =>
-      state.character.find(character => label === character.label)?.isSelected,
-  );
-  const dispatch = useAppDispatch();
+const CharacterChip = ({
+  label,
+  icon,
+  isSelected,
+  onSelect,
+}: CharacterChipProps) => {
+  console.log(`rendering ${label}`);
 
   return (
     <>
       <Chip
         title={label}
-        titleStyle={{ color: '#000', fontSize: 13 }}
+        titleStyle={{ fontSize: 13 }}
         containerStyle={{ marginHorizontal: 2, marginTop: 5 }}
         type={isSelected ? 'solid' : 'outline'}
         icon={{
@@ -45,8 +48,7 @@ const CharacterChip = ({ label, icon }: CharacterChipProps) => {
           size: 15,
         }}
         onPress={() => {
-          console.log(isSelected);
-          dispatch(onSelection(label));
+          onSelect(label);
         }}
       />
     </>
@@ -54,10 +56,22 @@ const CharacterChip = ({ label, icon }: CharacterChipProps) => {
 };
 
 const BottomSheetComponent = () => {
+  // State to control the selected label locally
+  const [selectedLabel, setSelectedLabel] = useState('');
+
+  const characters = useAppSelector(state => state.character);
+  const dispatch = useAppDispatch();
+
+  //State to control the selected count
+  const [selectedCount, setSelectedCount] = useState(
+    characters.filter(item => item.isSelected).length,
+  );
+
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const snapPoints = useMemo(() => ['25%', '75%'], []);
+  const snapPoints = useMemo(() => ['25%', '70%'], []);
 
+  // Backdrop Component
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop enableTouchThrough {...props} />
@@ -65,6 +79,7 @@ const BottomSheetComponent = () => {
     [],
   );
 
+  //Header
   const renderHeader = useCallback(() => {
     return (
       <>
@@ -76,17 +91,47 @@ const BottomSheetComponent = () => {
     );
   }, []);
 
+  // Footer
+  const renderFooter = useCallback(() => {
+    return (
+      <>
+        <Button
+          title={`Pick up at least 8 interests (${selectedCount} / ${DefaultValue.min_num_of_character})`}
+          style={styles.footerButton}
+          radius="md"
+          disabled={
+            selectedCount < DefaultValue.min_num_of_character ? true : false
+          }
+        />
+      </>
+    );
+  }, [selectedCount]);
+
   const handleExpand = useCallback(() => {
     bottomSheetRef.current?.expand();
   }, []);
 
-  // useEffect(() => {
-  //   characters = shuffleArray(characters);
-  // }, []);
+  // Selection handling
+  const handleSelection = useCallback(
+    (label: string) => {
+      setSelectedLabel(label);
+      dispatch(onSelection(label));
+    },
+    [dispatch],
+  );
+
+  useEffect(() => {
+    setSelectedCount(characters.filter(item => item.isSelected).length);
+    console.log(selectedCount);
+  }, [selectedCount, characters]);
 
   return (
     <View style={styles.container}>
-      <Button title={'Expand'} style={{ flex: 1 }} onPress={handleExpand} />
+      <Button
+        title={`Expand:: ${selectedCount}`}
+        style={{ flex: 1 }}
+        onPress={handleExpand}
+      />
       <BottomSheet
         ref={bottomSheetRef}
         index={1}
@@ -97,13 +142,24 @@ const BottomSheetComponent = () => {
           <BottomSheetFlatList
             data={characterSampleData}
             renderItem={({ item }) => (
-              <CharacterChip label={item.label} icon={item.icon} />
+              <CharacterChip
+                label={item.label}
+                icon={item.icon}
+                isSelected={
+                  characters.find(character => character.label === item.label)
+                    ?.isSelected
+                }
+                onSelect={handleSelection}
+              />
             )}
+            ListFooterComponent={renderFooter}
             ListHeaderComponent={renderHeader}
+            ListFooterComponentStyle={styles.listFooterComponentStyle}
             ListHeaderComponentStyle={styles.listHeaderComponentStyle}
             contentContainerStyle={styles.listContentContainer}
             columnWrapperStyle={styles.listColumnWrapperStyle}
             numColumns={3}
+            extraData={selectedLabel}
             keyExtractor={item => item.label}
           />
         </View>
@@ -135,4 +191,6 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: 0.1,
   },
+  listFooterComponentStyle: { width: '90%', marginVertical: 50 },
+  footerButton: { flex: 1 },
 });
