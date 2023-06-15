@@ -5,27 +5,31 @@ import {
   DefaultTheme,
   NavigationContainer,
 } from '@react-navigation/native';
-import RootNav from './src/navigation/RootNav';
 import { ThemeProvider } from '@rneui/themed';
 import { PaperProvider } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
 import { BottomSheetComponent } from './src/components';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Provider } from 'react-redux';
+import { store } from './app/store';
+import RootNav from './src/navigation/RootNav';
 
 const App = () => {
   const scheme = useColorScheme();
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemeProvider>
-        <PaperProvider>
-          <NavigationContainer
-            theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-            {/* <RootNav /> */}
-            <BottomSheetComponent />
-          </NavigationContainer>
-        </PaperProvider>
-      </ThemeProvider>
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <ThemeProvider>
+          <PaperProvider>
+            <NavigationContainer
+              theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+              {/* <RootNav /> */}
+              <BottomSheetComponent />
+            </NavigationContainer>
+          </PaperProvider>
+        </ThemeProvider>
+      </GestureHandlerRootView>
+    </Provider>
   );
 };
 

@@ -1,28 +1,37 @@
-import React, { useRef, useMemo, useCallback, useState, memo } from 'react';
+import React, {
+  useRef,
+  useMemo,
+  useCallback,
+  useState,
+  memo,
+  useEffect,
+} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-import { Button, Chip, Divider, useTheme } from '@rneui/themed';
+import { Button, Chip, Divider } from '@rneui/themed';
 
-import { characterSampleData } from '../constants';
+import { ECharacter, characterSampleData } from '../constants';
 import { shuffleArray } from '../utils';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { onSelection } from '../features/character/characterSlice';
 
 type CharacterChipProps = {
   label: string;
   icon: string;
-  isSelected?: boolean;
-  onSelection: Function;
 };
 
-const CharacterChip = ({
-  label,
-  icon,
-  isSelected,
-  onSelection,
-}: CharacterChipProps) => {
+const CharacterChip = ({ label, icon }: CharacterChipProps) => {
+  const isSelected: boolean | undefined = useAppSelector(
+    state =>
+      state.character.find(character => label === character.label)?.isSelected,
+  );
+  const dispatch = useAppDispatch();
+
   return (
     <>
       <Chip
@@ -36,7 +45,8 @@ const CharacterChip = ({
           size: 15,
         }}
         onPress={() => {
-          onSelection(label);
+          console.log(isSelected);
+          dispatch(onSelection(label));
         }}
       />
     </>
@@ -44,8 +54,6 @@ const CharacterChip = ({
 };
 
 const BottomSheetComponent = () => {
-  const [isSelected, setIsSelected] = useState();
-
   const bottomSheetRef = useRef<BottomSheet>(null);
 
   const snapPoints = useMemo(() => ['25%', '75%'], []);
@@ -72,9 +80,9 @@ const BottomSheetComponent = () => {
     bottomSheetRef.current?.expand();
   }, []);
 
-  const handleSelection = useCallback(props => {
-    console.log(props);
-  }, []);
+  // useEffect(() => {
+  //   characters = shuffleArray(characters);
+  // }, []);
 
   return (
     <View style={styles.container}>
@@ -87,13 +95,9 @@ const BottomSheetComponent = () => {
         backdropComponent={renderBackdrop}>
         <View style={styles.contentContainer}>
           <BottomSheetFlatList
-            data={shuffleArray(characterSampleData)}
+            data={characterSampleData}
             renderItem={({ item }) => (
-              <CharacterChip
-                label={item.label}
-                icon={item.icon}
-                onSelection={handleSelection}
-              />
+              <CharacterChip label={item.label} icon={item.icon} />
             )}
             ListHeaderComponent={renderHeader}
             ListHeaderComponentStyle={styles.listHeaderComponentStyle}
