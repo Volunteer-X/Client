@@ -29,18 +29,34 @@ const App = () => {
               theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
               {/* <RootNav /> */}
               <GoogleStaticMaps
-                center="City Hall, New York, NY"
-                latitude=""
-                longitude=""
-                zoom={15}
+                // "City Hall, New York, NY"
+                center={{ latitude: '40.737102', longitude: '-73.990318' }}
+                zoom={14}
                 size={{ width: 640, height: 640 }}
-                path={[
-                  { pathLatitude: '123', pathLongitude: '132' },
-                  { pathLatitude: '563', pathLongitude: '0898' },
+                // paths={[
+                //   {
+                //     points: [
+                //       { latitude: '40.737102', longitude: '-73.990318' },
+                //       { latitude: '40.749825', longitude: '-73.987963' },
+                //       { latitude: '40.755823', longitude: '-73.986397' },
+                //     ],
+                //   },
+                // ]}
+                enableImplicitPositioning={true}
+                markers={[
+                  {
+                    location: {
+                      latitude: '40.737102',
+                      longitude: '-73.990318',
+                    },
+                    color: 'purple',
+                    size: 'mid',
+                  },
                 ]}
                 apiKey={MAP_API_KEY}
                 onError={() => {}}
                 onLoad={() => {}}
+                containerStyle={{ flex: 1, margin: 15, borderRadius: 100 }}
               />
             </NavigationContainer>
           </PaperProvider>

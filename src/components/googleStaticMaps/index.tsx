@@ -1,12 +1,10 @@
 import { Text } from '@rneui/themed';
 import React from 'react';
-import { Image, PixelRatio } from 'react-native';
-import { Item } from 'react-native-paper/lib/typescript/src/components/Drawer/Drawer';
+import { ImageStyle, PixelRatio, StyleProp, ViewStyle } from 'react-native';
+import { Image } from '@rneui/themed';
 
 interface GoogleStaticMapsProps {
-  center?: string;
-  latitude: string;
-  longitude: string;
+  center: string | Location;
   zoom: number;
   size: Size;
   scale?: 1 | 2;
@@ -21,8 +19,16 @@ interface GoogleStaticMapsProps {
   blur?: number;
   mapID?: string;
   mapStyle?: Array<MapStyle>;
-  path?: Array<Path>;
-  pathStyle: Partial<PathStyle>;
+  paths?: Array<Path>;
+  markers?: Array<Marker>;
+  visible?: Array<string>;
+  containerStyle?: StyleProp<ViewStyle>;
+  enableImplicitPositioning?: boolean;
+}
+
+interface Location {
+  latitude: string;
+  longitude: string;
 }
 
 interface MapStyle {
@@ -47,14 +53,22 @@ interface Size {
   height: number;
 }
 
-interface Path {
-  pathLatitude: string;
-  pathLongitude: string;
+interface Path extends Color {
+  points: Array<string> | Array<Location>;
+  weigth?: number;
+  fillColor?: string;
+  geodesic?: boolean;
 }
 
-interface PathStyle {
-  weigth: number;
-  color:
+interface Marker extends Color {
+  location: string | Location;
+  size?: 'tiny' | 'mid' | 'small' | 'normal';
+  label?: string;
+  scale?: 1 | 2 | 4;
+}
+
+interface Color {
+  color?:
     | string
     | 'black'
     | 'brown'
@@ -66,8 +80,6 @@ interface PathStyle {
     | 'orange'
     | 'red'
     | 'white';
-  fillColor: string;
-  geodesic: boolean;
 }
 
 const defaultScale = () => {
@@ -75,13 +87,19 @@ const defaultScale = () => {
   return isRetina ? 2 : 1;
 };
 
+const setLocations = (items: Array<string> | Array<Location>) => {
+  return items
+    .map(item =>
+      typeof item === 'string' ? item : `${item.latitude},${item.longitude}`,
+    )
+    .join('|');
+};
+
 const GoogleStaticMaps = ({
   center,
-  latitude,
-  longitude,
   zoom = 12,
   size,
-  scale = 1,
+  scale = defaultScale(),
   format = 'png',
   mapType = 'roadmap',
   language,
@@ -90,8 +108,11 @@ const GoogleStaticMaps = ({
   mapStyle,
   apiKey,
   blur = 0,
-  path,
-  pathStyle,
+  paths,
+  markers,
+  visible,
+  enableImplicitPositioning = false,
+  containerStyle,
   signature,
   onError = () => {},
   onLoad = () => {},
@@ -102,10 +123,16 @@ const GoogleStaticMaps = ({
     let uri = new URL(root);
     let params = new URLSearchParams();
 
-    //Center
-    center
-      ? params.append('center', center)
-      : params.append('center', `${latitude},${longitude}`);
+    // Center
+    if (!enableImplicitPositioning) {
+      typeof center === 'string'
+        ? params.append('center', center)
+        : params.append('center', `${center.latitude},${center.longitude}`);
+    } else if (!(markers || paths || visible)) {
+      console.error(
+        'If enableImplicitPositioning=true, add either a marker, path or visible',
+      );
+    }
 
     //Zoom
     params.append('zoom', `${zoom}`);
@@ -138,32 +165,50 @@ const GoogleStaticMaps = ({
 
     // path=pathStyles|pathLocation1|pathLocation2|...
     // Path
-    if (path) {
-      let pathStyleUri = '';
-      let pathLocations = path
-        .map(item => `${item.pathLatitude},${item.pathLongitude}`)
-        .join('|');
-      if (pathStyle) {
-        pathStyle.color ? (pathStyleUri += `color:${pathStyle.color}`) : '';
-        pathStyle.color
-          ? (pathStyleUri += `fillcolor:${pathStyle.fillColor}`)
-          : '';
-        pathStyle.color
-          ? (pathStyleUri += `geodesic:${pathStyle.geodesic}`)
-          : '';
-        pathStyle.color ? (pathStyleUri += `weight:${pathStyle.weigth}`) : '';
-      }
+    if (paths) {
+      paths.forEach(path => {
+        let styleUri = '';
+        path.color ? (styleUri += `color:${path.color}|`) : '';
+        path.fillColor ? (styleUri += `fillcolor:${path.fillColor}|`) : '';
+        path.geodesic ? (styleUri += `geodesic:${path.geodesic}|`) : '';
+        path.weigth ? (styleUri += `weight:${path.weigth}|`) : '';
 
-      // params.append('path', pathStyle);
+        params.append('path', `${styleUri}${setLocations(path.points)}`);
+      });
     }
+
+    // Marker
+    if (markers) {
+      markers.forEach(marker => {
+        let styleUri = '';
+
+        marker.color ? (styleUri += `color:${marker.color}|`) : '';
+        marker.label
+          ? (styleUri += `label:${marker.label.charAt(0).toUpperCase()}|`)
+          : '';
+
+        marker.size ? (styleUri += `size:${marker.size}|`) : '';
+
+        marker.scale ? (styleUri += `scale:${marker.scale}|`) : '';
+
+        let locationUri =
+          typeof marker.location === 'string'
+            ? marker.location
+            : `${marker.location.latitude},${marker.location.longitude}`;
+
+        params.append('markers', `${styleUri}${locationUri}`);
+      });
+    }
+
+    // Visible
+    visible ? params.append('visible', visible.join('|')) : null;
 
     // API
     params.append('key', apiKey);
 
     uri.search = params.toString();
 
-    // console.log(`uri:: ${decodeURI(uri.href)}`);
-    // console.log(`uri-encoded:: ${encodeURI(uri.href)}`);
+    console.log(`uri-href:: ${uri.href}`);
 
     return uri.href;
   };
@@ -171,7 +216,7 @@ const GoogleStaticMaps = ({
   return (
     <>
       <Image
-        style={{ flex: 1 }}
+        containerStyle={containerStyle}
         source={{
           uri: getStaticMapUrl(),
         }}
@@ -182,3 +227,7 @@ const GoogleStaticMaps = ({
 };
 
 export default GoogleStaticMaps;
+
+// Todo - Map Style
+// Todo - Custom Marker Icons
+// Todo - Image Loading and error handling
