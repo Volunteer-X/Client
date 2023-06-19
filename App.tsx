@@ -13,7 +13,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 
 import { store } from './app/store';
-import RootNav from './src/navigation/root-navigation';
+import { RootNavigation } from './src/navigation';
 
 const App = () => {
   const scheme = useColorScheme();
@@ -24,7 +24,7 @@ const App = () => {
           <PaperProvider>
             <NavigationContainer
               theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <RootNav />
+              <RootNavigation />
             </NavigationContainer>
           </PaperProvider>
         </ThemeProvider>

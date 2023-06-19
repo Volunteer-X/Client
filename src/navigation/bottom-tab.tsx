@@ -4,14 +4,14 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-paper';
 import { Pressable } from 'react-native';
 
+import { PageNames } from '../lib';
 import {
   ActivityScreen,
   AddScreen,
   HomeScreen,
   MapScreen,
   SearchScreen,
-} from '../screens';
-import { PageNames } from '../lib';
+} from '../features';
 
 function tabBarIcon({
   color,
