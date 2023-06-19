@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import MapView from 'react-native-maps';
 import { SearchBar } from '@rneui/base';
-import CarouselMapCard from '../components/carousels/Carousel';
+import CarouselMapCard from '../../../components/carousels/Carousel';
 
 const MapScreen = (): React.JSX.Element => {
   return (

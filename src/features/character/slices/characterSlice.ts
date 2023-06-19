@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Character, ECharacter } from '../../constants';
+import { Character, ECharacter } from '../../../lib';
 
 export interface CharacterState {
   isSelected: boolean;

@@ -11,7 +11,7 @@ import {
   MapScreen,
   SearchScreen,
 } from '../screens';
-import { PageNames } from '../constants';
+import { PageNames } from '../lib';
 
 function tabBarIcon({
   color,

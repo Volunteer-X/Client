@@ -1,7 +1,15 @@
-import { Text } from '@rneui/themed';
+import { Overlay, Text } from '@rneui/themed';
 import React from 'react';
-import { ImageStyle, PixelRatio, StyleProp, ViewStyle } from 'react-native';
+import {
+  ImageStyle,
+  PixelRatio,
+  StyleProp,
+  StyleSheet,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { Image } from '@rneui/themed';
+import LinearGradient from 'react-native-linear-gradient';
 
 interface GoogleStaticMapsProps {
   center: string | Location;
@@ -208,8 +216,6 @@ const GoogleStaticMaps = ({
 
     uri.search = params.toString();
 
-    console.log(`uri-href:: ${uri.href}`);
-
     return uri.href;
   };
 
@@ -221,10 +227,14 @@ const GoogleStaticMaps = ({
           uri: getStaticMapUrl(),
         }}
         blurRadius={blur}
+        onLoad={() => onLoad}
+        onError={() => onError}
       />
     </>
   );
 };
+
+// const styles = StyleSheet.create({});
 
 export default GoogleStaticMaps;
 

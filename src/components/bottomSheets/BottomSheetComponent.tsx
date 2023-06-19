@@ -14,9 +14,9 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { Button, Divider } from '@rneui/themed';
 
-import { DefaultValue, characterSampleData } from '../../constants';
+import { DefaultValue, characterSampleData } from '../../lib';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { onSelection } from '../../features/character/characterSlice';
+import { onSelection } from '../../features/character/slices/characterSlice';
 import { CharacterChip } from '../chips';
 
 const BottomSheetComponent = () => {

@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 
 import Carousel from 'react-native-reanimated-carousel';
 import NearbyActivityCardView from '../NearbyActivityCardView';
-import { mapViewCardData } from '../../constants/data';
+import { mapViewCardData } from '../../lib/constants/data';
 
 const CarouselMapCard = () => {
   return (

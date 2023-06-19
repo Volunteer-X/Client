@@ -7,11 +7,11 @@ import {
 } from '@react-navigation/drawer';
 import { Avatar, Divider } from 'react-native-paper';
 
-import BottomTabNavigation from '../navigation/BottomTab';
+import BottomTabNavigation from '../bottom-tab';
 import { ProfileScreen, SettingScreen } from '../screens';
-import { PageNames } from '../constants';
-import { StyledText, StyledView } from '../style/styledComponents';
-import { BackButon } from '../components';
+import { PageNames } from '../../lib';
+import { StyledText, StyledView } from '../../theme/styledComponents';
+import { BackButon } from '../../components';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   return (

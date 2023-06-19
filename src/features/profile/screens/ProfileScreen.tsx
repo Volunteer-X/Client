@@ -2,9 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Avatar, Button, Icon } from '@rneui/themed';
-import { PageNames } from '../constants';
+import { PageNames } from '../../../lib';
 import UserFeeds from './UserFeeds';
-import ActivityScreen from './ActivityScreen';
+import ActivityScreen from '../../activity/screens/ActivityScreen';
 import { ParamListBase, RouteProp } from '@react-navigation/native';
 
 const StatView = ({
