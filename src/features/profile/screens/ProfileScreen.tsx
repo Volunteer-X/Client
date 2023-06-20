@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text, StyleSheet, Pressable, Dimensions } from 'react-native';
+import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { Avatar, Button, Icon } from '@rneui/themed';
+import { Text } from 'react-native-paper';
+
 import { PageNames } from '../../../lib';
 import UserFeeds from './UserFeeds';
 import ActivityScreen from '../../activity/screens/ActivityScreen';
-import { ParamListBase, RouteProp } from '@react-navigation/native';
 
 const StatView = ({
   statCount,
@@ -16,8 +17,10 @@ const StatView = ({
 }): React.JSX.Element => {
   return (
     <Pressable onPress={() => {}} style={styles.statsContentContainer}>
-      <Text style={styles.statsCount}>{statCount}</Text>
-      <Text style={styles.statsLabel}>{statLabel}</Text>
+      <Text variant="labelSmall" style={styles.statsCount}>
+        {statCount}
+      </Text>
+      <Text variant="labelSmall">{statLabel}</Text>
     </Pressable>
   );
 };
@@ -83,10 +86,10 @@ const ProfileScreen = () => {
         <Avatar
           rounded
           size={'large'}
-          source={require('../assets/placeholder.jpg')}
+          source={require('../../../assets/placeholder.jpg')}
         />
-        <Text>Full Name</Text>
-        <Text style={styles.username}>@username</Text>
+        <Text variant="titleLarge">Amil Muhammed Hamza</Text>
+        <Text variant="bodySmall">@docren155</Text>
         <View style={styles.statsContainer}>
           <StatView statCount={234} statLabel="Followers" />
           <StatView statCount={123} statLabel="Following" />
@@ -172,7 +175,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 2,
   },
-  username: { fontSize: 11 },
+  username: {},
   statsCount: { fontWeight: 'bold' },
   statsLabel: { fontSize: 11 },
   headerActionContainer: {

@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { PingStepA, PingStepB } from './MakePing';
 import { MapOverlay } from '../../../components';
 import { PingStackParamList } from '../../../navigation/type';
+import { PingA, PingB } from '.';
 
 const AddScreen = () => {
   const Stack = createStackNavigator<PingStackParamList>();
@@ -18,7 +18,7 @@ const AddScreen = () => {
         {/* <Stack.Screen name="Overlay" component={MapOverlay} /> */}
         <Stack.Screen
           name="PingStepA"
-          component={PingStepA}
+          component={PingA}
           options={{
             presentation: 'transparentModal',
             cardOverlayEnabled: true,
@@ -27,7 +27,7 @@ const AddScreen = () => {
         />
         <Stack.Screen
           name="PingStepB"
-          component={PingStepB}
+          component={PingB}
           options={{
             presentation: 'transparentModal',
             cardOverlayEnabled: false,

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
-import GoogleStaticMaps from './googleStaticMaps';
 import LinearGradient from 'react-native-linear-gradient';
+import Geolocation from 'react-native-geolocation-service';
+
+import GoogleStaticMaps from './googleStaticMaps';
 import { MAP_API_KEY } from '@env';
 
 const MapOverlay = () => {

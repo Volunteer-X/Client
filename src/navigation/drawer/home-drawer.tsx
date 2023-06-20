@@ -8,10 +8,11 @@ import {
 import { Avatar, Divider } from 'react-native-paper';
 
 import BottomTabNavigation from '../bottom-tab';
-import { ProfileScreen, SettingScreen } from '../screens';
+
 import { PageNames } from '../../lib';
 import { StyledText, StyledView } from '../../theme/styledComponents';
-import { BackButon } from '../../components';
+import { BackButton } from '../../components';
+import { ProfileScreen, SettingScreen } from '../../features';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   return (
@@ -54,7 +55,7 @@ const HomeDrawer = (): React.JSX.Element => {
         options={{
           headerShown: true,
           headerLeft(props) {
-            return BackButon(props);
+            return BackButton(props);
           },
         }}
       />
