@@ -8,4 +8,8 @@ export const PageNames = {
   Search: 'Search',
   Activity: 'Activity',
   UserFeeds: 'UserFeeds',
+  AuthHome: 'AuthHome',
+  SetUsername: 'SetUsername',
+
+  InitialSelectPicks: 'InitialSelectPicks',
 };

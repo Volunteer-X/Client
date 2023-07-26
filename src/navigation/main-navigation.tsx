@@ -1,7 +1,7 @@
 import React from 'react';
 import HomeDrawer from './drawer/home-drawer';
 
-const RootNavigation = () => {
+const MainNavigation = () => {
   return (
     <>
       <HomeDrawer />
@@ -9,4 +9,4 @@ const RootNavigation = () => {
   );
 };
 
-export default RootNavigation;
+export default MainNavigation;

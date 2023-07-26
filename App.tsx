@@ -11,18 +11,21 @@ import { PaperProvider } from 'react-native-paper';
 import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
+import { Auth0Provider } from 'react-native-auth0';
+import { AUTH0_DOMAIN, AUTH0_CLIENT } from '@env';
 
 import { store } from './app/store';
-import { RootNavigation } from './src/navigation';
-import { PLATFORM_PERMISSIONS, requestPermission } from './src/utils';
+import { RootNavController } from './src/components';
 
 const App = () => {
   const scheme = useColorScheme();
 
   useEffect(() => {
-    requestPermission({
-      permission: PLATFORM_PERMISSIONS.ACCESS_COARSE_LOCATION,
-    });
+    // let locationPermission = requestPermission({
+    //   permission: PLATFORM_PERMISSIONS.ACCESS_COARSE_LOCATION,
+    // });
+    // dispatch(setLocationPermission(locationPermission));
+    // getCurrentLocation().then(res => console.log(res));
   }, []);
 
   return (
@@ -30,10 +33,12 @@ const App = () => {
       <GestureHandlerRootView style={{ flex: 1 }}>
         <ThemeProvider>
           <PaperProvider>
-            <NavigationContainer
-              theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-              <RootNavigation />
-            </NavigationContainer>
+            <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+              <NavigationContainer
+                theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
+                <RootNavController />
+              </NavigationContainer>
+            </Auth0Provider>
           </PaperProvider>
         </ThemeProvider>
       </GestureHandlerRootView>
