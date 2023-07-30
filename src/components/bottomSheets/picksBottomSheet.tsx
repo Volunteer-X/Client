@@ -16,19 +16,20 @@ import { Button, Divider } from '@rneui/themed';
 
 import { DefaultValue, PICKS_DATA } from '../../lib';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { onSelection } from '../../features/character/slices/characterSlice';
-import { PicksChip } from '../chips';
 
-const BottomSheetComponent = () => {
+import { PicksChip } from '../chips';
+import { onSelection } from '../../features/picks/slices/picksSlice';
+
+const PicksBottomSheet = () => {
   // State to control the selected label locally
   const [selectedLabel, setSelectedLabel] = useState('');
 
-  const characters = useAppSelector(state => state.character);
+  const picks = useAppSelector(state => state.picks);
   const dispatch = useAppDispatch();
 
   //State to control the selected count
   const [selectedCount, setSelectedCount] = useState(
-    characters.filter(item => item.isSelected).length,
+    picks.filter(item => item.isSelected).length,
   );
 
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -77,7 +78,7 @@ const BottomSheetComponent = () => {
 
   // Selection handling
   const handleSelection = useCallback(
-    (label: string) => {
+    (index: number, label: string) => {
       setSelectedLabel(label);
       dispatch(onSelection(label));
     },
@@ -85,9 +86,9 @@ const BottomSheetComponent = () => {
   );
 
   useEffect(() => {
-    setSelectedCount(characters.filter(item => item.isSelected).length);
+    setSelectedCount(picks.filter(item => item.isSelected).length);
     console.log(selectedCount);
-  }, [selectedCount, characters]);
+  }, [selectedCount, picks]);
 
   return (
     <View style={styles.container}>
@@ -105,15 +106,15 @@ const BottomSheetComponent = () => {
         <View style={styles.contentContainer}>
           <BottomSheetFlatList
             data={PICKS_DATA}
-            renderItem={({ item }) => (
+            renderItem={({ item, index }) => (
               <PicksChip
                 label={item.label}
                 icon={item.icon}
+                index={index}
                 isSelected={
-                  characters.find(character => character.label === item.label)
-                    ?.isSelected
+                  picks.find(val => val.label === item.label)?.isSelected
                 }
-                onSelect={handleSelection}
+                onSelection={handleSelection}
               />
             )}
             ListFooterComponent={renderFooter}
@@ -132,7 +133,7 @@ const BottomSheetComponent = () => {
   );
 };
 
-export default BottomSheetComponent;
+export default PicksBottomSheet;
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },

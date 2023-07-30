@@ -3,35 +3,38 @@ import { StyleSheet } from 'react-native';
 import { Chip, withTheme } from 'react-native-paper';
 
 export type PicksProps = {
+  index?: number;
   label: string;
   icon?: string;
   isSelected?: boolean;
-  onSelect: Function;
+  onSelection: Function;
 };
 
 const PicksChip = ({
   theme,
+  index,
   label,
   icon,
   isSelected,
-  onSelect,
+  onSelection,
 }: {
   theme: any;
+  index: PicksProps['index'];
   label: PicksProps['label'];
   icon: PicksProps['icon'];
   isSelected: PicksProps['isSelected'];
-  onSelect: PicksProps['onSelect'];
+  onSelection: PicksProps['onSelection'];
 }) => {
   const style = makeStyles(theme);
   return (
     <>
       <Chip
-        textStyle={{ fontSize: 13 }}
-        style={{ marginHorizontal: 2, marginTop: 5 }}
+        textStyle={style.textStyle}
+        style={style.chipStyle}
         mode={isSelected ? 'flat' : 'outlined'}
         selected={isSelected}
         onPress={() => {
-          onSelect(label);
+          onSelection(index, label);
         }}>
         {label}
       </Chip>
@@ -41,6 +44,10 @@ const PicksChip = ({
 
 export default withTheme(PicksChip);
 
-const makeStyles = theme => {
-  StyleSheet.create({});
-};
+const makeStyles = theme =>
+  StyleSheet.create({
+    textStyle: {
+      fontSize: 13,
+    },
+    chipStyle: { marginHorizontal: 2, marginTop: 5 },
+  });

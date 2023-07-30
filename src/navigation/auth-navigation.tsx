@@ -10,7 +10,7 @@ const AuthNavigation = () => {
     <>
       <Stack.Navigator
         screenOptions={{ headerShown: false }}
-        initialRouteName="SetUsername">
+        initialRouteName="SetPicks">
         <Stack.Screen name="AuthHome" component={AuthHome} />
         <Stack.Screen name="SetUsername" component={SetUsername} />
         <Stack.Screen

@@ -1,11 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { characterSlice } from '../src/features/character';
+
 import { currentLocationSlice } from '../src/features/maps';
 import { permissionSlice } from '../src/features/permissions';
+import { picksSlice } from '../src/features/picks';
 
 export const store = configureStore({
   reducer: {
-    character: characterSlice,
+    picks: picksSlice,
     currentLocation: currentLocationSlice,
     permissions: permissionSlice,
   },

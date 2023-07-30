@@ -1,9 +1,9 @@
 export { PageNames } from './constants/pages';
 export {
-  Character,
-  EPicks as ECharacter,
+  Picks as Character,
+  EPicks,
   PICKS_DATA,
   CharacterArr,
-} from './constants/character';
+} from './constants/picks';
 
 export { default as DefaultValue } from './constants/values';
