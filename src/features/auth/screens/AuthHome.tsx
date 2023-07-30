@@ -1,9 +1,21 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { Button, Text, withTheme } from 'react-native-paper';
+import { AuthStackParamList } from '../../../navigation/type';
 
-const AuthHome = ({ theme }: { theme: any }) => {
+type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
+
+const AuthHome = ({
+  theme,
+  route,
+  navigation,
+}: {
+  theme: any;
+  route: Props['route'];
+  navigation: Props['navigation'];
+}) => {
   const styles = makeStyles(theme);
 
   const { getCredentials, authorize, user, error } = useAuth0();

@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Geolocation from 'react-native-geolocation-service';
 
-import GoogleStaticMaps from './googleStaticMaps';
+import GoogleStaticMaps from './googleStaticMap';
 import { MAP_API_KEY } from '@env';
 
 const MapOverlay = () => {

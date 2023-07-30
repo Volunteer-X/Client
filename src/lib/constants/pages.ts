@@ -10,6 +10,5 @@ export const PageNames = {
   UserFeeds: 'UserFeeds',
   AuthHome: 'AuthHome',
   SetUsername: 'SetUsername',
-
-  InitialSelectPicks: 'InitialSelectPicks',
+  SetPicks: 'SetPicks',
 };

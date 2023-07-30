@@ -1,1 +1,1 @@
-export { default as CharacterChip } from './CharacterChip';
+export { default as PicksChip } from './PicksChip';

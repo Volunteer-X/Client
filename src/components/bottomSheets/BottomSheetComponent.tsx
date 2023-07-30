@@ -14,10 +14,10 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { Button, Divider } from '@rneui/themed';
 
-import { DefaultValue, characterSampleData } from '../../lib';
+import { DefaultValue, PICKS_DATA } from '../../lib';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { onSelection } from '../../features/character/slices/characterSlice';
-import { CharacterChip } from '../chips';
+import { PicksChip } from '../chips';
 
 const BottomSheetComponent = () => {
   // State to control the selected label locally
@@ -104,9 +104,9 @@ const BottomSheetComponent = () => {
         backdropComponent={renderBackdrop}>
         <View style={styles.contentContainer}>
           <BottomSheetFlatList
-            data={characterSampleData}
+            data={PICKS_DATA}
             renderItem={({ item }) => (
-              <CharacterChip
+              <PicksChip
                 label={item.label}
                 icon={item.icon}
                 isSelected={

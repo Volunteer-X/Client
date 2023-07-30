@@ -1,8 +1,8 @@
 export { PageNames } from './constants/pages';
 export {
   Character,
-  ECharacter,
-  characterSampleData,
+  EPicks as ECharacter,
+  PICKS_DATA,
   CharacterArr,
 } from './constants/character';
 

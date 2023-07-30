@@ -5,3 +5,9 @@ export type PingStackParamList = {
   PingStepB: undefined;
 };
 export type PingProps = StackNavigationProp<PingStackParamList>;
+
+export type AuthStackParamList = {
+  AuthHome: undefined;
+  SetUsername: undefined;
+  SetPicks: { username: string };
+};
