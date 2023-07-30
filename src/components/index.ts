@@ -3,3 +3,5 @@ export { default as PicksBottomSheet } from './bottomSheets/picksBottomSheet';
 export { default as NearbyActivityCardView } from './NearbyActivityCardView';
 export { default as MapOverlay } from './MapOverlay';
 export { default as RootNavController } from './RootNavController';
+
+export { default as MultiSelectView } from './multiSelectView';
