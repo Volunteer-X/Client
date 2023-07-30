@@ -38,7 +38,7 @@ export const CharacterArr = [
   'Women',
 ];
 
-export enum ECharacter {
+export enum EPicks {
   Animal = 'Animal Welfare',
   Art = 'Art',
   Culture = 'Culture',
@@ -57,82 +57,82 @@ export enum ECharacter {
   Technology = 'Technology',
   Women = 'Women',
 }
-export enum ECharacterIcon {}
+export enum EPickIcon {}
 
 //Sample data
 
-type CharacterProps = {
+type PicksProps = {
   label: string;
   icon: string;
 };
 
-export const characterSampleData: Array<CharacterProps> = [
+export const PICKS_DATA: Array<PicksProps> = [
   {
-    label: ECharacter.Animal,
+    label: EPicks.Animal,
     icon: 'home',
   },
   {
-    label: ECharacter.Art,
+    label: EPicks.Art,
     icon: 'home',
   },
   {
-    label: ECharacter.Culture,
+    label: EPicks.Culture,
     icon: 'home',
   },
   {
-    label: ECharacter.Children,
+    label: EPicks.Children,
     icon: 'home',
   },
   {
-    label: ECharacter.Civil,
+    label: EPicks.Civil,
     icon: 'home',
   },
   {
-    label: ECharacter.Disaster,
+    label: EPicks.Disaster,
     icon: 'home',
   },
   {
-    label: ECharacter.Economic,
+    label: EPicks.Economic,
     icon: 'home',
   },
   {
-    label: ECharacter.Education,
+    label: EPicks.Education,
     icon: 'home',
   },
   {
-    label: ECharacter.Environment,
+    label: EPicks.Environment,
     icon: 'home',
   },
   {
-    label: ECharacter.Health,
+    label: EPicks.Health,
     icon: 'home',
   },
   {
-    label: ECharacter.Human,
+    label: EPicks.Human,
     icon: 'home',
   },
   {
-    label: ECharacter.Poverty,
+    label: EPicks.Poverty,
     icon: 'home',
   },
   {
-    label: ECharacter.Politics,
+    label: EPicks.Politics,
     icon: 'home',
   },
   {
-    label: ECharacter.Science,
+    label: EPicks.Science,
     icon: 'home',
   },
   {
-    label: ECharacter.Social,
+    label: EPicks.Social,
     icon: 'home',
   },
   {
-    label: ECharacter.Technology,
+    label: EPicks.Technology,
     icon: 'home',
   },
   {
-    label: ECharacter.Women,
+    label: EPicks.Women,
     icon: 'home',
   },
 ];
