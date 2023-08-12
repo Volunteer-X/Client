@@ -24,7 +24,6 @@ const MainNavigation = () => {
 
   if (!isLoading) {
     SplashScreen.hide();
-    // return <SplashScreen />;
   }
 
   return (
