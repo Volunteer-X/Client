@@ -5,3 +5,4 @@ export { default as MapOverlay } from './MapOverlay';
 export { default as RootNavController } from './RootNavController';
 
 export { default as MultiSelectView } from './multiSelectView';
+export { default as TextInput } from './TextInput';

@@ -2,17 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Button,
-  HelperText,
   Text,
-  TextInput,
   withTheme,
+  TextInput as RNTextInput,
 } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
+import { TextInput } from '../../../components';
+import {
+  useForm,
+  FormProvider,
+  SubmitErrorHandler,
+  SubmitHandler,
+} from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { InferType, object, string } from 'yup';
 
 import { AuthStackParamList } from '../../../types/type';
 import { AppTheme } from '../../../theme';
+import { Defaults } from '../../../lib/constants/values';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;
+
+// (?!.*\.{2,})(?!\.)(?!.*\.$)[a-zA-Z0-9_\.]+
+const scheme = object({
+  username: string()
+    .trim()
+    .matches(new RegExp('^(?!.*.{2,})(?!.)(?!.*.$)[a-zA-Z0-9_.]+$'))
+    .min(Defaults.MIN_LEN_USERNAME)
+    .max(Defaults.MAX_LEN_USERNAME)
+    .required(),
+}).required();
+
+type FormValues = InferType<typeof scheme>;
 
 const SetUsername = ({
   theme,
@@ -23,12 +44,23 @@ const SetUsername = ({
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
+  const { ...methods } = useForm<FormValues>({ resolver: yupResolver(scheme) });
+
   const [username, setUsername] = useState('');
-  const [isValidUsername, setIsValidUsername] = useState(false);
 
   const { possibleUsername } = route.params;
 
   const styles = makeStyles(theme);
+
+  const onSubmit: SubmitHandler<FormValues> = data => {
+    console.log(data);
+    setUsername(data.username);
+    // navigation.navigate('SetPicks', { username: username });
+  };
+
+  const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
+    return console.log(errors);
+  };
 
   const subtitleText = possibleUsername ? (
     <View style={styles.possibleUsernameContainer}>
@@ -41,23 +73,6 @@ const SetUsername = ({
     </View>
   ) : null;
 
-  useEffect(() => {
-    possibleUsername !== undefined ? setUsername(possibleUsername) : null;
-  }, [possibleUsername]);
-
-  const checkIfValidUsername = () => {
-    return username === 'amil';
-  };
-
-  const handleContinue = () => {
-    console.log(
-      '🚀 ~ file: SetUsername.tsx ~ handleContinue: Clicked Continue',
-      isValidUsername,
-    );
-
-    // navigation.navigate('SetPicks', { username: username });
-  };
-
   return (
     <View style={styles.container}>
       <View>
@@ -66,30 +81,32 @@ const SetUsername = ({
         </Text>
         {subtitleText}
       </View>
-      <View>
+      <FormProvider {...methods}>
         <TextInput
+          name="username"
           label="Username"
+          defaultValue={possibleUsername}
           mode="outlined"
-          value={username}
-          onChangeText={value => setUsername(value)}
-          left={<TextInput.Icon icon="account-circle" />}
+          left={<RNTextInput.Icon icon="account-circle" />}
           right={
             username ? (
-              <TextInput.Icon icon={isValidUsername ? 'check' : 'close'} />
+              <RNTextInput.Icon
+                icon={methods.formState.isValid ? 'check' : 'close'}
+              />
             ) : (
               ''
             )
           }
+          rules={{ required: true }}
+          helperType="error"
+          helperText={methods.formState.errors.username?.message}
         />
-        <HelperText
-          type="error"
-          visible={checkIfValidUsername()}>{`${username} already exists`}</HelperText>
-      </View>
+      </FormProvider>
       <Button
         mode="contained"
         style={styles.buttonStyle}
-        onPress={() => handleContinue()}
-        disabled={!isValidUsername}>
+        onPress={methods.handleSubmit(onSubmit, onError)}
+        disabled={methods.formState.isValid}>
         Continue
       </Button>
     </View>

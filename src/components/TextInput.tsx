@@ -14,41 +14,33 @@ import {
 interface TextInputProps extends RNTextInputProps, UseControllerProps {
   label: string;
   defaultValue?: string;
-  left: React.ReactNode;
-  right: React.ReactNode;
-  helperText: string;
+  helperText?: string;
+  helperType?: 'error' | 'info';
 }
 
-const ControlledInput = (props: TextInputProps) => {
+const ControlledInput = ({
+  label,
+  name,
+  rules,
+  defaultValue,
+  helperText,
+  helperType = 'error',
+  ...inputProps
+}: TextInputProps) => {
   const { formState } = useFormContext();
-
-  const {
-    label,
-    name,
-    rules,
-    defaultValue,
-    left,
-    right,
-    helperText,
-    ...inputProps
-  } = props;
 
   const { field } = useController({ name, rules, defaultValue });
 
   return (
     <View>
-      <RNTextInput {...inputProps} label={label} />
       <RNTextInput
         label={label}
-        mode="outlined"
         value={field.value}
         onChangeText={field.onChange}
         onBlur={field.onBlur}
-        left={left}
-        right={right}
         {...inputProps}
       />
-      <HelperText type="error" visible={formState.isValid}>
+      <HelperText type={helperType} visible={!formState.isValid}>
         {helperText}
       </HelperText>
     </View>
