@@ -8,6 +8,11 @@ export type PingProps = StackNavigationProp<PingStackParamList>;
 
 export type AuthStackParamList = {
   AuthHome: undefined;
-  SetUsername: undefined;
+  SetUsername: { possibleUsername?: string };
   SetPicks: { username: string };
+};
+
+export type MainNavList = {
+  AuthStack: AuthStackParamList;
+  Drawer: undefined;
 };

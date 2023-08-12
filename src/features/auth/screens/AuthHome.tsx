@@ -2,35 +2,46 @@ import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
-import { Button, Text, withTheme } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
+import { AUTH0_SCOPE } from '@env';
+
 import { AuthStackParamList } from '../../../navigation/type';
+import useAppTheme from '../../../hooks/useAppTheme';
+import { AppTheme } from '../../../theme';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 
 const AuthHome = ({
-  theme,
   route,
   navigation,
 }: {
-  theme: any;
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
+  const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const { getCredentials, authorize, user, error } = useAuth0();
+  const { authorize, user, error } = useAuth0();
 
-  const handleOnClick = useCallback(async () => {
-    authorize()
-      .then(res => {
-        console.log(`res:: ${res}`);
+  // Handles login with auth0
+  const onLogin = useCallback(async () => {
+    try {
+      // Auth0 authorize
+      await authorize({ scope: AUTH0_SCOPE });
 
-        if (user === null || user === undefined) {
-          throw error;
-        }
-      })
-      .catch(err => console.log(err));
-  }, [authorize, error, user]);
+      // check auth unsuccessful
+      if (user === null || user === undefined) {
+        throw error;
+      } else {
+        navigation.navigate('SetUsername', {
+          possibleUsername:
+            user?.nickname || user?.preferred_username || undefined,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [authorize, error, navigation, user]);
 
   return (
     <View style={styles.page}>
@@ -48,16 +59,16 @@ const AuthHome = ({
         mode="contained"
         style={styles.loginStyle}
         contentStyle={styles.loginContentStyle}
-        onPress={handleOnClick}>
+        onPress={onLogin}>
         Get Started
       </Button>
     </View>
   );
 };
 
-export default withTheme(AuthHome);
+export default AuthHome;
 
-const makeStyles = (theme: any) =>
+const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     page: {
       flex: 1,

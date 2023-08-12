@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import { Avatar, Divider } from 'react-native-paper';
+import { Avatar, Button, Divider } from 'react-native-paper';
 
 import BottomTabNavigation from '../bottom-tab';
 
@@ -13,8 +13,22 @@ import { PageNames } from '../../lib';
 import { StyledText, StyledView } from '../../theme/styledComponents';
 import { BackButton } from '../../components';
 import { ProfileScreen, SettingScreen } from '../../features';
+import { useAuth0 } from 'react-native-auth0';
+import { DevSettings } from 'react-native';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
+  const { clearSession } = useAuth0();
+
+  const onLogout = useCallback(async () => {
+    try {
+      await clearSession();
+      // Dev setup
+      DevSettings.reload();
+    } catch (error) {
+      console.log('log out cancelled');
+    }
+  }, [clearSession]);
+
   return (
     <DrawerContentScrollView {...props}>
       <StyledView className="px-5 py-5">
@@ -31,6 +45,9 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
       <Divider />
       <DrawerItemList {...props} />
       <Divider />
+      <Button mode="contained" onPress={onLogout}>
+        Logout
+      </Button>
     </DrawerContentScrollView>
   );
 }

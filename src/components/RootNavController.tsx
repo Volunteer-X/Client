@@ -1,22 +1,33 @@
-import { AUTH0_CLIENT, AUTH0_DOMAIN } from '@env';
-import React, { useCallback, useEffect, useState } from 'react';
-import Auth0 from 'react-native-auth0';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useAuth0 } from 'react-native-auth0';
 import { AuthNavigation, MainNavigation } from '../navigation';
+import { SplashScreen } from '../features/auth';
+import { createStackNavigator } from '@react-navigation/stack';
+import { AuthStackParamList, MainNavList } from '../navigation/type';
+import { TypedNavigator } from '@react-navigation/native';
 
 const RootNavController = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const { user, isLoading } = useAuth0();
 
-  const checkIsLoggedIn = useCallback(async () => {
-    const auth0 = new Auth0({ domain: AUTH0_DOMAIN, clientId: AUTH0_CLIENT });
-    let _isLoggedIn = await auth0.credentialsManager.hasValidCredentials();
-    setIsLoggedIn(_isLoggedIn);
-  }, []);
+  const Stack = createStackNavigator<AuthStackParamList | MainNavList>();
 
-  useEffect(() => {
-    checkIsLoggedIn().catch(console.error);
-  }, [checkIsLoggedIn]);
+  if (isLoading) {
+    return <SplashScreen />;
+  }
 
-  return isLoggedIn ? <MainNavigation /> : <AuthNavigation />;
+  console.log(
+    '🚀 ~ file: RootNavController.tsx:9 ~ RootNavController ~ user:',
+    user?.nickname,
+  );
+
+  return (
+    <>
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        {user === null ? <AuthNavigation /> : <MainNavigation />}
+      </Stack.Navigator>
+    </>
+  );
 };
 
 export default RootNavController;

@@ -10,6 +10,7 @@ import {
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { AuthStackParamList } from '../../../navigation/type';
+import { AppTheme } from '../../../theme';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;
 
@@ -24,11 +25,24 @@ const SetUsername = ({
 }) => {
   const [username, setUsername] = useState('');
 
+  const possibleUsername = route.params.possibleUsername;
+
   const styles = makeStyles(theme);
 
+  const subtitleText = possibleUsername ? (
+    <View style={styles.possibleUsernameContainer}>
+      <Text variant="titleMedium" style={styles.possibleUsername}>
+        {possibleUsername}
+      </Text>
+      <Text variant="bodySmall" style={styles.subtitle}>
+        Suggested username
+      </Text>
+    </View>
+  ) : null;
+
   useEffect(() => {
-    console.log(username);
-  }, [username]);
+    possibleUsername !== undefined ? setUsername(possibleUsername) : null;
+  }, [possibleUsername]);
 
   const hasError = () => {
     return username === 'amil';
@@ -43,8 +57,10 @@ const SetUsername = ({
   return (
     <View style={styles.container}>
       <View>
-        <Text variant="headlineLarge">Pick your Username</Text>
-        <Text variant="titleSmall">subtitle text here</Text>
+        <Text variant="headlineLarge" style={styles.headline}>
+          Pick a username
+        </Text>
+        {subtitleText}
       </View>
       <View>
         <TextInput
@@ -77,7 +93,7 @@ const SetUsername = ({
 
 export default withTheme(SetUsername);
 
-const makeStyles = (theme: any) =>
+const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
@@ -87,5 +103,19 @@ const makeStyles = (theme: any) =>
     },
     buttonStyle: {
       borderRadius: 10,
+    },
+    headline: {
+      fontWeight: '700',
+    },
+    possibleUsernameContainer: {
+      alignItems: 'center',
+      marginVertical: 10,
+      gap: 5,
+    },
+    subtitle: {},
+    possibleUsername: {
+      fontStyle: 'normal',
+      fontWeight: '900',
+      color: theme.colors.onTertiaryContainer,
     },
   });

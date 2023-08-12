@@ -1,48 +1,45 @@
 import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
-import React, { useEffect } from 'react';
-import {
-  DarkTheme,
-  DefaultTheme,
-  NavigationContainer,
-} from '@react-navigation/native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { ThemeProvider } from '@rneui/themed';
 import { PaperProvider } from 'react-native-paper';
-import { useColorScheme } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import { Auth0Provider } from 'react-native-auth0';
 import { AUTH0_DOMAIN, AUTH0_CLIENT } from '@env';
+import { ApolloProvider } from '@apollo/client';
 
 import { store } from './app/store';
-import { RootNavController } from './src/components';
+
+import { AppThemeProvider } from './src/theme';
+import useAppTheme from './src/hooks/useAppTheme';
+
+import apolloClient from './src/services/apolloClient';
+
+import { MainNavigation } from './src/navigation';
 
 const App = () => {
-  const scheme = useColorScheme();
-
-  useEffect(() => {
-    // let locationPermission = requestPermission({
-    //   permission: PLATFORM_PERMISSIONS.ACCESS_COARSE_LOCATION,
-    // });
-    // dispatch(setLocationPermission(locationPermission));
-    // getCurrentLocation().then(res => console.log(res));
-  }, []);
+  const { themePreference, theme } = useAppTheme();
 
   return (
-    <Provider store={store}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <ThemeProvider>
-          <PaperProvider>
-            <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
-              <NavigationContainer
-                theme={scheme === 'dark' ? DarkTheme : DefaultTheme}>
-                <RootNavController />
-              </NavigationContainer>
-            </Auth0Provider>
-          </PaperProvider>
-        </ThemeProvider>
-      </GestureHandlerRootView>
-    </Provider>
+    <ApolloProvider client={apolloClient}>
+      <Provider store={store}>
+        <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <AppThemeProvider value={themePreference}>
+              <ThemeProvider>
+                <PaperProvider theme={theme}>
+                  <NavigationContainer theme={theme}>
+                    <MainNavigation />
+                  </NavigationContainer>
+                </PaperProvider>
+              </ThemeProvider>
+            </AppThemeProvider>
+          </GestureHandlerRootView>
+        </Auth0Provider>
+      </Provider>
+    </ApolloProvider>
   );
 };
 
