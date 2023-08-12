@@ -5,13 +5,14 @@ import { useAuth0 } from 'react-native-auth0';
 import { Button, Text } from 'react-native-paper';
 import { AUTH0_SCOPE } from '@env';
 
-import { AuthStackParamList } from '../../../navigation/type';
+import { AuthStackParamList } from '../../../types/type';
 import useAppTheme from '../../../hooks/useAppTheme';
 import { AppTheme } from '../../../theme';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 
 const AuthHome = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   route,
   navigation,
 }: {
@@ -68,6 +69,7 @@ const AuthHome = ({
 
 export default AuthHome;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     page: {

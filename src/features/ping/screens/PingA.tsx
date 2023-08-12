@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Text, withTheme, Button } from 'react-native-paper';
-import { PingProps } from '../../../navigation/type';
+import { PingProps } from '../../../types/type';
 
 const PingA = ({ theme }: { theme: any }) => {
   const styles = makeStyles(theme);

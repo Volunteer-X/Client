@@ -1,7 +1,7 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import { AuthHome, SetPicks, SetUsername } from '../features/auth';
-import { AuthStackParamList } from './type';
+import { AuthStackParamList } from '../types/type';
 import { withTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { AppTheme } from '../theme';

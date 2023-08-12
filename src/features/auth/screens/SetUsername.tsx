@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { AuthStackParamList } from '../../../navigation/type';
+import { AuthStackParamList } from '../../../types/type';
 import { AppTheme } from '../../../theme';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;

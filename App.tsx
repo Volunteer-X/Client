@@ -18,6 +18,7 @@ import useAppTheme from './src/hooks/useAppTheme';
 import apolloClient from './src/services/apolloClient';
 
 import { MainNavigation } from './src/navigation';
+import { StyleSheet } from 'react-native';
 
 const App = () => {
   const { themePreference, theme } = useAppTheme();
@@ -26,7 +27,7 @@ const App = () => {
     <ApolloProvider client={apolloClient}>
       <Provider store={store}>
         <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
-          <GestureHandlerRootView style={{ flex: 1 }}>
+          <GestureHandlerRootView style={styles.gestureHandlerRootView}>
             <AppThemeProvider value={themePreference}>
               <ThemeProvider>
                 <PaperProvider theme={theme}>
@@ -44,3 +45,9 @@ const App = () => {
 };
 
 export default App;
+
+const styles = StyleSheet.create({
+  gestureHandlerRootView: {
+    flex: 1,
+  },
+});

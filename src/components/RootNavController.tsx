@@ -3,7 +3,7 @@ import { useAuth0 } from 'react-native-auth0';
 import { AuthNavigation, MainNavigation } from '../navigation';
 import { SplashScreen } from '../features/auth';
 import { createStackNavigator } from '@react-navigation/stack';
-import { AuthStackParamList, MainNavList } from '../navigation/type';
+import { AuthStackParamList, MainNavList } from '../types/type';
 import { TypedNavigator } from '@react-navigation/native';
 
 const RootNavController = () => {

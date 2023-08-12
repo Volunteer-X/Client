@@ -1,0 +1,2 @@
+schema: ./src/features/**/api/*.gql
+documents: ./src/features/**/api/*.gql

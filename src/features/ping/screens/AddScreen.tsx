@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MapOverlay } from '../../../components';
-import { PingStackParamList } from '../../../navigation/type';
+import { PingStackParamList } from '../../../types/type';
 import { PingA, PingB } from '.';
 
 const AddScreen = () => {

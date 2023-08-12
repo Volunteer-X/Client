@@ -1,8 +1,19 @@
-export default {
-  min_num_of_character: 8,
+import { Platform } from 'react-native';
+
+export const defaults = {
+  MIN_NUM_OF_PICKS: 8,
 };
 
 export const FINE_LOCATION_PERMISSION_NOT_SET =
   'Fine location permission not set';
 export const COARSE_LOCATION_PERMISSION_NOT_SET =
   'Coarse location permission not set';
+
+let clientName: string;
+if (Platform.OS === 'android') {
+  clientName = 'VolunteerX App [Android]';
+} else if (Platform.OS === 'ios') {
+  clientName = 'VolunteerX App [IOS]';
+}
+
+export { clientName };

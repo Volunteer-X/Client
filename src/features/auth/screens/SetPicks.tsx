@@ -2,8 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native';
 import { Button, Text, withTheme } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
-import { AuthStackParamList } from '../../../navigation/type';
 
+import { AuthStackParamList } from '../../../types/type';
 import { PicksChip } from '../../../components/chips';
 import { PICKS_DATA } from '../../../lib';
 

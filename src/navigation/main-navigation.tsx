@@ -3,7 +3,7 @@ import { useAuth0 } from 'react-native-auth0';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from 'react-native-splash-screen';
 
-import { MainNavList } from './type';
+import { MainNavList } from '../types/type';
 
 import AuthNavigation from './auth-navigation';
 // import { SplashScreen } from '../features/auth';
