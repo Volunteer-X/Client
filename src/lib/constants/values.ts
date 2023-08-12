@@ -2,6 +2,7 @@ import { Platform } from 'react-native';
 
 export const defaults = {
   MIN_NUM_OF_PICKS: 8,
+  MIN_LENGHT_OF_USERNAME: 6,
 };
 
 export const FINE_LOCATION_PERMISSION_NOT_SET =

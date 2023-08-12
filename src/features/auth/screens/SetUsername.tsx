@@ -24,8 +24,9 @@ const SetUsername = ({
   navigation: Props['navigation'];
 }) => {
   const [username, setUsername] = useState('');
+  const [isValidUsername, setIsValidUsername] = useState(false);
 
-  const possibleUsername = route.params.possibleUsername;
+  const { possibleUsername } = route.params;
 
   const styles = makeStyles(theme);
 
@@ -44,14 +45,17 @@ const SetUsername = ({
     possibleUsername !== undefined ? setUsername(possibleUsername) : null;
   }, [possibleUsername]);
 
-  const hasError = () => {
+  const checkIfValidUsername = () => {
     return username === 'amil';
   };
 
   const handleContinue = () => {
-    console.log('Clicked Continue');
+    console.log(
+      '🚀 ~ file: SetUsername.tsx ~ handleContinue: Clicked Continue',
+      isValidUsername,
+    );
 
-    navigation.navigate('SetPicks', { username: username });
+    // navigation.navigate('SetPicks', { username: username });
   };
 
   return (
@@ -71,7 +75,7 @@ const SetUsername = ({
           left={<TextInput.Icon icon="account-circle" />}
           right={
             username ? (
-              <TextInput.Icon icon={hasError() ? 'close' : 'check'} />
+              <TextInput.Icon icon={isValidUsername ? 'check' : 'close'} />
             ) : (
               ''
             )
@@ -79,12 +83,13 @@ const SetUsername = ({
         />
         <HelperText
           type="error"
-          visible={hasError()}>{`${username} already exists`}</HelperText>
+          visible={checkIfValidUsername()}>{`${username} already exists`}</HelperText>
       </View>
       <Button
         mode="contained"
         style={styles.buttonStyle}
-        onPress={() => handleContinue()}>
+        onPress={() => handleContinue()}
+        disabled={!isValidUsername}>
         Continue
       </Button>
     </View>

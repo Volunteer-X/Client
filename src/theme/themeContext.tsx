@@ -5,7 +5,7 @@ type ThemeContextProps = {
   isThemeDark: boolean;
 };
 
-const ThemeContext = createContext<ThemeContextProps>({
+export const ThemeContext = createContext<ThemeContextProps>({
   setThemeScheme: () => {},
   isThemeDark: false,
 });

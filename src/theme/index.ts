@@ -27,4 +27,4 @@ export const CombinedDarkTheme = merge(customDarkTheme, DarkTheme);
 
 export type AppTheme = typeof CombinedDefaultTheme;
 
-export { AppThemeProvider } from './themeContext';
+export { AppThemeProvider, ThemeContext } from './themeContext';

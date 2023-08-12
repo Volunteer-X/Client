@@ -40,7 +40,7 @@ const AuthHome = ({
         });
       }
     } catch (err) {
-      console.log(err);
+      console.log('🚀 ~ file: AuthHome.tsx:43 ~ onLogin ~ err:', err);
     }
   }, [authorize, error, navigation, user]);
 
