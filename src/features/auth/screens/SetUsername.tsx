@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import {
   Button,
@@ -13,27 +13,18 @@ import {
   FormProvider,
   SubmitErrorHandler,
   SubmitHandler,
+  useWatch,
 } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { InferType, object, string } from 'yup';
+import { InferType } from 'yup';
 
 import { AuthStackParamList } from '../../../types/type';
 import { AppTheme } from '../../../theme';
-import { Defaults } from '../../../lib/constants/values';
+import { useYupResolver } from '../../../hooks';
+import { yupScheme } from '../helpers/yupSchema';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;
 
-// (?!.*\.{2,})(?!\.)(?!.*\.$)[a-zA-Z0-9_\.]+
-const scheme = object({
-  username: string()
-    .trim()
-    .matches(new RegExp('^(?!.*.{2,})(?!.)(?!.*.$)[a-zA-Z0-9_.]+$'))
-    .min(Defaults.MIN_LEN_USERNAME)
-    .max(Defaults.MAX_LEN_USERNAME)
-    .required(),
-}).required();
-
-type FormValues = InferType<typeof scheme>;
+type FormValues = InferType<typeof yupScheme>;
 
 const SetUsername = ({
   theme,
@@ -44,22 +35,51 @@ const SetUsername = ({
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
-  const { ...methods } = useForm<FormValues>({ resolver: yupResolver(scheme) });
-
+  const styles = makeStyles(theme);
+  const resolver = useYupResolver<FormValues>(yupScheme);
+  const { control, trigger, formState, ...methods } = useForm<FormValues>({
+    // resolver: yupResolver(scheme),
+    resolver,
+  });
   const [username, setUsername] = useState('');
-
   const { possibleUsername } = route.params;
 
-  const styles = makeStyles(theme);
+  const _username = useWatch({
+    control,
+    name: 'username',
+    defaultValue: possibleUsername ?? '',
+  });
+
+  const triggerRevalidation = useCallback(async () => {
+    return await trigger('username', { shouldFocus: true });
+  }, [trigger]);
+
+  useEffect(() => {
+    triggerRevalidation().then(result => console.log(result));
+  }, [_username, triggerRevalidation]);
+
+  // useEffect(() => {
+  //   const subscription = watch(({ username }, { name, type }) =>
+  //     console.log('🚀 ~ useEffect', username, formState.isValid),
+  //   );
+  //   if (formState.isValid) {
+  //     console.log(
+  //       '🚀 ~ file:  ~ useEffect ~ unsubscribe: Here',
+  //       formState.isValid,
+  //     );
+  //     subscription.unsubscribe();
+  //   }
+  // }, [formState.isValid, watch]);
 
   const onSubmit: SubmitHandler<FormValues> = data => {
-    console.log(data);
+    console.log('🚀 ~ file: SetUsername.tsx:60 ~ data:', data);
+
     setUsername(data.username);
     // navigation.navigate('SetPicks', { username: username });
   };
 
   const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-    return console.log(errors);
+    console.log('🚀 ~ file: SetUsername.tsx:65 ~ errors:', errors);
   };
 
   const subtitleText = possibleUsername ? (
@@ -81,7 +101,11 @@ const SetUsername = ({
         </Text>
         {subtitleText}
       </View>
-      <FormProvider {...methods}>
+      <FormProvider
+        trigger={trigger}
+        control={control}
+        formState={formState}
+        {...methods}>
         <TextInput
           name="username"
           label="Username"
@@ -89,24 +113,22 @@ const SetUsername = ({
           mode="outlined"
           left={<RNTextInput.Icon icon="account-circle" />}
           right={
-            username ? (
-              <RNTextInput.Icon
-                icon={methods.formState.isValid ? 'check' : 'close'}
-              />
+            methods.getValues().username !== '' ? (
+              <RNTextInput.Icon icon={formState.isValid ? 'check' : 'close'} />
             ) : (
               ''
             )
           }
           rules={{ required: true }}
           helperType="error"
-          helperText={methods.formState.errors.username?.message}
+          helperText={formState.errors.username?.message}
         />
       </FormProvider>
       <Button
         mode="contained"
         style={styles.buttonStyle}
         onPress={methods.handleSubmit(onSubmit, onError)}
-        disabled={methods.formState.isValid}>
+        disabled={!formState.isValid}>
         Continue
       </Button>
     </View>
