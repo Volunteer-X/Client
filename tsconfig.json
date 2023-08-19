@@ -1,9 +1,30 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@navigation/*": [
+        "src/navigation/*"
+      ]
+    },
     "resolveJsonModule": true,
-    "types": [
-      "./src/types"
-    ]
-  }
+    // "typeRoots": [
+    //   "./src/types"
+    // ]
+  },
 }

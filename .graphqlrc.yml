@@ -1,0 +1,2 @@
+schema: "./src/app.query.gql"
+documents: "./src/app.query.gql"

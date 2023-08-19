@@ -5,16 +5,15 @@ import {
   DrawerItemList,
   createDrawerNavigator,
 } from '@react-navigation/drawer';
-import { Avatar, Button, Divider } from 'react-native-paper';
+import { Avatar, Button, Divider, Text } from 'react-native-paper';
 
 import BottomTabNavigation from '../bottom-tab';
 
 import { PageNames } from '../../lib';
-import { StyledText, StyledView } from '../../theme/styledComponents';
 import { BackButton } from '../../components';
 import { ProfileScreen, SettingScreen } from '../../features';
 import { useAuth0 } from 'react-native-auth0';
-import { DevSettings } from 'react-native';
+import { DevSettings, View } from 'react-native';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   const { clearSession } = useAuth0();
@@ -31,17 +30,15 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
 
   return (
     <DrawerContentScrollView {...props}>
-      <StyledView className="px-5 py-5">
+      <View>
         <Avatar.Text label="Vx" size={48} />
-        <StyledText>Full Name</StyledText>
-        <StyledText>@username</StyledText>
-        <StyledView className="flex flex-row gap-5">
-          <StyledText className="text-cyan-900 font-bold">
-            20 Followers
-          </StyledText>
-          <StyledText>2 Activities</StyledText>
-        </StyledView>
-      </StyledView>
+        <Text>Full Name</Text>
+        <Text>@username</Text>
+        <View>
+          <Text>20 Followers</Text>
+          <Text>2 Activities</Text>
+        </View>
+      </View>
       <Divider />
       <DrawerItemList {...props} />
       <Divider />

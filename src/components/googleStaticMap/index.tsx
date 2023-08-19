@@ -1,15 +1,6 @@
-import { Overlay, Text } from '@rneui/themed';
 import React from 'react';
-import {
-  ImageStyle,
-  PixelRatio,
-  StyleProp,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from 'react-native';
+import { PixelRatio, StyleProp, ViewStyle } from 'react-native';
 import { Image } from '@rneui/themed';
-import LinearGradient from 'react-native-linear-gradient';
 
 interface GoogleStaticMapsProps {
   center: string | Location;

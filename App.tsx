@@ -2,6 +2,7 @@ import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
 import { ThemeProvider } from '@rneui/themed';
 import { PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -13,12 +14,13 @@ import { ApolloProvider } from '@apollo/client';
 import { store } from './app/store';
 
 import { AppThemeProvider } from './src/theme';
-import useAppTheme from './src/hooks/useAppTheme';
+import useAppTheme from '@hooks/useAppTheme';
 
-import apolloClient from './src/services/apolloClient';
+// import apolloClient from './src/services/apolloClient';
+import apolloClient from '@services/apolloClient';
 
-import { MainNavigation } from './src/navigation';
-import { StyleSheet } from 'react-native';
+// import { MainNavigation } from './src/navigation';
+import { MainNavigation } from '@navigation/index';
 
 const App = () => {
   const { themePreference, theme } = useAppTheme();
