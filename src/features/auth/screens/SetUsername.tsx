@@ -22,7 +22,6 @@ import {
   TextInput as RNTextInput,
 } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
-import { TextInput } from '../../../components';
 import {
   useForm,
   FormProvider,
@@ -32,9 +31,10 @@ import {
 } from 'react-hook-form';
 import { InferType } from 'yup';
 
-import { AuthStackParamList } from '../../../types/type';
-import { AppTheme } from '../../../theme';
-import { useYupResolver } from '../../../hooks';
+import { AuthStackParamList } from '@ts-types/type';
+import { TextInput } from '@components/index';
+import { AppTheme } from '@theme/index';
+import { useYupResolver } from '@hooks/index';
 import { yupScheme } from '../helpers/yupSchema';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;

@@ -4,7 +4,7 @@ import {
   CombinedDarkTheme,
   CombinedDefaultTheme,
   ThemeContext,
-} from '../theme';
+} from '@theme/index';
 
 const useAppTheme = () => {
   const { setThemeScheme } = useContext(ThemeContext);

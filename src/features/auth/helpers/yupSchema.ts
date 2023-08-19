@@ -1,5 +1,5 @@
 import { object, string } from 'yup';
-import { Defaults } from '../../../lib/constants/values';
+import { Defaults } from '@app/lib/constants/values';
 
 // (?!.*\.{2,})(?!\.)(?!.*\.$)[a-zA-Z0-9_\.]+
 export const yupScheme = object({

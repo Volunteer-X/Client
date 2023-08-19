@@ -13,7 +13,7 @@ import { ApolloProvider } from '@apollo/client';
 
 import { store } from './app/store';
 
-import { AppThemeProvider } from './src/theme';
+import { AppThemeProvider } from '@theme/index';
 import useAppTheme from '@hooks/useAppTheme';
 
 // import apolloClient from './src/services/apolloClient';

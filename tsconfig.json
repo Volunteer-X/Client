@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "*": [
+      "@app/*": [
         "src/*"
       ],
       "@components/*": [
@@ -20,6 +20,15 @@
       ],
       "@navigation/*": [
         "src/navigation/*"
+      ],
+      "@theme/*": [
+        "src/theme/*"
+      ],
+      "@features/*": [
+        "src/features/*"
+      ],
+      "@ts-types/*": [
+        "src/types/*"
       ]
     },
     "resolveJsonModule": true,

@@ -4,8 +4,8 @@ import { Button, Text, withTheme } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { AuthStackParamList } from '../../../types/type';
-import { PicksChip } from '../../../components/chips';
-import { PICKS_DATA } from '../../../lib';
+import { PICKS_DATA } from '@app/lib/index';
+import { PicksChip } from '@components/chips/index';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetPicks'>;
 

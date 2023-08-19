@@ -6,8 +6,8 @@ import { Button, Text } from 'react-native-paper';
 import { AUTH0_SCOPE } from '@env';
 
 import { AuthStackParamList } from '../../../types/type';
-import useAppTheme from '../../../hooks/useAppTheme';
-import { AppTheme } from '../../../theme';
+import useAppTheme from '@hooks/useAppTheme';
+import { AppTheme } from '@theme/index';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 
