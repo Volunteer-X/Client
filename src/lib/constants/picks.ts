@@ -1,24 +1,24 @@
-export const Picks = {
-  Animal: 'Animal Welfare',
-  Art: 'Art',
-  Culture: 'Culture',
-  Children: 'Children',
-  Civil: 'Civil Rights',
-  Disaster: 'Disaster',
-  Economic: 'Economic',
-  Education: 'Education',
-  Environment: 'Environment',
-  Health: 'Health',
-  Human: 'Human Rights',
-  Poverty: 'Poverty',
-  Politics: 'Politics',
-  Science: 'Science',
-  Social: 'Social Services',
-  Technology: 'Technology',
-  Women: 'Women',
-};
+// export const picksLabel = {
+//   Animal: 'Animal Welfare',
+//   Art: 'Art',
+//   Culture: 'Culture',
+//   Children: 'Children',
+//   Civil: 'Civil Rights',
+//   Disaster: 'Disaster',
+//   Economic: 'Economic',
+//   Education: 'Education',
+//   Environment: 'Environment',
+//   Health: 'Health',
+//   Human: 'Human Rights',
+//   Poverty: 'Poverty',
+//   Politics: 'Politics',
+//   Science: 'Science',
+//   Social: 'Social Services',
+//   Technology: 'Technology',
+//   Women: 'Women',
+// };
 
-export const CharacterArr = [
+export const PicksArray = [
   'Animal Welfare',
   'Art',
   'Culture',
@@ -38,7 +38,7 @@ export const CharacterArr = [
   'Women',
 ];
 
-export enum EPicks {
+export enum PicksLabel {
   Animal = 'Animal Welfare',
   Art = 'Art',
   Culture = 'Culture',
@@ -57,100 +57,118 @@ export enum EPicks {
   Technology = 'Technology',
   Women = 'Women',
 }
-export enum EPickIcon {}
+export enum PicksIcon {
+  Animal = 'home',
+  Art = 'home',
+  Culture = 'home',
+  Children = 'home',
+  Civil = 'home',
+  Disaster = 'home',
+  Economic = 'home',
+  Education = 'home',
+  Environment = 'home',
+  Health = 'home',
+  Human = 'home',
+  Poverty = 'home',
+  Politics = 'home',
+  Science = 'home',
+  Social = 'home',
+  Technology = 'home',
+  Women = 'home',
+}
 
 //Sample data
 
-export type PicksProps = {
+export interface Pick {
   label: string;
   icon: string;
   isSelected: boolean;
-};
+}
 
-export const PICKS_DATA: Array<PicksProps> = [
+export const Picks: Array<Pick> = [
   {
-    label: EPicks.Animal,
-    icon: 'home',
+    label: PicksLabel.Animal,
+    icon: PicksIcon.Animal,
     isSelected: false,
   },
   {
-    label: EPicks.Art,
-    icon: 'home',
+    label: PicksLabel.Art,
+    icon: PicksIcon.Art,
     isSelected: false,
   },
   {
-    label: EPicks.Culture,
-    icon: 'home',
+    label: PicksLabel.Culture,
+    icon: PicksIcon.Culture,
     isSelected: false,
   },
   {
-    label: EPicks.Children,
-    icon: 'home',
+    label: PicksLabel.Children,
+    icon: PicksIcon.Children,
     isSelected: false,
   },
   {
-    label: EPicks.Civil,
-    icon: 'home',
+    label: PicksLabel.Civil,
+    icon: PicksIcon.Civil,
     isSelected: false,
   },
   {
-    label: EPicks.Disaster,
-    icon: 'home',
+    label: PicksLabel.Disaster,
+    icon: PicksIcon.Disaster,
     isSelected: false,
   },
   {
-    label: EPicks.Economic,
-    icon: 'home',
+    label: PicksLabel.Economic,
+    icon: PicksIcon.Economic,
     isSelected: false,
   },
   {
-    label: EPicks.Education,
-    icon: 'home',
+    label: PicksLabel.Education,
+    icon: PicksIcon.Education,
     isSelected: false,
   },
   {
-    label: EPicks.Environment,
-    icon: 'home',
+    label: PicksLabel.Environment,
+    icon: PicksIcon.Environment,
     isSelected: false,
   },
   {
-    label: EPicks.Health,
-    icon: 'home',
+    label: PicksLabel.Health,
+    icon: PicksIcon.Health,
     isSelected: false,
   },
   {
-    label: EPicks.Human,
-    icon: 'home',
+    label: PicksLabel.Human,
+    icon: PicksIcon.Human,
     isSelected: false,
   },
   {
-    label: EPicks.Poverty,
-    icon: 'home',
+    label: PicksLabel.Poverty,
+    icon: PicksIcon.Poverty,
     isSelected: false,
   },
   {
-    label: EPicks.Politics,
-    icon: 'home',
+    label: PicksLabel.Politics,
+    icon: PicksIcon.Politics,
     isSelected: false,
   },
   {
-    label: EPicks.Science,
-    icon: 'home',
+    label: PicksLabel.Science,
+    icon: PicksIcon.Science,
     isSelected: false,
   },
   {
-    label: EPicks.Social,
-    icon: 'home',
+    label: PicksLabel.Social,
+    icon: PicksIcon.Social,
     isSelected: false,
   },
   {
-    label: EPicks.Technology,
-    icon: 'home',
+    label: PicksLabel.Technology,
+    icon: PicksIcon.Technology,
     isSelected: false,
   },
   {
-    label: EPicks.Women,
-    icon: 'home',
+    label: PicksLabel.Women,
+    icon: PicksIcon.Women,
     isSelected: false,
   },
 ];

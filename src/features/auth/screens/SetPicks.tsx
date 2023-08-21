@@ -6,6 +6,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList } from '../../../types/type';
 import { PICKS_DATA } from '@app/lib/index';
 import { PicksChip } from '@components/chips/index';
+import PicksSelectView, {
+  PicksSelectProps,
+} from '@components/picks-select-view';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetPicks'>;
 
@@ -14,6 +17,10 @@ type Picks = {
   icon?: string;
   isSelected: boolean;
 };
+
+interface Test extends PicksSelectProps {
+  icon?: string;
+}
 
 const SetPicks = ({
   theme,
@@ -66,6 +73,15 @@ const SetPicks = ({
     />
   );
 
+  let tests: Array<Test> = [
+    {
+      label: 'hello',
+      index: 0,
+      isSelected: false,
+      icon: '',
+    },
+  ];
+
   return (
     <View style={styles.chipContainer}>
       <FlatList
@@ -80,6 +96,7 @@ const SetPicks = ({
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}
         ListFooterComponentStyle={styles.listFooterComponentStyle}
       />
+      <PicksSelectView data={tests} />
     </View>
   );
 };

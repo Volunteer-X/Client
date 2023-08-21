@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EPicks } from '../../../lib';
+import { PicksLabel } from '../../../lib';
 
 export interface PickState {
   isSelected: boolean;
@@ -9,71 +9,71 @@ export interface PickState {
 const initialState: PickState[] = [
   {
     isSelected: false,
-    label: EPicks.Animal.toString(),
+    label: PicksLabel.Animal,
   },
   {
     isSelected: false,
-    label: EPicks.Art.toString(),
+    label: PicksLabel.Art,
   },
   {
     isSelected: false,
-    label: EPicks.Children.toString(),
+    label: PicksLabel.Children,
   },
   {
     isSelected: false,
-    label: EPicks.Civil.toString(),
+    label: PicksLabel.Civil.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Culture.toString(),
+    label: PicksLabel.Culture.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Disaster.toString(),
+    label: PicksLabel.Disaster.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Economic.toString(),
+    label: PicksLabel.Economic.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Education.toString(),
+    label: PicksLabel.Education.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Environment.toString(),
+    label: PicksLabel.Environment.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Health.toString(),
+    label: PicksLabel.Health.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Human.toString(),
+    label: PicksLabel.Human.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Politics.toString(),
+    label: PicksLabel.Politics.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Poverty.toString(),
+    label: PicksLabel.Poverty.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Science.toString(),
+    label: PicksLabel.Science.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Social.toString(),
+    label: PicksLabel.Social.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Technology.toString(),
+    label: PicksLabel.Technology.toString(),
   },
   {
     isSelected: false,
-    label: EPicks.Women.toString(),
+    label: PicksLabel.Women.toString(),
   },
 ];
 
