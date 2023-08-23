@@ -1,7 +1,9 @@
 import { Platform } from 'react-native';
 
 export const Defaults = {
-  MIN_NUM_PICKS: 8,
+  MIN_NUM_PICKS: 5,
+  MIN_NUM_PICKS_PER_PING: 1,
+  MAX_NUM_PICKS_PER_PING: 5,
   MIN_LEN_USERNAME: 6,
   MAX_LEN_USERNAME: 20,
 };

@@ -1,26 +1,16 @@
-import React, { useCallback, useState } from 'react';
-import { StyleSheet, View, FlatList, ListRenderItem } from 'react-native';
-import { Button, Text, withTheme } from 'react-native-paper';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Button, Divider, Text, withTheme } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 
-import { AuthStackParamList } from '../../../types/type';
-import { PICKS_DATA } from '@app/lib/index';
-import { PicksChip } from '@components/chips/index';
-import PicksSelectView, {
-  PicksSelectProps,
-} from '@components/picks-select-view';
+import { AuthStackParamList } from '@ts-types/type';
+import PicksSelectView from '@app/components/PicksSelectView';
+import { Defaults } from '@app/lib/constants/values';
+import { AppTheme } from '@app/theme';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetPicks'>;
 
-type Picks = {
-  label: string;
-  icon?: string;
-  isSelected: boolean;
-};
-
-interface Test extends PicksSelectProps {
-  icon?: string;
-}
+const { height, width } = Dimensions.get('window');
 
 const SetPicks = ({
   theme,
@@ -31,97 +21,129 @@ const SetPicks = ({
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
+  const selectedPicks = useRef<Array<string>>();
+  const [canContinue, setCanContinue] = useState<boolean>(false);
+
+  const username = route.params?.username;
   const styles = makeStyles(theme);
 
-  const [selectedPick, setPick] = useState('');
-
-  const onSelection = (index: number, label: string) => {
-    setPick(label);
-    console.log(PICKS_DATA[index]);
-    if (!PICKS_DATA[index].isSelected) {
-      PICKS_DATA[index].isSelected = true;
+  const getSelectedPicks = useCallback((_selectedPicks: Array<string>) => {
+    if (_selectedPicks.length < Defaults.MIN_NUM_PICKS) {
+      setCanContinue(false);
     } else {
-      PICKS_DATA[index].isSelected = false;
+      setCanContinue(true);
+      selectedPicks.current = _selectedPicks;
     }
-  };
+  }, []);
 
   const renderHeader = useCallback(() => {
     return (
       <>
-        <Text variant="headlineSmall" style={styles.headerTextStyle}>
-          Pick a minimum of 3 picks {selectedPick}
+        <Text variant="displaySmall" style={styles.headerGreeting}>
+          {`Hi, ${username}!`}
+        </Text>
+        <Text variant="displayLarge" style={styles.headerTitle}>
+          Your picks
+        </Text>
+        <Text variant="titleLarge" style={styles.headerSubtitle}>
+          Let us know what you would like to follow and engage on
         </Text>
       </>
     );
-  }, [selectedPick, styles]);
+  }, [styles, username]);
 
   const renderFooter = useCallback(() => {
     return (
       <>
-        <Button mode="contained">Continue</Button>
+        <Divider style={styles.divider} />
+        <View style={styles.helperContainer}>
+          <Text variant="titleMedium" style={styles.helperText}>
+            {'\u2022 You can press and hold to learn more about each picks.'}
+          </Text>
+          <Text variant="titleMedium" style={styles.helperText}>
+            {`\u2022 A minimum of ${Defaults.MIN_NUM_PICKS} picks to get the best result.`}
+          </Text>
+          <Text variant="titleMedium" style={styles.helperText}>
+            {'\u2022 You can select all the picks if you desire.'}
+          </Text>
+        </View>
+        <Button
+          mode="contained"
+          disabled={!canContinue}
+          uppercase
+          style={styles.continueButton}
+          contentStyle={styles.continueButtonContent}
+          labelStyle={styles.continueButtonLabel}
+          onPress={() => {
+            console.log(selectedPicks.current);
+          }}>
+          Continue
+        </Button>
       </>
     );
-  }, []);
-
-  const renderItem: ListRenderItem<Picks> = ({ item, index }) => (
-    <PicksChip
-      label={item.label}
-      onSelection={onSelection}
-      index={index}
-      icon={item.icon}
-      isSelected={item.isSelected}
-    />
-  );
-
-  let tests: Array<Test> = [
-    {
-      label: 'hello',
-      index: 0,
-      isSelected: false,
-      icon: '',
-    },
-  ];
+  }, [canContinue, styles]);
 
   return (
-    <View style={styles.chipContainer}>
-      <FlatList
-        data={PICKS_DATA}
-        keyExtractor={item => item.label}
-        renderItem={renderItem}
+    <View style={styles.container}>
+      <PicksSelectView
         numColumns={3}
+        columnWrapperStyle={styles.columnWrapper}
         ListHeaderComponent={renderHeader}
         ListFooterComponent={renderFooter}
-        extraData={PICKS_DATA}
-        contentContainerStyle={styles.listContentContainer}
-        ListHeaderComponentStyle={styles.listHeaderComponentStyle}
-        ListFooterComponentStyle={styles.listFooterComponentStyle}
+        contentContainerStyle={styles.contentContainer}
+        ListHeaderComponentStyle={styles.headerComponent}
+        ListFooterComponentStyle={styles.footerComponent}
+        chipStyle={styles.chip}
+        chipTextStyle={styles.chipText}
+        selectedPicks={getSelectedPicks}
       />
-      <PicksSelectView data={tests} />
     </View>
   );
 };
 
 export default withTheme(SetPicks);
 
-const makeStyles = (theme: any) =>
+const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
-    chipContainer: {
-      flex: 1,
-      marginHorizontal: 20,
+    container: { flex: 1 },
+    contentContainer: { flex: 1, paddingHorizontal: width * 0.05 },
+    headerComponent: {
+      marginBottom: height * 0.025,
+      gap: 10,
     },
-    listContentContainer: {
-      flex: 1,
+    headerTitle: { fontWeight: 'bold' },
+    headerGreeting: { fontWeight: '100' },
+    headerSubtitle: { color: theme.colors.onSurfaceDisabled },
+    footerComponent: { flex: 1 },
+    continueButton: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      marginVertical: 35,
+    },
+    divider: {
+      marginVertical: 25,
+    },
+    helperContainer: { gap: 10 },
+    helperText: {
+      color: theme.colors.onSurfaceDisabled,
+    },
+    continueButtonContent: {
+      height: height * 0.065,
+      padding: 0,
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
     },
-    listHeaderComponentStyle: {
-      width: '100%',
-      alignItems: 'flex-start',
-      marginVertical: 25,
+    continueButtonLabel: {
+      fontSize: 25,
+      padding: 15,
     },
-    headerTextStyle: {},
-    listFooterComponentStyle: {
-      width: '100%',
-      marginVertical: 25,
+    columnWrapper: { flexWrap: 'wrap' },
+    chip: {
+      paddingVertical: 10,
+      paddingHorizontal: 5,
+      margin: 10,
     },
+    chipText: { fontSize: 18, fontWeight: '600' },
   });

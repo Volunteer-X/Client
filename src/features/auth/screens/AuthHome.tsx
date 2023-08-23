@@ -1,6 +1,6 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
-import { Image, StyleSheet, View } from 'react-native';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { Button, Text } from 'react-native-paper';
 import { AUTH0_SCOPE } from '@env';
@@ -10,6 +10,8 @@ import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@theme/index';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
+
+const { height, width, fontScale } = Dimensions.get('window');
 
 const AuthHome = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,7 +56,7 @@ const AuthHome = ({
         Welcome to VolunteerX
       </Text>
       <Text variant="titleSmall" style={styles.subTitle}>
-        Connect
+        Connect to the world
       </Text>
       <Button
         mode="contained"
@@ -69,7 +71,6 @@ const AuthHome = ({
 
 export default AuthHome;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     page: {
@@ -79,7 +80,9 @@ const makeStyles = (theme: AppTheme) =>
       gap: 10,
     },
     title: { fontWeight: '800' },
-    subTitle: {},
+    subTitle: {
+      color: theme.colors.onSurfaceVariant,
+    },
     logo: {
       width: 250,
       height: 250,

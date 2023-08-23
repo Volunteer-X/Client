@@ -1,50 +1,49 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Chip, withTheme } from 'react-native-paper';
+import { StyleSheet, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import { Chip } from 'react-native-paper';
 
-export type PicksProps = {
-  index?: number;
-  label: string;
-  icon?: string;
-  isSelected?: boolean;
-  onSelection: Function;
+import useAppTheme from '@hooks/useAppTheme';
+import { AppTheme } from '@theme/index';
+import { Pick } from '@app/lib/constants/picks';
+
+export type ChipProps = {
+  datum: Pick;
+  index: number;
+  onSelection: (index: number) => void;
+  chipTextStyle?: StyleProp<TextStyle>;
+  chipStyle?: StyleProp<ViewStyle>;
 };
 
 const PicksChip = ({
-  theme,
   index,
-  label,
-  icon,
-  isSelected,
+  datum,
   onSelection,
-}: {
-  theme: any;
-  index: PicksProps['index'];
-  label: PicksProps['label'];
-  icon: PicksProps['icon'];
-  isSelected: PicksProps['isSelected'];
-  onSelection: PicksProps['onSelection'];
-}) => {
+  chipTextStyle,
+  chipStyle,
+}: ChipProps) => {
+  const { theme } = useAppTheme();
   const style = makeStyles(theme);
+
+  const { isSelected, label, icon } = datum;
+
   return (
     <>
       <Chip
-        textStyle={style.textStyle}
-        style={style.chipStyle}
+        textStyle={chipTextStyle ? chipTextStyle : style.textStyle}
+        style={chipStyle ? chipStyle : style.chipStyle}
+        icon={icon}
         mode={isSelected ? 'flat' : 'outlined'}
         selected={isSelected}
-        onPress={() => {
-          onSelection(index, label);
-        }}>
+        onPress={() => onSelection(index)}>
         {label}
       </Chip>
     </>
   );
 };
 
-export default withTheme(PicksChip);
+export default PicksChip;
 
-const makeStyles = theme =>
+const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     textStyle: {
       fontSize: 13,
