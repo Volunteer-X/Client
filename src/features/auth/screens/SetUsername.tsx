@@ -31,13 +31,13 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { InferType } from 'yup';
+import { useLazyQuery, useQuery } from '@apollo/client';
 
 import { AuthStackParamList } from '@ts-types/type';
 import { TextInput } from '@components/index';
 import { AppTheme } from '@theme/index';
 import { useYupResolver } from '@hooks/index';
 import { yupScheme } from '../helpers/yupSchema';
-import { useQuery } from '@apollo/client';
 import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.queries';
 import { Query } from '@app/__generated__/gql/graphql';
 
@@ -57,52 +57,82 @@ const SetUsername = ({
   const styles = makeStyles(theme);
 
   const [username, setUsername] = useState('');
+  const { possibleUsername } = route.params;
 
-  const {
+  /*   const {
     data: queryData,
     loading,
     error: queryError,
+    refetch: queryRefetch,
   } = useQuery<Query>(CHECK_USERNAME_AVAILABILITY, {
-    variables: { username },
-    skip: !username,
-  });
+    variables: { username: possibleUsername },
+  }); */
 
+  const [GetUsernameAvailability, query] = useLazyQuery<Query>(
+    CHECK_USERNAME_AVAILABILITY,
+    {
+      variables: { username: possibleUsername },
+    },
+  );
+
+  /*  yup Validation && useForm hook */
   const resolver = useYupResolver<FormValues>(yupScheme);
+  const { control, trigger, formState, setError, ...methods } =
+    useForm<FormValues>({
+      resolver,
+    });
 
-  const { control, trigger, formState, ...methods } = useForm<FormValues>({
-    resolver,
-  });
-
-  const { possibleUsername } = route.params;
-
-  // useWatch to watch changes in the text field.
+  /* useWatch to watch changes in the text field. */
   const _username = useWatch({
     control,
     name: 'username',
     defaultValue: possibleUsername ?? '',
   });
 
-  //Tiggers revalidation based on the useWatch Hook
+  /* Tiggers revalidation based on the useWatch Hook */
   const triggerRevalidation = useCallback(async () => {
     return await trigger('username', { shouldFocus: true });
   }, [trigger]);
 
   // UseEffect to run tiggerRevalidation everytime watch value changes.
   useEffect(() => {
-    triggerRevalidation().then(result => console.log(result));
-  }, [_username, triggerRevalidation]);
+    triggerRevalidation().then(result => {
+      if (result) {
+        console.log(
+          '🚀 ~ file: SetUsername.tsx:99 ~ triggerRevalidation ~ result:',
+          result,
+          _username,
+        );
+        GetUsernameAvailability({ variables: { username: _username } });
+      }
+    });
+  }, [GetUsernameAvailability, _username, triggerRevalidation]);
+
+  useEffect(() => {
+    if (formState.isValid) {
+      if (query && query.data?.isUsernameAvailable !== undefined) {
+        if (!query.data?.isUsernameAvailable) {
+          setError('username', {
+            type: 'manual',
+            message: 'Username already exists',
+          });
+        }
+      }
+    }
+  }, [formState, setError, query]);
 
   const onSubmit: SubmitHandler<FormValues> = formData => {
-    console.log('🚀 ~ file: SetUsername.tsx:60 ~ data:', formData);
-
     setUsername(formData.username);
-    // navigation.navigate('SetPicks', { username: username });
+
+    navigation.navigate('SetPicks', { username: formData.username });
   };
 
+  // Todo handle onSubmition errors
   const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
     console.log('🚀 ~ file: SetUsername.tsx:65 ~ errors:', errors);
   };
 
+  // ! possible error of suggested username being an exisitng username
   const subtitleText = possibleUsername ? (
     <View style={styles.possibleUsernameContainer}>
       <Text variant="titleMedium" style={styles.possibleUsername}>
@@ -133,15 +163,20 @@ const SetUsername = ({
           defaultValue={possibleUsername}
           mode="outlined"
           left={<RNTextInput.Icon icon="account-circle" />}
+          // right={
+          //   queryData && queryData.isUsernameAvailable ? (
+          //     <RNTextInput.Icon icon="check-all" />
+          //   ) : (
+          //     methods.getValues().username !== '' && (
+          //       <RNTextInput.Icon
+          //         icon={formState.isValid ? 'check' : 'close'}
+          //       />
+          //     )
+          //   )
+          // }
           right={
-            queryData && queryData.isUsernameAvailable ? (
-              <RNTextInput.Icon icon="check-all" />
-            ) : (
-              methods.getValues().username !== '' && (
-                <RNTextInput.Icon
-                  icon={formState.isValid ? 'check' : 'close'}
-                />
-              )
+            methods.getValues().username !== '' && (
+              <RNTextInput.Icon icon={formState.isValid ? 'check' : 'close'} />
             )
           }
           rules={{ required: true }}
@@ -154,7 +189,7 @@ const SetUsername = ({
         style={styles.buttonStyle}
         onPress={methods.handleSubmit(onSubmit, onError)}
         disabled={!formState.isValid}
-        loading={loading}>
+        loading={query.loading}>
         Continue
       </Button>
     </View>

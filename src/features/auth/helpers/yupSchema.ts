@@ -17,5 +17,6 @@ export const yupScheme = object({
       excludeEmptyString: true,
       message: 'You can use letters, numbers, underscore & periods.',
     })
+
     .required('Username is required'),
 }).required();
