@@ -20,6 +20,7 @@ import {
   Text,
   withTheme,
   TextInput as RNTextInput,
+  Snackbar,
 } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -36,6 +37,9 @@ import { TextInput } from '@components/index';
 import { AppTheme } from '@theme/index';
 import { useYupResolver } from '@hooks/index';
 import { yupScheme } from '../helpers/yupSchema';
+import { useQuery } from '@apollo/client';
+import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.queries';
+import { Query } from '@app/__generated__/gql/graphql';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;
 
@@ -51,14 +55,27 @@ const SetUsername = ({
   navigation: Props['navigation'];
 }) => {
   const styles = makeStyles(theme);
+
+  const [username, setUsername] = useState('');
+
+  const {
+    data: queryData,
+    loading,
+    error: queryError,
+  } = useQuery<Query>(CHECK_USERNAME_AVAILABILITY, {
+    variables: { username },
+    skip: !username,
+  });
+
   const resolver = useYupResolver<FormValues>(yupScheme);
+
   const { control, trigger, formState, ...methods } = useForm<FormValues>({
-    // resolver: yupResolver(scheme),
     resolver,
   });
-  const [username, setUsername] = useState('');
+
   const { possibleUsername } = route.params;
 
+  // useWatch to watch changes in the text field.
   const _username = useWatch({
     control,
     name: 'username',
@@ -69,15 +86,16 @@ const SetUsername = ({
   const triggerRevalidation = useCallback(async () => {
     return await trigger('username', { shouldFocus: true });
   }, [trigger]);
+
   // UseEffect to run tiggerRevalidation everytime watch value changes.
   useEffect(() => {
     triggerRevalidation().then(result => console.log(result));
   }, [_username, triggerRevalidation]);
 
-  const onSubmit: SubmitHandler<FormValues> = data => {
-    console.log('🚀 ~ file: SetUsername.tsx:60 ~ data:', data);
+  const onSubmit: SubmitHandler<FormValues> = formData => {
+    console.log('🚀 ~ file: SetUsername.tsx:60 ~ data:', formData);
 
-    setUsername(data.username);
+    setUsername(formData.username);
     // navigation.navigate('SetPicks', { username: username });
   };
 
@@ -116,10 +134,14 @@ const SetUsername = ({
           mode="outlined"
           left={<RNTextInput.Icon icon="account-circle" />}
           right={
-            methods.getValues().username !== '' ? (
-              <RNTextInput.Icon icon={formState.isValid ? 'check' : 'close'} />
+            queryData && queryData.isUsernameAvailable ? (
+              <RNTextInput.Icon icon="check-all" />
             ) : (
-              ''
+              methods.getValues().username !== '' && (
+                <RNTextInput.Icon
+                  icon={formState.isValid ? 'check' : 'close'}
+                />
+              )
             )
           }
           rules={{ required: true }}
@@ -131,7 +153,8 @@ const SetUsername = ({
         mode="contained"
         style={styles.buttonStyle}
         onPress={methods.handleSubmit(onSubmit, onError)}
-        disabled={!formState.isValid}>
+        disabled={!formState.isValid}
+        loading={loading}>
         Continue
       </Button>
     </View>

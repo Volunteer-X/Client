@@ -7,4 +7,5 @@ declare module '@env' {
   export const DEV_PORT: string;
   export const DEV_WS_PATH: string;
   export const DEV_HTTP_PATH: string;
+  export const DEV_SCHEME: string;
 }

@@ -9,6 +9,7 @@ import AuthNavigation from './auth-navigation';
 // import { SplashScreen } from '../features/auth';
 import HomeDrawer from './drawer/home-drawer';
 import { useAppSelector } from '../hooks';
+import { DEV_HTTP_URI } from '@env';
 
 const MainNavigation = () => {
   const { user, isLoading } = useAuth0();

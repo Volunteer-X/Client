@@ -1,5 +1,6 @@
 import { createHttpLink } from '@apollo/client';
 import { ErrorResponse, onError } from '@apollo/client/link/error';
+import { DEV_HOST, DEV_HTTP_PATH, DEV_PORT, DEV_SCHEME } from '@env';
 
 export const errorLink = onError(
   ({ graphQLErrors, networkError }: ErrorResponse) => {
@@ -18,5 +19,5 @@ export const errorLink = onError(
 );
 
 export const httpLink = createHttpLink({
-  uri: 'http://localhost:4000/',
+  uri: `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
 });
