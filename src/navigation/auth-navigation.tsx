@@ -5,6 +5,7 @@ import { AuthStackParamList } from '../types/type';
 import { withTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
 import { AppTheme } from '../theme';
+import LoadingScreen from '@app/features/auth/screens/LoadingScreen';
 
 const AuthNavigation = ({ theme }: { theme: AppTheme }) => {
   const Stack = createStackNavigator<AuthStackParamList>();
@@ -37,6 +38,16 @@ const AuthNavigation = ({ theme }: { theme: AppTheme }) => {
             headerTitle: '',
             headerStatusBarHeight: headerHeight,
             headerStyle: styles.headerStyle,
+          }}
+        />
+        <Stack.Screen
+          name="LoadingScreen"
+          component={LoadingScreen}
+          options={{
+            headerShown: false,
+            // headerTitle: '',
+            // headerStatusBarHeight: headerHeight,
+            // headerStyle: styles.headerStyle,
           }}
         />
       </Stack.Navigator>

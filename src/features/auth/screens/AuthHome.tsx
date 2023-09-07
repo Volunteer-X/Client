@@ -49,7 +49,7 @@ const AuthHome = ({
   return (
     <View style={styles.page}>
       <Image
-        source={require('../../../assets/logo-v1.png')}
+        source={require('@assets/images/logo-v1.png')}
         style={styles.logo}
       />
       <Text variant="titleLarge" style={styles.title}>

@@ -36,16 +36,24 @@ const SetPicks = ({
     }
   }, []);
 
+  const handleOnSubmition = () => {
+    console.log(selectedPicks.current);
+    navigation.navigate('LoadingScreen', {
+      username,
+      picks: selectedPicks.current,
+    });
+  };
+
   const renderHeader = useCallback(() => {
     return (
       <>
-        <Text variant="displaySmall" style={styles.headerGreeting}>
+        <Text variant="titleMedium" style={styles.headerGreeting}>
           {`Hi, ${username}!`}
         </Text>
-        <Text variant="displayLarge" style={styles.headerTitle}>
+        <Text variant="displayMedium" style={styles.headerTitle}>
           Your picks
         </Text>
-        <Text variant="titleLarge" style={styles.headerSubtitle}>
+        <Text variant="titleMedium" style={styles.headerSubtitle}>
           Let us know what you would like to follow and engage on
         </Text>
       </>
@@ -57,13 +65,13 @@ const SetPicks = ({
       <>
         <Divider style={styles.divider} />
         <View style={styles.helperContainer}>
-          <Text variant="titleMedium" style={styles.helperText}>
+          <Text variant="bodySmall" style={styles.helperText}>
             {'\u2022 You can press and hold to learn more about each picks.'}
           </Text>
-          <Text variant="titleMedium" style={styles.helperText}>
+          <Text variant="bodySmall" style={styles.helperText}>
             {`\u2022 A minimum of ${Defaults.MIN_NUM_PICKS} picks to get the best result.`}
           </Text>
-          <Text variant="titleMedium" style={styles.helperText}>
+          <Text variant="bodySmall" style={styles.helperText}>
             {'\u2022 You can select all the picks if you desire.'}
           </Text>
         </View>
@@ -74,9 +82,7 @@ const SetPicks = ({
           style={styles.continueButton}
           contentStyle={styles.continueButtonContent}
           labelStyle={styles.continueButtonLabel}
-          onPress={() => {
-            console.log(selectedPicks.current);
-          }}>
+          onPress={handleOnSubmition}>
           Continue
         </Button>
       </>
@@ -106,7 +112,10 @@ export default withTheme(SetPicks);
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     container: { flex: 1 },
-    contentContainer: { flex: 1, paddingHorizontal: width * 0.05 },
+    contentContainer: {
+      flex: 1,
+      paddingHorizontal: width * 0.05,
+    },
     headerComponent: {
       marginBottom: height * 0.025,
       gap: 10,
@@ -136,14 +145,14 @@ const makeStyles = (theme: AppTheme) =>
       justifyContent: 'center',
     },
     continueButtonLabel: {
-      fontSize: 25,
-      padding: 15,
+      fontSize: 18,
+      padding: 0,
     },
     columnWrapper: { flexWrap: 'wrap' },
     chip: {
-      paddingVertical: 10,
-      paddingHorizontal: 5,
-      margin: 10,
+      paddingVertical: 3,
+      paddingHorizontal: 1.5,
+      margin: 3,
     },
-    chipText: { fontSize: 18, fontWeight: '600' },
+    chipText: { fontSize: 14, fontWeight: '600' },
   });

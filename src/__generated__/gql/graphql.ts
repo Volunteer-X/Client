@@ -23,6 +23,7 @@ export type CreateUserInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   middleName?: InputMaybe<Scalars['String']['input']>;
+  picture?: InputMaybe<Scalars['String']['input']>;
   role: Role;
   username: Scalars['String']['input'];
 };
@@ -95,6 +96,7 @@ export type User = {
   email: Scalars['String']['output'];
   id: Scalars['ObjectID']['output'];
   name?: Maybe<Name>;
+  picture?: Maybe<Scalars['String']['output']>;
   role: Role;
   updatedAt?: Maybe<Scalars['DateTime']['output']>;
   username: Scalars['String']['output'];

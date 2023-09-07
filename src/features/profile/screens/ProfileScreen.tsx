@@ -86,7 +86,7 @@ const ProfileScreen = () => {
         <Avatar
           rounded
           size={'large'}
-          source={require('../../../assets/placeholder.jpg')}
+          source={require('@assets/images/placeholder.jpg')}
         />
         <Text variant="titleLarge">Amil Muhammed Hamza</Text>
         <Text variant="bodySmall">@docren155</Text>

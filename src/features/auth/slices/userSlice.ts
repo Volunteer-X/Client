@@ -1,10 +1,14 @@
+import { Role } from '@app/lib/constants/enums';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 export interface User {
   isInitialCompleted: boolean;
   username?: string;
   email?: string;
-  name?: string;
+  firstName?: string;
+  lastName?: string;
+  role?: Role;
+  picture?: string;
 }
 
 const initialState: User = {
@@ -19,9 +23,12 @@ export const userSlice = createSlice({
       state.isInitialCompleted = action.payload.isInitialCompleted;
     },
     setUser: (state, action: PayloadAction<User>) => {
-      state.username = action.payload.username;
-      state.name = action.payload.name;
-      state.email = action.payload.email;
+      // state.username = action.payload.username;
+      // state.firstName = action.payload.firstName;
+      // state.lastName = action.payload.lastName;
+      // state.email = action.payload.email;
+
+      state = action.payload;
     },
   },
 });

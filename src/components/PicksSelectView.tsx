@@ -26,6 +26,9 @@ type Props = {
 
 type EnhancedProps = Modify<FlatListProps<Pick>, RemovedProps, Props>;
 
+/*
+ * TODO: Long press display information setting
+ */
 const PicksSelectView = ({
   selectedPicks,
   chipStyle,
