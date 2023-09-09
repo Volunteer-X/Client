@@ -13,9 +13,12 @@ import { AuthStackParamList } from '@app/types/type';
 import { useAuth0 } from 'react-native-auth0';
 import { useMutation } from '@apollo/client';
 import { CREATE_USER } from '../graphql/auth.mutation';
-import { Role } from '@app/lib/constants/enums';
+// import { Role } from '@app/lib/constants/enums';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { setUser } from '../slices/userSlice';
+import { setUser, User } from '../slices/userSlice';
+import { Role } from '@app/__generated__/gql/graphql';
+import { setUserPicks } from '@app/features/picks/slices/picksSlice';
+import { setRegistrationState } from '../slices/registrationCheckSlice';
 
 type Props = StackScreenProps<AuthStackParamList, 'LoadingScreen'>;
 
@@ -26,8 +29,7 @@ const LoadingScreen = (props: Props) => {
   const styles = makeStyles(theme);
 
   // * Redux Hooks
-  const _user = useAppSelector(state => state.user);
-  const _picks = useAppSelector(state => state.picks);
+  const picksState = useAppSelector(state => state.picks);
 
   const dispatch = useAppDispatch();
 
@@ -40,7 +42,7 @@ const LoadingScreen = (props: Props) => {
   const { username, picks } = props.route.params;
 
   // * userProfile from auth0
-  const user = useMemo(() => {
+  const auth0UserData = useMemo(() => {
     return auth0.user;
   }, [auth0]);
 
@@ -56,19 +58,19 @@ const LoadingScreen = (props: Props) => {
       variables: {
         createUserInput: {
           username,
-          email: user?.email ? user.email : '',
-          firstName: user?.given_name ? user.given_name : '',
-          lastName: user?.family_name ? user.family_name : '',
-          middleName: user?.middle_name,
-          role: Role.USER,
-          picture: user?.picture,
-          picks: picks ? picks : [],
+          email: auth0UserData?.email ? auth0UserData.email : '',
+          firstName: auth0UserData?.given_name ? auth0UserData.given_name : '',
+          lastName: auth0UserData?.family_name ? auth0UserData.family_name : '',
+          middleName: auth0UserData?.middle_name,
+          role: Role.User,
+          picture: auth0UserData?.picture,
+          picks: picks,
         },
       },
     });
 
     // console.log(user);
-  }, [createUser, picks, user, username]);
+  }, [createUser, picks, auth0UserData, username]);
 
   // ! dev only
   if (error) {
@@ -76,11 +78,29 @@ const LoadingScreen = (props: Props) => {
   }
 
   if (!loading && data) {
-    dispatch(setUser(data.user));
+    const user: User = {
+      id: data.createUser.id,
+      username: data.createUser.username,
+      email: data.createUser.email,
+      firstName: data.createUser.name?.firstName,
+      lastName: data.createUser.name?.lastName,
+      role: data.createUser.role,
+      picture: data.createUser.picture,
+    };
+
     console.log(
-      '🚀 ~ file: LoadingScreen.tsx:72 ~ LoadingScreen ~ data:',
-      data,
+      '🚀 ~ file: LoadingScreen.tsx:89 ~ LoadingScreen ~ isRegistered:',
+      data.createUser.isRegistered,
     );
+
+    dispatch(
+      setRegistrationState({ isRegistered: data.createUser.isRegistered }),
+    );
+
+    dispatch(setUserPicks(picks));
+
+    dispatch(setUser(user));
+    //
   }
 
   return (
@@ -108,16 +128,16 @@ const LoadingScreen = (props: Props) => {
           ]}
         />
         {loading ? (
-          <Text variant="titleLarge" style={styles.message}>
+          <Text variant="titleMedium" style={styles.message}>
             Getting your profile ready...
           </Text>
         ) : (
-          <Text variant="titleLarge" style={styles.message}>
-            Adding final touch up
+          <Text variant="titleMedium" style={styles.message}>
+            Adding final touch up...
           </Text>
         )}
         {error && (
-          <Text variant="titleLarge" style={styles.message}>
+          <Text variant="titleMedium" style={[styles.error, styles.message]}>
             Oops something wrong happened!!
           </Text>
         )}
@@ -154,5 +174,8 @@ const makeStyles = (theme: AppTheme) =>
     },
     message: {
       textAlign: 'center',
+    },
+    error: {
+      color: theme.colors.onErrorContainer,
     },
   });

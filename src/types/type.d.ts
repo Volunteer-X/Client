@@ -10,7 +10,7 @@ export type AuthStackParamList = {
   AuthHome: undefined;
   SetUsername: { possibleUsername?: string };
   SetPicks: { username: string };
-  LoadingScreen: { username: string; picks: Array<string> | undefined };
+  LoadingScreen: { username: string; picks: Array<string> };
 };
 
 export type MainNavList = {

@@ -1,38 +1,40 @@
-import { Role } from '@app/lib/constants/enums';
+import { Role } from '@app/__generated__/gql/graphql';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { cloneDeep } from 'lodash';
 
 export interface User {
-  isInitialCompleted: boolean;
+  id: string;
   username?: string;
   email?: string;
   firstName?: string;
   lastName?: string;
   role?: Role;
-  picture?: string;
+  picture?: string | null;
 }
 
 const initialState: User = {
-  isInitialCompleted: false,
+  id: '',
 };
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setCompletedState: (state, action: PayloadAction<User>) => {
-      state.isInitialCompleted = action.payload.isInitialCompleted;
-    },
     setUser: (state, action: PayloadAction<User>) => {
       // state.username = action.payload.username;
       // state.firstName = action.payload.firstName;
       // state.lastName = action.payload.lastName;
       // state.email = action.payload.email;
+      // state.picture = action.payload.picture;
+      // state.role = action.payload.role;
+      // state.id = action.payload.id;
 
-      state = action.payload;
+      state = cloneDeep(action.payload);
+      console.log('🚀 ~ file: userSlice.ts:34 ~ state:', state);
     },
   },
 });
 
-export const { setCompletedState, setUser } = userSlice.actions;
+export const { setUser } = userSlice.actions;
 
 export default userSlice.reducer;

@@ -21,7 +21,7 @@ const SetPicks = ({
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
-  const selectedPicks = useRef<Array<string>>();
+  const selectedPicks = useRef<Array<string>>([]);
   const [canContinue, setCanContinue] = useState<boolean>(false);
 
   const username = route.params?.username;

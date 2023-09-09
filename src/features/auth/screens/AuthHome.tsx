@@ -33,13 +33,13 @@ const AuthHome = ({
       await authorize({ scope: AUTH0_SCOPE });
 
       // check auth unsuccessful
-      if (user === null || user === undefined) {
-        throw error;
-      } else {
+      if (user || user !== null) {
         navigation.navigate('SetUsername', {
           possibleUsername:
             user?.nickname || user?.preferred_username || undefined,
         });
+      } else {
+        throw error;
       }
     } catch (err) {
       console.log('🚀 ~ file: AuthHome.tsx:43 ~ onLogin ~ err:', err);
