@@ -87,7 +87,7 @@ const SetPicks = ({
         </Button>
       </>
     );
-  }, [canContinue, styles]);
+  }, [canContinue, handleOnSubmition, styles]);
 
   return (
     <View style={styles.container}>

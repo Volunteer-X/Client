@@ -1,8 +1,17 @@
 import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  BottomTabHeaderProps,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Avatar } from 'react-native-paper';
-import { Pressable } from 'react-native';
+import {
+  Avatar,
+  Button,
+  IconButton,
+  MD3Colors,
+  Text,
+} from 'react-native-paper';
+import { Pressable, StyleSheet, View } from 'react-native';
 
 import { PageNames } from '../lib';
 import {
@@ -12,6 +21,8 @@ import {
   SearchScreen,
 } from '@features/index';
 import PingNavigation from './ping-navigation';
+import useAppTheme from '@hooks/useAppTheme';
+import { AppTheme } from '@app/theme';
 
 function tabBarIcon({
   color,
@@ -66,7 +77,66 @@ function homeHeaderLeft(props: {
   );
 }
 
+/*
+* Ping Header
+! Alert on going back, and animation
+*/
+function PingHeaderLeft(props: {
+  tintColor?: string | undefined;
+  pressColor?: string | undefined;
+  pressOpacity?: number | undefined;
+  labelVisible?: boolean | undefined;
+  navigation: any;
+}) {
+  return (
+    <IconButton
+      icon="close"
+      size={25}
+      {...props}
+      onPress={() => {
+        props.navigation.goBack();
+      }}
+    />
+  );
+}
+
+/*
+ * Ping Header Right
+ ! May need to move to another file as a seperate  component to handle ping server actions
+ */
+function PingHeaderRight(props: {
+  tintColor?: string | undefined;
+  pressColor?: string | undefined;
+  pressOpacity?: number | undefined;
+  labelVisible?: boolean | undefined;
+  navigation: any;
+}) {
+  const { theme } = useAppTheme();
+
+  return (
+    <Button
+      icon="chevron-right"
+      {...props}
+      mode="contained"
+      uppercase
+      labelStyle={{
+        fontSize: theme.fonts.bodyMedium.fontSize,
+        letterSpacing: 1.1,
+      }}
+      contentStyle={{
+        flexDirection: 'row-reverse',
+      }}
+      style={{ justifyContent: 'center', marginEnd: 10 }}>
+      Ping
+    </Button>
+  );
+}
+
 const BottomTabNavigation = () => {
+  const { theme } = useAppTheme();
+
+  const styles = makeStyles(theme);
+
   const Tab = createBottomTabNavigator();
 
   return (
@@ -74,6 +144,7 @@ const BottomTabNavigation = () => {
       initialRouteName={PageNames.Home}
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
+        tabBarHideOnKeyboard: true,
         tabBarIcon: ({ color, focused, size }) =>
           tabBarIcon({ color, focused, size, route }),
       })}>
@@ -92,7 +163,14 @@ const BottomTabNavigation = () => {
       <Tab.Screen
         name={PageNames.CreatePing}
         component={PingNavigation}
-        options={{ headerShown: false }}
+        options={({ route, navigation }) => ({
+          headerShown: true,
+          tabBarStyle: { display: 'none' },
+          headerStyle: styles.headerStyle,
+          headerTitle: 'Create a ping',
+          headerLeft: props => PingHeaderLeft({ ...props, navigation }),
+          headerRight: props => PingHeaderRight({ ...props, navigation }),
+        })}
       />
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />
       <Tab.Screen name={PageNames.Activity} component={ActivityScreen} />
@@ -101,3 +179,11 @@ const BottomTabNavigation = () => {
 };
 
 export default BottomTabNavigation;
+
+const makeStyles = (theme: AppTheme) =>
+  StyleSheet.create({
+    headerStyle: {
+      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
+      elevation: 0,
+    },
+  });
