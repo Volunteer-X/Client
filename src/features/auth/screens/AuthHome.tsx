@@ -1,11 +1,11 @@
-import { StackScreenProps } from '@react-navigation/stack';
 import React, { useCallback } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
 import { useAuth0 } from 'react-native-auth0';
 import { Button, Text } from 'react-native-paper';
 import { AUTH0_SCOPE } from '@env';
 
-import { AuthStackParamList } from '../../../types/type';
+import { AuthStackParamList } from '@ts-types/type';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@theme/index';
 

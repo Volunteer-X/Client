@@ -22,6 +22,9 @@ import apolloClient from '@services/apolloClient';
 // import { MainNavigation } from './src/navigation';
 import { MainNavigation } from '@navigation/index';
 
+/* 
+TODO develop authProvider for persist store and authentication check
+*/
 const App = () => {
   const { themePreference, theme } = useAppTheme();
 

@@ -1,53 +1,132 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Text, withTheme, Button } from 'react-native-paper';
-import { PingProps } from '../../../types/type';
+import {
+  Text,
+  withTheme,
+  IconButton,
+  Chip,
+  Divider,
+  TextInput,
+} from 'react-native-paper';
+import { PingANavProp } from '@ts-types/type';
+import { AppTheme } from '@app/theme';
+import useAppTheme from '@hooks/useAppTheme';
+import { PicksLabel } from '@app/lib';
 
-const PingA = ({ theme }: { theme: any }) => {
+const { height, width } = Dimensions.get('window');
+
+const PingA = () => {
+  const { theme } = useAppTheme();
   const styles = makeStyles(theme);
-  const navigation = useNavigation<PingProps>();
+  const navigation = useNavigation<PingANavProp>();
+
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row' }}>
-        <Text variant="labelSmall" style={{ color: theme.colors.primary }}>
-          1
+      {/* Header */}
+      <View style={styles.header}>
+        <Text variant="titleLarge" style={styles.headerTitle}>
+          Create a ping
         </Text>
-        <Text
-          variant="labelSmall"
-          style={{ color: theme.colors.onSurfaceVariant }}>
-          /2
-        </Text>
+        <IconButton icon="chevron-right" size={36} />
       </View>
-      <Text variant="headlineLarge">Create your Ping!</Text>
-      <Text>Captions</Text>
-      <Button
-        onPress={() => {
-          navigation.navigate('PingStepB');
-        }}>
-        Next step
-      </Button>
+      {/* Picks */}
+      <View style={[styles.subContainer, styles.picksContainer]}>
+        <Text variant="titleLarge" style={styles.pickTitle}>
+          Picks
+        </Text>
+        <View style={styles.picksHorizontalContainer}>
+          <Chip icon="home" style={styles.chip} mode="outlined">
+            {PicksLabel.Technology}
+          </Chip>
+          <Chip icon="home" style={styles.chip} mode="outlined">
+            {PicksLabel.Art}
+          </Chip>
+          <Chip icon="home" style={styles.chip} mode="outlined">
+            {PicksLabel.Children}
+          </Chip>
+          <Chip icon="home" style={styles.chip} mode="outlined">
+            {PicksLabel.Disaster}
+          </Chip>
+          <Chip
+            icon="home"
+            style={styles.chip}
+            mode="outlined"
+            selected
+            showSelectedOverlay
+            compact>
+            {PicksLabel.Environment}
+          </Chip>
+        </View>
+      </View>
+      <View style={[styles.subContainer]}>
+        <TextInput
+          theme={{ colors: { primary: 'blue' } }}
+          placeholder="An interesting title"
+          underlineStyle={styles.textInput}
+          contentStyle={styles.textInputContent}
+        />
+        <TextInput
+          multiline
+          placeholder="What's happening?"
+          style={[styles.textInput, styles.textArea]}
+        />
+      </View>
     </View>
   );
 };
 
 export default withTheme(PingA);
 
-const makeStyles = (theme: any) =>
+const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     container: {
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      paddingVertical: 30,
-      paddingHorizontal: 20,
-      marginHorizontal: 25,
-      marginVertical: 50,
-      borderRadius: 25,
+      flex: 1,
+      paddingHorizontal: 15,
+      paddingTop: 10,
       gap: 10,
-      // changeable
-      backgroundColor: theme.colors.background,
+      // ! Change
+      backgroundColor: theme.colors.surface,
+    },
+    subContainer: {
+      padding: 10,
+      borderRadius: 10,
+
+      // ! Change
+      backgroundColor: theme.colors.surfaceDisabled,
+    },
+    header: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+    },
+    headerTitle: {
+      fontWeight: 'bold',
+      letterSpacing: 2.5,
+    },
+    pickTitle: {
+      fontWeight: '600',
+      letterSpacing: 1.1,
+    },
+    picksContainer: {
+      gap: 10,
+    },
+    picksHorizontalContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+    },
+    chip: {
+      paddingHorizontal: 2.5,
+      paddingVertical: 5,
+      marginRight: 7.5,
+      marginVertical: 5,
+    },
+    textInput: {},
+    textArea: {
+      minHeight: height / 5,
+    },
+    textInputContent: {
+      // backgroundColor: '#EEE',
+      borderColor: '#432',
     },
   });

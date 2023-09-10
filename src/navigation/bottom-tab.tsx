@@ -7,11 +7,11 @@ import { Pressable } from 'react-native';
 import { PageNames } from '../lib';
 import {
   ActivityScreen,
-  AddScreen,
   HomeScreen,
   MapScreen,
   SearchScreen,
-} from '../features';
+} from '@features/index';
+import PingNavigation from './ping-navigation';
 
 function tabBarIcon({
   color,
@@ -32,7 +32,7 @@ function tabBarIcon({
     case 'Map':
       iconName = focused ? 'location' : 'location-outline';
       break;
-    case 'Add':
+    case 'Create ping':
       iconName = focused ? 'flame' : 'flame-outline';
       break;
     case 'Search':
@@ -90,8 +90,8 @@ const BottomTabNavigation = () => {
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name={PageNames.Add}
-        component={AddScreen}
+        name={PageNames.CreatePing}
+        component={PingNavigation}
         options={{ headerShown: false }}
       />
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />

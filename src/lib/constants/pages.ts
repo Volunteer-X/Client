@@ -4,7 +4,7 @@ export const PageNames = {
   Profile: 'Profile',
   Home: 'Home',
   Map: 'Map',
-  Add: 'Add',
+  CreatePing: 'Create ping',
   Search: 'Search',
   Activity: 'Activity',
   UserFeeds: 'UserFeeds',

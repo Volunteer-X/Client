@@ -1,13 +1,11 @@
-import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { AuthHome, SetPicks, SetUsername } from '../features/auth';
-import { AuthStackParamList } from '../types/type';
-import { withTheme } from 'react-native-paper';
 import { StyleSheet } from 'react-native';
-import { AppTheme } from '../theme';
-import LoadingScreen from '@app/features/auth/screens/LoadingScreen';
-import { useAuth0 } from 'react-native-auth0';
-import { useAppSelector } from '@app/hooks';
+import { createStackNavigator } from '@react-navigation/stack';
+import { withTheme } from 'react-native-paper';
+
+import { AppTheme } from '@theme/index';
+import { AuthStackParamList } from '@ts-types/type';
+import { AuthHome, SetPicks, SetUsername, LoadingScreen } from '@features/auth';
 
 const AuthNavigation = ({ theme }: { theme: AppTheme }) => {
   const Stack = createStackNavigator<AuthStackParamList>();

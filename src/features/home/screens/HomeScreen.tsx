@@ -9,9 +9,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text style={{ color: '#000' }}>Home Screen</Text>
-      <Button onPress={() => Linking.openURL('https://www.google.com/')}>
-        Drawer
-      </Button>
+      <Button onPress={() => {}}>Drawer</Button>
     </View>
   );
 };

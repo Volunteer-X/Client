@@ -1,11 +1,15 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { createStackNavigator } from '@react-navigation/stack';
-import { MapOverlay } from '../../../components';
-import { PingStackParamList } from '../../../types/type';
-import { PingA, PingB } from '.';
+import { Platform, StyleSheet } from 'react-native';
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack';
 
-const AddScreen = () => {
+import { MapOverlay } from '@components/index';
+import { PingStackParamList } from '@ts-types/type';
+import { PingA, PingB } from '@features/ping/screens/index';
+
+const PingNavigation = () => {
   const Stack = createStackNavigator<PingStackParamList>();
 
   return (
@@ -21,7 +25,7 @@ const AddScreen = () => {
           component={PingA}
           options={{
             presentation: 'transparentModal',
-            cardOverlayEnabled: true,
+            cardOverlayEnabled: false,
             cardOverlay: MapOverlay,
           }}
         />
@@ -38,7 +42,7 @@ const AddScreen = () => {
   );
 };
 
-export default AddScreen;
+export default PingNavigation;
 
 const styles = StyleSheet.create({
   page: {
