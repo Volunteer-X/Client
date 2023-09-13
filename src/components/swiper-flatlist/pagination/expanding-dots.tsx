@@ -13,7 +13,7 @@ import Animated, {
 
 import { DotProps } from './pagination-props';
 
-const ExpandingDots = ({
+export const ExpandingDots = ({
   scrollX,
   size,
   dotContainerStyle = {},
@@ -72,8 +72,6 @@ const ExpandingDots = ({
     </View>
   );
 };
-
-export default ExpandingDots;
 
 const style = StyleSheet.create({
   container: {

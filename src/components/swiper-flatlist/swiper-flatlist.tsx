@@ -14,21 +14,19 @@ import {
   FlatList as RNFlatlist,
   FlatListProps,
   useWindowDimensions,
-  Dimensions,
 } from 'react-native';
-import {
-  ScrollToIndex,
-  SwiperFlatlistProps,
-  SwiperFlatlistRefProps,
-} from './swiper-flatlist.props';
 
-import { FlatList as RNGHFlatList } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated';
-import ExpandingDots from './pagination/expanding-dots';
-import { Pagination } from './pagination/pagination';
+
+import {
+  SwiperFlatlistProps,
+  SwiperFlatlistRefProps,
+} from './swiper-flatlist.props';
+
+import { Pagination, ExpandingDots } from './pagination';
 
 type T = any;
 const FIRST_INDEX = 0;
@@ -42,7 +40,6 @@ const SwiperFlatlist = React.forwardRef(
       renderItem,
       renderAll = false,
       index = I18nManager.isRTL ? data.length - 1 : FIRST_INDEX,
-      useRNGestureHandler = false,
       // * Pagination
       showPagination = false,
       paginationStyle,
@@ -83,7 +80,6 @@ const SwiperFlatlist = React.forwardRef(
 
     const [scrollEnabled, setScrollEnabled] = useState(!disableGesture);
 
-    //   ! Generic
     const flatlistElement = useRef<RNFlatlist<unknown>>(null);
 
     useEffect(() => {
@@ -105,36 +101,6 @@ const SwiperFlatlist = React.forwardRef(
       [onChangeIndex],
     );
 
-    const _scrollToIndex = useCallback(
-      (params: ScrollToIndex) => {
-        const { index: indexToScroll, animated = true } = params;
-        const newParams = { animated, index: indexToScroll };
-        setIgnoreOnMomentumScrollEnd(true);
-
-        const next = {
-          index: indexToScroll,
-          prevIndex: currentIndexes.index,
-        };
-
-        if (
-          currentIndexes.index !== next.index &&
-          currentIndexes.prevIndex !== next.prevIndex
-        ) {
-          setCurrentIndexes({ index: next.index, prevIndex: next.prevIndex });
-        } else if (currentIndexes.index !== next.index) {
-          setCurrentIndexes(prevState => ({ ...prevState, index: next.index }));
-        } else if (currentIndexes.prevIndex !== next.prevIndex) {
-          setCurrentIndexes(prevIndex => ({
-            ...prevIndex,
-            prevIndex: next.prevIndex,
-          }));
-        }
-
-        flatlistElement.current?.scrollToEnd(newParams);
-      },
-      [currentIndexes.index, currentIndexes.prevIndex],
-    );
-
     useEffect(() => {
       _onChangeIndex({
         index: currentIndexes.index,
@@ -143,23 +109,8 @@ const SwiperFlatlist = React.forwardRef(
     }, [_onChangeIndex, currentIndexes.index, currentIndexes.prevIndex]);
 
     useImperativeHandle(ref, () => ({
-      scrollToIndex: (item: ScrollToIndex) => {
-        setScrollEnabled(true);
-        _scrollToIndex(item);
-        setScrollEnabled(!disableGesture);
-      },
       getCurrentIndex: () => currentIndexes.index,
       getPrevIndex: () => currentIndexes.index,
-      goToLastIndex: () => {
-        setScrollEnabled(true);
-        _scrollToIndex({ index: I18nManager.isRTL ? FIRST_INDEX : size - 1 });
-        setScrollEnabled(!disableGesture);
-      },
-      goToFirstIndex: () => {
-        setScrollEnabled(true);
-        _scrollToIndex({ index: I18nManager.isRTL ? size - 1 : FIRST_INDEX });
-        setScrollEnabled(!disableGesture);
-      },
     }));
 
     const _onMomentumScrollEnd: FlatListProps<unknown>['onMomentumScrollEnd'] =
@@ -221,19 +172,15 @@ const SwiperFlatlist = React.forwardRef(
       showsHorizontalScrollIndicator: false,
       showsVerticalScrollIndicator: false,
       pagingEnabled: true,
-      ...props,
       onMomentumScrollEnd: _onMomentumScrollEnd,
       onScroll,
-      onScrollToIndexFailed: info =>
-        setTimeout(() =>
-          _scrollToIndex({ index: info.index, animated: false }),
-        ),
       data,
       renderItem,
       initialNumToRender,
       initialScrollIndex: index,
       viewabilityConfig: _viewabilityConfig,
       onViewableItemsChanged: _onViewableItemsChanged,
+      ...props,
     };
 
     const { width, height } = useWindowDimensions();
@@ -252,12 +199,6 @@ const SwiperFlatlist = React.forwardRef(
 
     return (
       <>
-        {/* {useRNGestureHandler ? (
-          <RNGHFlatList {...flatlistProps} />
-        ) : (
-          <RNFlatlist {...flatlistProps} />
-        )} */}
-
         <Animated.FlatList {...flatlistProps} />
         {showDots && (
           <ExpandingDots
