@@ -22,8 +22,12 @@ import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { PicksLabel } from '@app/lib';
 import { IconSource } from 'react-native-paper/lib/typescript/src/components/Icon';
-import GoogleStaticMaps from '@app/components/googleStaticMap';
+import GoogleStaticMaps from '@app/components/google-static-map';
 import { MAP_API_KEY } from '@env';
+import { SwiperFlatlist } from '@components/swiper-flatlist';
+import { Image } from '@rneui/base';
+
+import { SwiperFlatListWithGestureHandler } from 'react-native-swiper-flatlist/WithGestureHandler';
 
 const { height, width } = Dimensions.get('window');
 
@@ -65,22 +69,6 @@ const MediaTypeView = ({
       ))}
     </>
   );
-
-  //   return (
-  //     <>
-  //       <View style={style.mediaTypeContainer}>
-  //         <IconButton
-  //           icon={icon}
-  //           iconColor={MD3Colors.neutral50}
-  //           size={size}
-  //           style={style.mediaTypeIcon}
-  //         />
-  //         <Text variant="labelMedium" style={style.mediaTypeText}>
-  //           {label}
-  //         </Text>
-  //       </View>
-  //     </>
-  //   );
 };
 
 const SIZE = {
@@ -108,6 +96,14 @@ const PingA = () => {
   ];
 
   const navigation = useNavigation<PingANavProp>();
+
+  // ! Test SwiperFlatlist
+  const images = [
+    'https://picsum.photos/id/237/200/300',
+    'https://picsum.photos/1200/600',
+    'https://images.unsplash.com/photo-1563713665854-e72327bf780e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+    'https://i2.wp.com/beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg',
+  ];
 
   return (
     <View style={styles.superContainer}>
@@ -144,6 +140,33 @@ const PingA = () => {
           </View>
 
           {/* Media */}
+          <View style={{ borderRadius: 10 }}>
+            <SwiperFlatlist
+              useRNGestureHandler
+              style={{}}
+              data={images}
+              showPagination
+              renderItem={({ item, index }) => {
+                return (
+                  <View
+                    style={{
+                      flexDirection: 'column',
+                      width: width - 2 * SIZE.paddingHorizontal,
+                      justifyContent: 'flex-start',
+                    }}>
+                    <Image
+                      source={{ uri: item }}
+                      style={{
+                        height: 200,
+                        width: '100%',
+                        resizeMode: 'cover',
+                      }}
+                    />
+                  </View>
+                );
+              }}
+            />
+          </View>
 
           {/* Text */}
           <View style={[styles.subContainer]}>
