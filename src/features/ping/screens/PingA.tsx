@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -10,75 +10,40 @@ import { useNavigation } from '@react-navigation/native';
 import {
   Text,
   withTheme,
-  IconButton,
   Chip,
   Divider,
   TextInput,
   HelperText,
   MD3Colors,
+  IconButton,
 } from 'react-native-paper';
-import { PingANavProp } from '@ts-types/type';
+
+import { ImagePickerResponse, Asset } from 'react-native-image-picker';
+
+import { PingANavProp } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
-import { PicksLabel } from '@app/lib';
-import { IconSource } from 'react-native-paper/lib/typescript/src/components/Icon';
-import GoogleStaticMaps from '@app/components/google-static-map';
+import { PicksLabel, SIZES } from '@app/lib';
+import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
-import { SwiperFlatlist } from '@components/swiper-flatlist';
-import { Image } from '@rneui/base';
 
-import { SwiperFlatListWithGestureHandler } from 'react-native-swiper-flatlist/WithGestureHandler';
+import { MediaTypeView, MediaResponse } from '@app/components';
+import { MediaFlatlist } from '@app/components/swiper-flatlist';
 
 const { height, width } = Dimensions.get('window');
 
 const loremIpsum =
   'But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or.';
 
-const MediaTypeView = ({
-  mediaTypes,
-  style,
-  size = 25,
-  enableLabel = false,
-}: {
-  mediaTypes: Array<{ icon: IconSource; label: string }>;
-  size?: number;
-  style: any;
-  enableLabel?: boolean;
-}) => {
-  const { theme } = useAppTheme();
-
-  return (
-    <>
-      {mediaTypes.map(mediaType => (
-        <View style={style.mediaTypeContainer} key={mediaType.label}>
-          <IconButton
-            icon={mediaType.icon}
-            iconColor={theme.dark ? MD3Colors.neutral50 : MD3Colors.neutral40}
-            size={size}
-            style={style.mediaTypeIcon}
-            onPress={() => {
-              console.log(mediaType.label);
-            }}
-          />
-          {enableLabel && (
-            <Text variant="labelMedium" style={style.mediaTypeText}>
-              {mediaType.label}
-            </Text>
-          )}
-        </View>
-      ))}
-    </>
-  );
-};
-
-const SIZE = {
-  paddingHorizontal: 15,
-};
-
 const PingA = () => {
   const { theme } = useAppTheme();
-
   const styles = makeStyles(theme);
+
+  const mediaTypeRef = useRef<{ getResponse: () => MediaResponse }>(null);
+
+  const [assets, setAssets] = useState<Array<Asset>>();
+  const [showUrl, setShowUrl] = useState<boolean>(false);
+
   const textInputProps = {
     contentStyle: styles.textInputContent,
     underlineColor: 'transparent',
@@ -88,22 +53,47 @@ const PingA = () => {
     textColor: theme.colors.onSurface,
   };
 
-  let mediaTypes: Array<{ icon: string; label: string }> = [
-    { icon: 'link', label: 'Links' },
-    { icon: 'image', label: 'Images' },
-    { icon: 'play-circle-outline', label: 'Videos' },
-    { icon: 'file-document-outline', label: 'Files' },
-  ];
-
   const navigation = useNavigation<PingANavProp>();
 
-  // ! Test SwiperFlatlist
-  const images = [
-    'https://picsum.photos/id/237/200/300',
-    'https://picsum.photos/1200/600',
-    'https://images.unsplash.com/photo-1563713665854-e72327bf780e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
-    'https://i2.wp.com/beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg',
-  ];
+  const _onMediaTypeResponse = useCallback(
+    ({
+      didCancel,
+      errorCode,
+      errorMessage,
+      isUrl,
+      assets: newAssets,
+    }: MediaResponse) => {
+      console.log('🚀 ~ file: PingA.tsx:56 ~ PingA ~ res:', newAssets);
+
+      // * Do nothing on cancel
+      if (didCancel) {
+        return;
+      }
+
+      // Todo Handle on error
+      if (errorCode && errorMessage) {
+        console.error(errorCode, errorMessage);
+      }
+
+      // Todo Handle if URL
+      if (isUrl) {
+        setShowUrl(isUrl);
+        return;
+      }
+
+      /*
+      Todo Handle different usecases
+      * if user selects media again, concat new assets with old assets
+      * check for repeated data
+    */
+      if (newAssets) {
+        setAssets(newAssets);
+      }
+    },
+    [setAssets],
+  );
+
+  // useEffect(() => {}, [assets]);
 
   return (
     <View style={styles.superContainer}>
@@ -140,35 +130,11 @@ const PingA = () => {
           </View>
 
           {/* Media */}
-          <View style={{ borderRadius: 10 }}>
-            <SwiperFlatlist
-              useRNGestureHandler
-              style={{}}
-              data={images}
-              showPagination
-              renderItem={({ item, index }) => {
-                return (
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      width: width - 2 * SIZE.paddingHorizontal,
-                      justifyContent: 'flex-start',
-                    }}>
-                    <Image
-                      source={{ uri: item }}
-                      style={{
-                        height: 200,
-                        width: '100%',
-                        resizeMode: 'cover',
-                      }}
-                    />
-                  </View>
-                );
-              }}
-            />
+          <View style={[{ borderRadius: 10 }]}>
+            <MediaFlatlist assets={assets} paddingOffset={SIZES.medium} />
           </View>
 
-          {/* Text */}
+          {/* Text & URL */}
           <View style={[styles.subContainer]}>
             <TextInput
               placeholder="An interesting title"
@@ -182,6 +148,34 @@ const PingA = () => {
               Required
             </HelperText>
             <Divider bold style={{ marginVertical: 5 }} />
+            {/* URL */}
+            {showUrl && (
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}>
+                  <TextInput
+                    placeholder="Enter the website link"
+                    style={[styles.textInput, { flex: 1 }]}
+                    textContentType="URL"
+                    // value="www.google.com/"
+                    dense
+                    {...textInputProps}
+                  />
+                  <IconButton
+                    icon="close"
+                    onPress={() => {
+                      setShowUrl(false);
+                    }}
+                  />
+                </View>
+                <Divider bold style={{ marginVertical: 5 }} />
+              </View>
+            )}
+
             {/* Text Area */}
             <TextInput
               multiline
@@ -190,6 +184,7 @@ const PingA = () => {
               textContentType="none"
               textBreakStrategy="highQuality"
               value={loremIpsum}
+              maxLength={500}
               dense
               {...textInputProps}
             />
@@ -201,9 +196,14 @@ const PingA = () => {
           {/* Location */}
           <View style={[styles.subContainer, { padding: 0 }]}>
             <View>
-              <TouchableOpacity>
-                <Text variant="bodyLarge" style={styles.locationLabel}>
-                  Add location
+              <TouchableOpacity style={styles.locationLabel}>
+                <Text>
+                  <Text variant="bodyLarge">Add location </Text>
+                  <Text
+                    variant="bodySmall"
+                    style={{ color: MD3Colors.neutral50 }}>
+                    (Optional)
+                  </Text>
                 </Text>
               </TouchableOpacity>
             </View>
@@ -223,7 +223,10 @@ const PingA = () => {
       {/* Media */}
       <View style={styles.mediaContainer}>
         {/* Link | Image | Video | Files */}
-        <MediaTypeView mediaTypes={mediaTypes} style={styles} />
+        <MediaTypeView
+          ref={mediaTypeRef}
+          onResponse={response => _onMediaTypeResponse(response)}
+        />
       </View>
     </View>
   );
@@ -238,7 +241,7 @@ const makeStyles = (theme: AppTheme) =>
       backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
     },
     container: {
-      paddingHorizontal: SIZE.paddingHorizontal,
+      paddingHorizontal: SIZES.medium,
       flex: 1,
       paddingVertical: 10,
       gap: 10,
@@ -284,33 +287,6 @@ const makeStyles = (theme: AppTheme) =>
       minHeight: height / 5,
     },
     textInputContent: {},
-    mediaTypeContainer: {
-      flexDirection: 'column',
-      alignItems: 'center',
-      borderRadius: 100,
-      gap: 3,
-    },
-    mediaTypeText: {
-      fontWeight: '500',
-      color: MD3Colors.neutral70,
-      letterSpacing: 1.2,
-    },
-    mediaTypeIcon: {
-      padding: 0,
-      margin: 0,
-      backgroundColor: theme.dark ? MD3Colors.neutral20 : MD3Colors.neutral80,
-    },
-    mediaContainer: {
-      paddingHorizontal: SIZE.paddingHorizontal,
-      paddingVertical: 10,
-      // borderTopStartRadius: 10,
-      // borderTopEndRadius: 10,
-      flexDirection: 'row',
-      gap: 15,
-      justifyContent: 'flex-start',
-      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
-      elevation: 5,
-    },
     mapContainerStyle: {
       flex: 1,
       height: height * 0.15,
@@ -319,5 +295,14 @@ const makeStyles = (theme: AppTheme) =>
     },
     locationLabel: {
       padding: 10,
+    },
+    mediaContainer: {
+      paddingHorizontal: SIZES.medium,
+      paddingVertical: 10,
+      flexDirection: 'row',
+      gap: 15,
+      justifyContent: 'flex-start',
+      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
+      elevation: 5,
     },
   });

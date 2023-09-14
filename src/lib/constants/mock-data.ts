@@ -24,3 +24,10 @@ export const mapViewCardData = [
     activityCreatedOn: '23 Jan 2023',
   },
 ];
+
+export const imagesURLs = [
+  'https://picsum.photos/id/237/200/300',
+  'https://picsum.photos/1200/600',
+  'https://images.unsplash.com/photo-1563713665854-e72327bf780e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80',
+  'https://i2.wp.com/beebom.com/wp-content/uploads/2016/01/Reverse-Image-Search-Engines-Apps-And-Its-Uses-2016.jpg',
+];

@@ -63,7 +63,15 @@ const SwiperFlatlist = React.forwardRef(
     }: SwiperFlatlistProps<T>,
     ref: React.Ref<SwiperFlatlistRefProps>,
   ) => {
-    const size = data.length;
+    let _data: unknown[] = [];
+    let _renderItem: FlatListProps<any>['renderItem'];
+
+    if (data) {
+      _data = data;
+      _renderItem = renderItem;
+    }
+
+    const size = _data.length;
 
     const initialNumToRender = renderAll ? size : 1;
 
@@ -154,7 +162,6 @@ const SwiperFlatlist = React.forwardRef(
     const onScroll = useAnimatedScrollHandler({
       onScroll: event => {
         x.value = event.contentOffset.x;
-        console.log('🚀 ~ file: swiper-flatlist.tsx:107 ~ x.value:', x.value);
       },
     });
 
@@ -162,6 +169,8 @@ const SwiperFlatlist = React.forwardRef(
       ref: RefObject<RNFlatlist<unknown>>;
     } = {
       scrollEnabled,
+      onScroll,
+      initialNumToRender,
       ref: flatlistElement,
       keyExtractor: (_item, _index) => {
         const item = _item as { key?: string; id?: string };
@@ -173,10 +182,8 @@ const SwiperFlatlist = React.forwardRef(
       showsVerticalScrollIndicator: false,
       pagingEnabled: true,
       onMomentumScrollEnd: _onMomentumScrollEnd,
-      onScroll,
-      data,
-      renderItem,
-      initialNumToRender,
+      data: _data,
+      renderItem: _renderItem,
       initialScrollIndex: index,
       viewabilityConfig: _viewabilityConfig,
       onViewableItemsChanged: _onViewableItemsChanged,
@@ -200,7 +207,7 @@ const SwiperFlatlist = React.forwardRef(
     return (
       <>
         <Animated.FlatList {...flatlistProps} />
-        {showDots && (
+        {size > 1 && showDots && (
           <ExpandingDots
             scrollX={x}
             size={size}
@@ -212,7 +219,7 @@ const SwiperFlatlist = React.forwardRef(
             expandingDotWidth={expandingDotWidth}
           />
         )}
-        {showPagination && (
+        {size > 1 && showPagination && (
           <Pagination
             size={size}
             paginationIndex={currentIndexes.index}

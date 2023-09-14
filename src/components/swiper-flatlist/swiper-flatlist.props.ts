@@ -9,8 +9,8 @@ export type SwiperFlatlistRefProps = {
 };
 
 export type SwiperFlatlistProps<T> = Partial<FlatListProps<T>> & {
-  data: T[];
-  renderItem: FlatListProps<T>['renderItem'];
+  data?: T[];
+  renderItem?: FlatListProps<T>['renderItem'];
   vertical?: boolean;
   index?: number;
   renderAll?: boolean;

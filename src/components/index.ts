@@ -5,3 +5,6 @@ export { default as MapOverlay } from './MapOverlay';
 export { default as RootNavController } from './RootNavController';
 
 export { default as TextInput } from './TextInput';
+export * from './media-type-view';
+
+export * from './video-player';
