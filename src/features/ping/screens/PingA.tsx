@@ -27,7 +27,7 @@ import { PicksLabel, SIZES } from '@app/lib';
 import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
 
-import { MediaTypeView, MediaResponse } from '@app/components';
+import { MediaTypeView } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
 
 const { height, width } = Dimensions.get('window');
@@ -39,10 +39,11 @@ const PingA = () => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const mediaTypeRef = useRef<{ getResponse: () => MediaResponse }>(null);
+  const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
 
   const [assets, setAssets] = useState<Array<Asset>>();
   const [showUrl, setShowUrl] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(false);
 
   const textInputProps = {
     contentStyle: styles.textInputContent,
@@ -60,9 +61,8 @@ const PingA = () => {
       didCancel,
       errorCode,
       errorMessage,
-      isUrl,
       assets: newAssets,
-    }: MediaResponse) => {
+    }: ImagePickerResponse) => {
       console.log('🚀 ~ file: PingA.tsx:56 ~ PingA ~ res:', newAssets);
 
       // * Do nothing on cancel
@@ -73,11 +73,6 @@ const PingA = () => {
       // Todo Handle on error
       if (errorCode && errorMessage) {
         console.error(errorCode, errorMessage);
-      }
-
-      // Todo Handle if URL
-      if (isUrl) {
-        setShowUrl(isUrl);
         return;
       }
 
@@ -93,7 +88,13 @@ const PingA = () => {
     [setAssets],
   );
 
-  // useEffect(() => {}, [assets]);
+  useEffect(() => {
+    if (showUrl || (assets && assets?.length > 0)) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [assets, showUrl]);
 
   return (
     <View style={styles.superContainer}>
@@ -130,7 +131,7 @@ const PingA = () => {
           </View>
 
           {/* Media */}
-          <View style={[{ borderRadius: 10 }]}>
+          <View style={[{ borderRadius: SIZES.xSmall }]}>
             <MediaFlatlist assets={assets} paddingOffset={SIZES.medium} />
           </View>
 
@@ -147,16 +148,11 @@ const PingA = () => {
             <HelperText type="error" visible>
               Required
             </HelperText>
-            <Divider bold style={{ marginVertical: 5 }} />
+            <Divider bold style={{ marginVertical: SIZES.xxSmall }} />
             {/* URL */}
             {showUrl && (
               <View>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}>
+                <View style={styles.urlContainer}>
                   <TextInput
                     placeholder="Enter the website link"
                     style={[styles.textInput, { flex: 1 }]}
@@ -172,7 +168,7 @@ const PingA = () => {
                     }}
                   />
                 </View>
-                <Divider bold style={{ marginVertical: 5 }} />
+                <Divider bold style={{ marginVertical: SIZES.xxSmall }} />
               </View>
             )}
 
@@ -220,12 +216,23 @@ const PingA = () => {
           </View>
         </View>
       </ScrollView>
-      {/* Media */}
+      {/* Media Selections */}
       <View style={styles.mediaContainer}>
         {/* Link | Image | Video | Files */}
         <MediaTypeView
           ref={mediaTypeRef}
           onResponse={response => _onMediaTypeResponse(response)}
+          disabled={disabled}
+        />
+        <IconButton
+          icon="link"
+          iconColor={theme.dark ? MD3Colors.neutral60 : MD3Colors.neutral40}
+          size={SIZES.xLarge}
+          style={styles.mediaTypeIcon}
+          onPress={() => {
+            setShowUrl(true);
+          }}
+          disabled={disabled}
         />
       </View>
     </View>
@@ -304,5 +311,15 @@ const makeStyles = (theme: AppTheme) =>
       justifyContent: 'flex-start',
       backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
       elevation: 5,
+    },
+    mediaTypeIcon: {
+      padding: 0,
+      margin: 0,
+      backgroundColor: theme.dark ? MD3Colors.neutral10 : MD3Colors.neutral80,
+    },
+    urlContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
     },
   });

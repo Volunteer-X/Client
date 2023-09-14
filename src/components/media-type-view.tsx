@@ -2,12 +2,10 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useRef,
   useState,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton, MD3Colors, Text } from 'react-native-paper';
-import { IconSource } from 'react-native-paper/lib/typescript/src/components/Icon';
 import {
   launchCamera,
   launchImageLibrary,
@@ -25,12 +23,7 @@ const mediaTypes = [
   { icon: 'video-image', label: AppMediaTypes.MEDIA },
   // { icon: 'image', label: AppMediaTypes.IMAGE },
   // { icon: 'play-circle-outline', label: AppMediaTypes.VIDEO },
-  { icon: 'link', label: AppMediaTypes.URL },
 ] as const;
-
-export interface MediaResponse extends ImagePickerResponse {
-  isUrl?: boolean;
-}
 
 export const MediaTypeView = React.forwardRef(
   (
@@ -38,20 +31,20 @@ export const MediaTypeView = React.forwardRef(
       size = SIZES.xLarge,
       enableLabel = false,
       onResponse,
+      disabled = false,
     }: {
       size?: number;
       enableLabel?: boolean;
-      onResponse?: (response: MediaResponse) => void;
+      disabled?: boolean;
+      onResponse?: (response: ImagePickerResponse) => void;
     },
-    ref: React.Ref<{ getResponse: () => MediaResponse }>,
+    ref: React.Ref<{ getResponse: () => ImagePickerResponse }>,
   ) => {
     const { theme } = useAppTheme();
 
     const styles = makeStyles(theme);
 
-    const [mediaResponse, setResponse] = useState<MediaResponse>({
-      isUrl: false,
-    });
+    const [mediaResponse, setResponse] = useState<ImagePickerResponse>({});
 
     useImperativeHandle(ref, () => ({
       getResponse: () => mediaResponse,
@@ -70,27 +63,22 @@ export const MediaTypeView = React.forwardRef(
       };
       switch (type) {
         case AppMediaTypes.CAMERA:
-          setResponse({
-            ...(await launchCamera({
+          setResponse(
+            await launchCamera({
               ...camerOptions,
               mediaType: 'photo',
-            })),
-            isUrl: false,
-          });
+            }),
+          );
 
           break;
         case AppMediaTypes.MEDIA:
-          setResponse({
-            ...(await launchImageLibrary({
+          setResponse(
+            await launchImageLibrary({
               ...mediaOptions,
               mediaType: 'mixed',
-            })),
-            isUrl: false,
-          });
+            }),
+          );
 
-          break;
-        case AppMediaTypes.URL:
-          setResponse({ isUrl: true });
           break;
         /*
         Todo change if decided to make video and image different
@@ -117,7 +105,7 @@ export const MediaTypeView = React.forwardRef(
     };
 
     const _onResponse = useCallback(
-      (response: MediaResponse) => {
+      (response: ImagePickerResponse) => {
         onResponse?.(response);
       },
       [onResponse],
@@ -133,10 +121,11 @@ export const MediaTypeView = React.forwardRef(
           <View style={styles.mediaTypeContainer} key={mediaType.label}>
             <IconButton
               icon={mediaType.icon}
-              iconColor={theme.dark ? MD3Colors.neutral60 : MD3Colors.neutral40}
+              iconColor={disabled ? MD3Colors.error0 : MD3Colors.neutral60}
               size={size}
               style={styles.mediaTypeIcon}
               onPress={() => handleOnPress(mediaType.label)}
+              disabled={disabled}
             />
             {enableLabel && (
               <Text variant="labelMedium" style={styles.mediaTypeText}>

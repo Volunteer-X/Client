@@ -1,15 +1,12 @@
 import React, { useCallback } from 'react';
 import { Dimensions, ListRenderItem, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import { Text } from 'react-native-paper';
-import Video from 'react-native-video';
 
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import SwiperFlatlist from '../swiper-flatlist';
 import { MediaFlatlistProps } from './media-flatlist.props';
-import { AppMediaTypes, SIZES } from '@app/lib';
-import { createThumbnail } from 'react-native-create-thumbnail';
+import { AppMediaTypes, HEIGHTS, SIZES } from '@app/lib';
 import { VideoPlayer } from '@app/components/video-player';
 
 type T = any;
@@ -19,6 +16,9 @@ function getType(str: string): string {
   return str.split('/')[0];
 }
 
+/*
+  Todo Setup onclick, preview function for the media, delete option 
+*/
 const MediaFlatlist = ({
   assets,
   paddingOffset = 0,
@@ -37,10 +37,7 @@ const MediaFlatlist = ({
                 <FastImage
                   source={{ uri: item.uri }}
                   resizeMode={FastImage.resizeMode.cover}
-                  style={{
-                    height: 200,
-                    width: '100%',
-                  }}
+                  style={styles.renderItemMedia}
                 />
               </View>
             );
@@ -49,13 +46,14 @@ const MediaFlatlist = ({
               <View style={styles.renderItemContainer}>
                 <VideoPlayer
                   source={{ uri: item.uri }}
-                  style={{ height: 200, width: '100%' }}
-                  paused
+                  style={styles.renderItemMedia}
                   muted
                   resizeMode="cover"
                 />
               </View>
             );
+          default:
+            return <></>;
         }
       },
       [styles],
@@ -65,8 +63,6 @@ const MediaFlatlist = ({
     uri: asset.uri ? asset.uri : '',
     type: asset.type ? getType(asset.type) : '',
   }));
-
-  // console.log('🚀 ~ file: media-flatlist.tsx:23 ~ listData:', listData);
 
   return (
     <>
@@ -88,5 +84,10 @@ const makeStyles = (theme: AppTheme, paddingOffset: number) =>
       flexDirection: 'column',
       width: width - 2 * paddingOffset,
       justifyContent: 'flex-start',
+    },
+    renderItemMedia: {
+      height: HEIGHTS.postMedia,
+      width: '100%',
+      borderRadius: SIZES.medium,
     },
   });
