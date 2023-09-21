@@ -106,16 +106,36 @@ const PingA = () => {
               Picks
             </Text> */}
             <View style={styles.picksHorizontalContainer}>
-              <Chip icon="home" style={styles.chip} mode="outlined">
+              <Chip
+                icon="home"
+                selected
+                showSelectedOverlay
+                style={styles.chip}
+                mode="outlined">
                 {PicksLabel.Technology}
               </Chip>
-              <Chip icon="home" style={styles.chip} mode="outlined">
+              <Chip
+                icon="home"
+                selected
+                showSelectedOverlay
+                style={styles.chip}
+                mode="outlined">
                 {PicksLabel.Art}
               </Chip>
-              <Chip icon="home" style={styles.chip} mode="outlined">
+              <Chip
+                icon="home"
+                selected
+                showSelectedOverlay
+                style={styles.chip}
+                mode="outlined">
                 {PicksLabel.Children}
               </Chip>
-              <Chip icon="home" style={styles.chip} mode="outlined">
+              <Chip
+                icon="home"
+                selected
+                showSelectedOverlay
+                style={styles.chip}
+                mode="outlined">
                 {PicksLabel.Disaster}
               </Chip>
               <Chip
@@ -126,6 +146,9 @@ const PingA = () => {
                 showSelectedOverlay
                 compact>
                 {PicksLabel.Environment}
+              </Chip>
+              <Chip icon="plus" style={styles.chip} mode="outlined">
+                {'Add more'}
               </Chip>
             </View>
           </View>

@@ -10,8 +10,9 @@ import { Provider } from 'react-redux';
 import { Auth0Provider } from 'react-native-auth0';
 import { AUTH0_DOMAIN, AUTH0_CLIENT } from '@env';
 import { ApolloProvider } from '@apollo/client';
+import { PersistGate } from 'redux-persist/integration/react';
 
-import { store } from './app/store';
+import { store, persistor } from './app/store';
 
 import { AppThemeProvider } from '@theme/index';
 import useAppTheme from '@hooks/useAppTheme';
@@ -21,6 +22,7 @@ import apolloClient from '@services/apolloClient';
 
 // import { MainNavigation } from './src/navigation';
 import { MainNavigation } from '@navigation/index';
+import { AuthProvider } from '@app/context/AuthContext';
 
 /* 
 TODO develop authProvider for persist store and authentication check
@@ -31,19 +33,23 @@ const App = () => {
   return (
     <ApolloProvider client={apolloClient}>
       <Provider store={store}>
-        <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
-          <GestureHandlerRootView style={styles.gestureHandlerRootView}>
-            <AppThemeProvider value={themePreference}>
-              <ThemeProvider>
-                <PaperProvider theme={theme}>
-                  <NavigationContainer theme={theme}>
-                    <MainNavigation />
-                  </NavigationContainer>
-                </PaperProvider>
-              </ThemeProvider>
-            </AppThemeProvider>
-          </GestureHandlerRootView>
-        </Auth0Provider>
+        <PersistGate loading={null} persistor={persistor}>
+          <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+            <AuthProvider>
+              <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                <AppThemeProvider value={themePreference}>
+                  <ThemeProvider>
+                    <PaperProvider theme={theme}>
+                      <NavigationContainer theme={theme}>
+                        <MainNavigation />
+                      </NavigationContainer>
+                    </PaperProvider>
+                  </ThemeProvider>
+                </AppThemeProvider>
+              </GestureHandlerRootView>
+            </AuthProvider>
+          </Auth0Provider>
+        </PersistGate>
       </Provider>
     </ApolloProvider>
   );

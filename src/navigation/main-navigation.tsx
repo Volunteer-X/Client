@@ -13,8 +13,17 @@ import { useLazyQuery } from '@apollo/client';
 import { GET_USER_BY_EMAIL } from '@app/features/auth/graphql/auth.queries';
 import { setRegistrationState } from '@app/features/auth/slices/registrationCheckSlice';
 import { setUser, User } from '@app/features/auth/slices/userSlice';
+import { useAppAuth } from '@app/context/AuthContext';
+import AppSplashScreen from '@app/features/auth/screens/AppSplashScreen';
 
 const MainNavigation = () => {
+  const { authState, loading } = useAppAuth();
+  console.log(
+    '🚀 ~ file: main-navigation.tsx:20 ~ MainNavigation ~ authState, loading:',
+    authState,
+    loading,
+  );
+
   const componentSelector = useRef<boolean>(true);
 
   const { user: auth0User, isLoading } = useAuth0();
@@ -22,7 +31,7 @@ const MainNavigation = () => {
   const [getUserByEmail, query] = useLazyQuery(GET_USER_BY_EMAIL);
 
   const isRegistered = useAppSelector(
-    state => state.registrationState.isRegistered,
+    state => state.root.registrationState.isRegistered,
   );
 
   const dispatch = useAppDispatch();
@@ -30,11 +39,6 @@ const MainNavigation = () => {
   const Stack = createStackNavigator<MainNavList>();
 
   if (!isLoading) {
-    console.log(
-      '🚀 ~ file: main-navigation.tsx:33 ~ MainNavigation ~ isLoading:',
-      isLoading,
-    );
-
     // * Check if auth0 authorized
     if (auth0User !== null) {
       // * Check if the user is registered and local state updated
@@ -114,6 +118,10 @@ const MainNavigation = () => {
         });
     }
   }, [auth0User, dispatch, getUserByEmail, isRegistered]);
+
+  // if (loading) {
+  //   return <AppSplashScreen />;
+  // }
 
   return (
     <>

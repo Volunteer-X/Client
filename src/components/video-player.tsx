@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { createThumbnail } from 'react-native-create-thumbnail';
 import Video, { VideoProperties } from 'react-native-video';
 
 interface VideoPlayerProps extends Omit<VideoProperties, 'source'> {

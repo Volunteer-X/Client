@@ -2,10 +2,10 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-import useAppTheme from '../../../hooks/useAppTheme';
-import { AppTheme } from '../../../theme';
+import useAppTheme from '@hooks/useAppTheme';
+import { AppTheme } from '@theme/index';
 
-const SplashScreen = () => {
+const AppSplashScreen = () => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
   return (
@@ -17,7 +17,7 @@ const SplashScreen = () => {
   );
 };
 
-export default SplashScreen;
+export default AppSplashScreen;
 
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
