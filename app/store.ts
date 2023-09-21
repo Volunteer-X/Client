@@ -25,7 +25,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
-    users: userSlice,
+    user: userSlice,
     picks: picksSlice,
     registrationState: registrationCheckSlice,
   }),

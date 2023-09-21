@@ -7,7 +7,6 @@ import WebView from 'react-native-webview';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const width = useWindowDimensions().width;
-  console.log('🚀 ~ file: HomeScreen.tsx:10 ~ HomeScreen ~ width:', width);
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

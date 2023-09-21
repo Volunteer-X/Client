@@ -30,7 +30,6 @@ export const userSlice = createSlice({
       // state.id = action.payload.id;
 
       state = cloneDeep(action.payload);
-      console.log('🚀 ~ file: userSlice.ts:34 ~ state:', state);
     },
   },
 });

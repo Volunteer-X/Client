@@ -6,17 +6,15 @@ import SplashScreen from 'react-native-splash-screen';
 import { MainNavList } from '../types/type';
 
 import AuthNavigation from './auth-navigation';
-// import { SplashScreen } from '../features/auth';
 import HomeDrawer from './drawer/home-drawer';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import { GET_USER_BY_EMAIL } from '@app/features/auth/graphql/auth.queries';
 import { setRegistrationState } from '@app/features/auth/slices/registrationCheckSlice';
 import { setUser, User } from '@app/features/auth/slices/userSlice';
-import { useAppAuth } from '@app/context/AuthContext';
-import AppSplashScreen from '@app/features/auth/screens/AppSplashScreen';
+import { AUTHSTAGE, useAppAuth } from '@app/context/auth-context';
 
-const MainNavigation = () => {
+const MainNavigation = ({ authStage }: { authStage: AUTHSTAGE }) => {
   const { authState, loading } = useAppAuth();
   console.log(
     '🚀 ~ file: main-navigation.tsx:20 ~ MainNavigation ~ authState, loading:',
@@ -124,15 +122,13 @@ const MainNavigation = () => {
   // }
 
   return (
-    <>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {componentSelector.current ? (
-          <Stack.Screen name="AuthStack" component={AuthNavigation} />
-        ) : (
-          <Stack.Screen name="Drawer" component={HomeDrawer} />
-        )}
-      </Stack.Navigator>
-    </>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {authStage === AUTHSTAGE.COMPLETED ? (
+        <Stack.Screen name="Drawer" component={HomeDrawer} />
+      ) : (
+        <Stack.Screen name="AuthStack" component={AuthNavigation} />
+      )}
+    </Stack.Navigator>
   );
 };
 

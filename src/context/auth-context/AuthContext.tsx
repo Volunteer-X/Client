@@ -1,6 +1,4 @@
 import { useLazyQuery } from '@apollo/client';
-import { GET_USER_BY_EMAIL } from '@app/features/auth/graphql/auth.queries';
-import { useAppSelector } from '@app/hooks';
 import React, {
   createContext,
   useCallback,
@@ -8,30 +6,10 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useAppSelector } from '@app/hooks';
 import { useAuth0 } from 'react-native-auth0';
-
-/*
- * AUTHSTAGES
- */
-export enum AUTHSTAGE {
-  INIT,
-  AUTH0,
-  PENDING,
-  COMPLETED,
-}
-
-type AuthState = {
-  isAuthenticated: boolean;
-  authStage: AUTHSTAGE;
-};
-
-interface AuthProps {
-  authState?: AuthState;
-  onLogout?: () => Promise<any>;
-  onLogin?: () => Promise<any>;
-  // setLocalAuthState?: () =>
-  loading?: boolean;
-}
+import { AuthProps, AUTHSTAGE, AuthState } from './AuthContext.type';
+import { GET_USER_BY_EMAIL } from '@features/auth/graphql/auth.queries';
 
 const initialState: AuthProps = {
   authState: {
@@ -41,8 +19,14 @@ const initialState: AuthProps = {
   loading: true,
 };
 
+/*
+ * Auth Context (React Context)
+ */
 const AuthContext = createContext<AuthProps>(initialState);
 
+/*
+ * useAuth Hook
+ */
 export const useAppAuth = () => {
   return useContext(AuthContext);
 };
@@ -64,11 +48,14 @@ export const AuthProvider = ({ children }: any) => {
   const getLocalAuthState = useCallback(() => {
     setLoading(true);
     if (localUserData) {
-      console.log(localUserData);
+      console.log(
+        '🚀 ~ file: AuthContext.tsx:67 ~ getLocalAuthState ~ localUserData:',
+        localUserData,
+      );
     } else {
       console.log(
         '🚀 ~ file: AuthContext.tsx:64 ~ getLocalAuthState ~ else:',
-        'false',
+        'true',
       );
     }
   }, [localUserData]);

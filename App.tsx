@@ -21,8 +21,8 @@ import useAppTheme from '@hooks/useAppTheme';
 import apolloClient from '@services/apolloClient';
 
 // import { MainNavigation } from './src/navigation';
-import { MainNavigation } from '@navigation/index';
-import { AuthProvider } from '@app/context/AuthContext';
+import { AuthProvider } from '@app/context/auth-context/AuthContext';
+import { RootNavController } from '@app/components';
 
 /* 
 TODO develop authProvider for persist store and authentication check
@@ -41,7 +41,7 @@ const App = () => {
                   <ThemeProvider>
                     <PaperProvider theme={theme}>
                       <NavigationContainer theme={theme}>
-                        <MainNavigation />
+                        <RootNavController />
                       </NavigationContainer>
                     </PaperProvider>
                   </ThemeProvider>
