@@ -4,14 +4,8 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {
-  Avatar,
-  Button,
-  IconButton,
-  MD3Colors,
-  Text,
-} from 'react-native-paper';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Avatar, MD3Colors } from 'react-native-paper';
+import { Pressable, StyleSheet } from 'react-native';
 
 import { PageNames } from '../lib';
 import {
@@ -23,6 +17,7 @@ import {
 import PingNavigation from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
+import { HomeHeader, PingHeaderLeft, PingHeaderRight } from '@app/components';
 
 function tabBarIcon({
   color,
@@ -59,79 +54,6 @@ function tabBarIcon({
   return <Icon name={iconName} size={size} color={color} />;
 }
 
-//Header Left Function
-function homeHeaderLeft(props: {
-  tintColor?: string | undefined;
-  pressColor?: string | undefined;
-  pressOpacity?: number | undefined;
-  labelVisible?: boolean | undefined;
-  navigation: any;
-}) {
-  return (
-    <Pressable
-      android_disableSound
-      {...props}
-      onPress={() => props.navigation.toggleDrawer()}>
-      <Avatar.Text label="Vx" size={24} />
-    </Pressable>
-  );
-}
-
-/*
-* Ping Header
-! Alert on going back, and animation
-*/
-function PingHeaderLeft(props: {
-  tintColor?: string | undefined;
-  pressColor?: string | undefined;
-  pressOpacity?: number | undefined;
-  labelVisible?: boolean | undefined;
-  navigation: any;
-}) {
-  return (
-    <IconButton
-      icon="close"
-      size={25}
-      {...props}
-      onPress={() => {
-        props.navigation.goBack();
-      }}
-    />
-  );
-}
-
-/*
- * Ping Header Right
- ! May need to move to another file as a seperate  component to handle ping server actions
- */
-function PingHeaderRight(props: {
-  tintColor?: string | undefined;
-  pressColor?: string | undefined;
-  pressOpacity?: number | undefined;
-  labelVisible?: boolean | undefined;
-  navigation: any;
-}) {
-  const { theme } = useAppTheme();
-
-  return (
-    <Button
-      icon="chevron-right"
-      {...props}
-      mode="contained"
-      uppercase
-      labelStyle={{
-        fontSize: theme.fonts.bodyMedium.fontSize,
-        letterSpacing: 1.1,
-      }}
-      contentStyle={{
-        flexDirection: 'row-reverse',
-      }}
-      style={{ justifyContent: 'center', marginEnd: 10 }}>
-      Ping
-    </Button>
-  );
-}
-
 const BottomTabNavigation = () => {
   const { theme } = useAppTheme();
 
@@ -151,9 +73,9 @@ const BottomTabNavigation = () => {
       <Tab.Screen
         name="Home"
         component={HomeScreen}
-        options={({ route, navigation }) => ({
-          headerLeft: props => homeHeaderLeft({ ...props, navigation }),
-        })}
+        options={{
+          header: (props: BottomTabHeaderProps) => HomeHeader(props),
+        }}
       />
       <Tab.Screen
         name={PageNames.Map}

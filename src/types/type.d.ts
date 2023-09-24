@@ -31,3 +31,7 @@ export type MainNavList = {
   AuthStack: AuthStackParamList;
   Drawer: undefined;
 };
+
+// Drawer
+
+export type HomeNavigationProps = {};

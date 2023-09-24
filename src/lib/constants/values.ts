@@ -21,3 +21,5 @@ if (Platform.OS === 'android') {
 }
 
 export { clientName };
+
+export const APP_NAME = 'VolunteerX' as string;

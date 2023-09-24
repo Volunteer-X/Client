@@ -116,7 +116,13 @@ const MainNavigation = ({ authStage }: { authStage: AUTHSTAGE }) => {
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {authStage === AUTHSTAGE.COMPLETED ? (
+      {/* {authStage === AUTHSTAGE.COMPLETED ? (
+        <Stack.Screen name="Drawer" component={HomeDrawer} />
+      ) : (
+        <Stack.Screen name="AuthStack" component={AuthNavigation} />
+      )} */}
+
+      {componentSelector ? (
         <Stack.Screen name="Drawer" component={HomeDrawer} />
       ) : (
         <Stack.Screen name="AuthStack" component={AuthNavigation} />

@@ -9,3 +9,7 @@ export { default as TextInput } from './TextInput';
 export * from './media-type-view';
 
 export * from './video-player';
+
+export * from './headers/ping-headers';
+
+export * from './headers/home-header';

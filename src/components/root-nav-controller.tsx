@@ -8,14 +8,10 @@ export const RootNavController = () => {
     authState: { authStage },
     loading,
   } = useAppAuth();
-  console.log(
-    '🚀 ~ file: root-nav-controller.tsx:11 ~ RootNavController ~ loading:',
-    loading,
-  );
 
-  if (loading) {
-    return <AppSplashScreen />;
-  }
+  // if (loading) {
+  //   return <AppSplashScreen />;
+  // }
 
   return <MainNavigation authStage={authStage} />;
 };
