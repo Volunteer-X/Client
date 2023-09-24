@@ -15,13 +15,6 @@ import { setUser, User } from '@app/features/auth/slices/userSlice';
 import { AUTHSTAGE, useAppAuth } from '@app/context/auth-context';
 
 const MainNavigation = ({ authStage }: { authStage: AUTHSTAGE }) => {
-  const { authState, loading } = useAppAuth();
-  console.log(
-    '🚀 ~ file: main-navigation.tsx:20 ~ MainNavigation ~ authState, loading:',
-    authState,
-    loading,
-  );
-
   const componentSelector = useRef<boolean>(true);
 
   const { user: auth0User, isLoading } = useAuth0();
