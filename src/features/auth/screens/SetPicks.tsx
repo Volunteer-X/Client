@@ -36,13 +36,13 @@ const SetPicks = ({
     }
   }, []);
 
-  const handleOnSubmition = () => {
+  const handleOnSubmition = useCallback(() => {
     console.log(selectedPicks.current);
     navigation.navigate('LoadingScreen', {
       username,
       picks: selectedPicks.current,
     });
-  };
+  }, [navigation, username]);
 
   const renderHeader = useCallback(() => {
     return (

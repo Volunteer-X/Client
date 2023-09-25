@@ -1,5 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
+import PicksSelectView from '@app/components/PicksSelectView';
+import PullToRefreshList from '@app/components/pull-to-refresh-list';
 import useAppTheme from '@app/hooks/useAppTheme';
+import { DIMENSIONS, PADDING } from '@app/lib';
 import { AppTheme } from '@app/theme';
 import React from 'react';
 
@@ -19,6 +22,23 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         barStyle="light-content"
         backgroundColor={theme.colors.background}
       />
+      {/* Flatlist Header Component */}
+      <View>
+        <PicksSelectView
+          horizontal
+          selectedPicks={() => {}}
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: PADDING.sm,
+          }}
+          chipStyle={{
+            marginHorizontal: 4,
+            marginTop: PADDING.sm,
+            marginBottom: PADDING.sm,
+          }}
+        />
+      </View>
+      <PullToRefreshList />
     </View>
   );
 };
@@ -33,8 +53,6 @@ const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       paddingBottom: inset.bottom,
       paddingLeft: inset.left,
       paddingRight: inset.right,
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: theme.colors.backdrop,
     },
   });
