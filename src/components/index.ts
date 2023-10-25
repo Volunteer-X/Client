@@ -15,3 +15,5 @@ export * from './headers/ping-headers';
 export * from './headers/home-header';
 
 export * from './pull-to-refresh-list';
+
+export * from './PicksSelectView';

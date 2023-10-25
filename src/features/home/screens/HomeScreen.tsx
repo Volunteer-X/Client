@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import PicksSelectView from '@app/components/PicksSelectView';
+import { PicksSelectView } from '@app/components';
 import PullToRefreshList from '@app/components/pull-to-refresh-list';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { DIMENSIONS, PADDING } from '@app/lib';

@@ -14,7 +14,7 @@ import {
   MapScreen,
   SearchScreen,
 } from '@features/index';
-import PingNavigation from './ping-navigation';
+import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { HomeHeader, PingHeaderLeft, PingHeaderRight } from '@app/components';
@@ -86,12 +86,8 @@ const BottomTabNavigation = () => {
         name={PageNames.CreatePing}
         component={PingNavigation}
         options={({ route, navigation }) => ({
-          headerShown: true,
+          headerShown: false,
           tabBarStyle: { display: 'none' },
-          headerStyle: styles.headerStyle,
-          headerTitle: 'Create a ping',
-          headerLeft: props => PingHeaderLeft({ ...props, navigation }),
-          headerRight: props => PingHeaderRight({ ...props, navigation }),
         })}
       />
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />
@@ -102,10 +98,4 @@ const BottomTabNavigation = () => {
 
 export default BottomTabNavigation;
 
-const makeStyles = (theme: AppTheme) =>
-  StyleSheet.create({
-    headerStyle: {
-      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
-      elevation: 0,
-    },
-  });
+const makeStyles = (theme: AppTheme) => StyleSheet.create({});

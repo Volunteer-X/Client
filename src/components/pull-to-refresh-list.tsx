@@ -22,7 +22,7 @@ import Animated, {
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
-import PicksSelectView from './PicksSelectView';
+import { PicksSelectView } from '@app/components';
 import { IconButton } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
@@ -44,6 +44,7 @@ const PullToRefreshList = () => {
   const translationY = useSharedValue(0);
   const pullUpTranslate = useSharedValue(0);
 
+  //   ! Change
   const fetchData = () => {
     setTimeout(() => {}, 2000);
 
@@ -152,7 +153,6 @@ const PullToRefreshList = () => {
 
   return (
     <>
-      <StatusBar />
       <View style={styles.container}>
         <Animated.View style={[styles.pullToRefreshArea, animatedSpace]}>
           <Animated.View style={[styles.center, pullUpTranslationStyle]}>
@@ -176,7 +176,7 @@ const PullToRefreshList = () => {
         <PicksSelectView
           selectedPicks={() => {}}
           showsVerticalScrollIndicator={false}
-          chipStyle={{ height: 100, marginVertical: 10 }}
+          chipStyle={{ height: 100, margin: 10 }}
           onScroll={handleOnScroll}
         />
 

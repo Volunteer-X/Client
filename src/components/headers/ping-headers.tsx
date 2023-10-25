@@ -1,6 +1,9 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { Button, IconButton } from 'react-native-paper';
 import useAppTheme from '@hooks/useAppTheme';
+import { RouteProp } from '@react-navigation/native';
+import { PingStackParamList } from '@app/types/type';
 
 /*
 * Ping Header
@@ -35,14 +38,30 @@ export const PingHeaderRight = (props: {
   pressOpacity?: number | undefined;
   labelVisible?: boolean | undefined;
   navigation: any;
+  route: RouteProp<PingStackParamList>;
 }) => {
   const { theme } = useAppTheme();
+
+  function handleOnClick() {
+    switch (props.route.name) {
+      case 'SelectPicks':
+        console.log('selectedPicks');
+
+        break;
+      case 'Body':
+        break;
+      case 'FinalPage':
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <Button
       icon="chevron-right"
       {...props}
-      mode="contained"
+      mode="text"
       uppercase
       labelStyle={{
         fontSize: theme.fonts.bodyMedium.fontSize,
@@ -51,7 +70,8 @@ export const PingHeaderRight = (props: {
       contentStyle={{
         flexDirection: 'row-reverse',
       }}
-      style={{ justifyContent: 'center', marginEnd: 10 }}>
+      style={{ justifyContent: 'center', marginEnd: 10 }}
+      onPress={handleOnClick}>
       Ping
     </Button>
   );

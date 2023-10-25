@@ -1,5 +1,8 @@
 declare module '@env' {
   export const MAP_API_KEY: string;
+  export const MAPBOX_API: string;
+  export const MAPBOX_STYLE_LIGHT: string;
+  export const MAPBOX_STYLE_DARK: string;
   export const AUTH0_CLIENT: string;
   export const AUTH0_DOMAIN: string;
   export const AUTH0_SCOPE: string;

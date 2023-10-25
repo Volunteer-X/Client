@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
+  Pressable,
   ScrollView,
+  StatusBar,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -20,7 +22,7 @@ import {
 
 import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 
-import { PingANavProp } from '@app/types/type';
+import { PingFinalStepNavProp } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { PicksLabel, SIZES } from '@app/lib';
@@ -29,13 +31,11 @@ import { MAP_API_KEY } from '@env';
 
 import { MediaTypeView } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
+import { loremIpsum } from '@app/lib/constants/values';
 
 const { height, width } = Dimensions.get('window');
 
-const loremIpsum =
-  'But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or.';
-
-const PingA = () => {
+export const PingFinalPage = () => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
@@ -54,7 +54,7 @@ const PingA = () => {
     textColor: theme.colors.onSurface,
   };
 
-  const navigation = useNavigation<PingANavProp>();
+  const navigation = useNavigation<PingFinalStepNavProp>();
 
   const _onMediaTypeResponse = useCallback(
     ({
@@ -98,6 +98,7 @@ const PingA = () => {
 
   return (
     <View style={styles.superContainer}>
+      <StatusBar backgroundColor={MD3Colors.neutral0} />
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.container}>
           {/* Picks */}
@@ -215,7 +216,10 @@ const PingA = () => {
           {/* Location */}
           <View style={[styles.subContainer, { padding: 0 }]}>
             <View>
-              <TouchableOpacity style={styles.locationLabel}>
+              <Pressable
+                style={styles.locationLabel}
+                // * navigates to search location screen
+                onPress={() => navigation.navigate('SearchLocation')}>
                 <Text>
                   <Text variant="bodyLarge">Add location </Text>
                   <Text
@@ -224,7 +228,7 @@ const PingA = () => {
                     (Optional)
                   </Text>
                 </Text>
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             <GoogleStaticMaps
@@ -261,8 +265,6 @@ const PingA = () => {
     </View>
   );
 };
-
-export default withTheme(PingA);
 
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({

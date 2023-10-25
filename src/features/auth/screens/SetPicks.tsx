@@ -4,7 +4,7 @@ import { Button, Divider, Text, withTheme } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 
 import { AuthStackParamList } from '@ts-types/type';
-import PicksSelectView from '@app/components/PicksSelectView';
+import { PicksSelectView } from '@app/components';
 import { Defaults } from '@app/lib/constants/values';
 import { AppTheme } from '@app/theme';
 

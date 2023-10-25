@@ -5,14 +5,36 @@ import { StackNavigationProp } from '@react-navigation/stack';
  * PingStackParamList
  */
 export type PingStackParamList = {
-  PingStepA: undefined;
-  PingStepB: undefined;
+  FinalPage: undefined;
+  // SelectPicks: undefined;
+  // Body: undefined;
+  SearchLocation: undefined;
 };
-export type PingANavProp = StackNavigationProp<PingStackParamList, 'PingStepA'>;
-export type PingARouteProp = RouteProp<PingStackParamList, 'PingStepA'>;
 
-export type PingBNavProp = StackNavigationProp<PingStackParamList, 'PingStepB'>;
-export type PingBRouteProp = RouteProp<PingStackParamList, 'PingStepB'>;
+export type PingFinalStepNavProp = StackNavigationProp<
+  PingStackParamList,
+  'FinalPage'
+>;
+
+export type PingFinalStepRouteProp = RouteProp<PingStackParamList, 'FinalPage'>;
+
+export type SelectPicksNavigationProp = StackNavigationProp<
+  PingStackParamList,
+  'SelectPicks'
+>;
+
+export type PingBodyNavigationProp = StackNavigationProp<
+  PingStackParamList,
+  'Body'
+>;
+
+export type PingSearchLocationNavigationProp = StackNavigationProp<
+  PingStackParamList,
+  'SearchLocation'
+>;
+
+// export type PingBNavProp = StackNavigationProp<PingStackParamList, 'PingStepB'>;
+// export type PingBRouteProp = RouteProp<PingStackParamList, 'PingStepB'>;
 
 /*
  * AuthStackParamList
