@@ -45,6 +45,8 @@ export const PingFinalPage = () => {
   const [showUrl, setShowUrl] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
 
+  const [location, setLocation] = useState();
+
   const textInputProps = {
     contentStyle: styles.textInputContent,
     underlineColor: 'transparent',

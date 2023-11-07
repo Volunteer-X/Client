@@ -1,21 +1,181 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
-import Mapbox from '@rnmapbox/maps';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Camera,
+  CircleLayer,
+  Image,
+  Images,
+  MapView,
+  MarkerView,
+  ShapeSource,
+  SymbolLayer,
+  UserLocation,
+} from '@rnmapbox/maps';
 import { MAPBOX_STYLE_DARK } from '@env';
-import LocationSearchBar from '@app/components/location-search-bar';
+import LocationSearchBar, {
+  LocationSearchBarRef,
+} from '@app/components/location-search-bar';
+import { Button, IconButton, MD3Colors } from 'react-native-paper';
+import { PADDING } from '@app/lib';
+import { Point, Feature } from 'geojson/index';
+import { useNavigation } from '@react-navigation/native';
+import { useGeoLocation } from '@app/context/geo-location';
 
 export const SearchLocationScreen = () => {
+  const navigation = useNavigation();
+
+  const currentLocation = useGeoLocation();
+
+  const [coordinate, setCoordinate] = useState<Array<number>>([
+    currentLocation?.longitude,
+    currentLocation?.latitude,
+  ]);
+
+  const searchBarRef = useRef<LocationSearchBarRef>(null);
+
+  // Todo :: Correct the search bar feature
+  useEffect(() => {
+    // console.log('Reached Here ', searchBarRef.current?.getLocation());
+
+    // if (searchBarRef.current?.getLocation()) {
+    //   console.log(
+    //     'swapped value::',
+    //     swapPointElements(searchBarRef.current?.getLocation()),
+    //   );
+
+    if (searchBarRef.current) {
+      let revPoint = searchBarRef.current?.point;
+
+      console.log('revPoint::', revPoint);
+
+      if (revPoint?.lat && revPoint.lng) {
+        setCoordinate([revPoint?.lng as number, revPoint?.lat as number]);
+      }
+    }
+
+    // }
+
+    return () => {};
+  }, []);
+
+  const getMarkerCoordinates = ({ coordinates }: Point) => {
+    // console.log('coordinates::', coordinates);
+
+    setCoordinate(coordinates);
+  };
+
+  const handleSubmition = () => {
+    console.log('finale Coordinates::', coordinate);
+  };
+
+  const circleStyle = {
+    circleRadius: 200,
+    circleOpacity: 0.25,
+    circleStrokeColor: 'green',
+    circleStrokeWidth: 1.5,
+    circleStrokeOpacity: 0.25,
+    circleSortKey: 1,
+  };
+
+  const circleBlurStyle = {
+    circleBlur: 1,
+    circleRadius: 200,
+    circleOpacity: 0.25,
+    circleColor: 'green',
+    circleSortKey: 2,
+  };
+
+  const iconStyle = {
+    iconImage: 'icon-symbol-layer',
+    iconSize: 1,
+  };
+
+  const shapeFeature: Feature = {
+    type: 'Feature',
+    id: 'Feature-123',
+    geometry: {
+      type: 'Point',
+      coordinates: coordinate ? coordinate : [0, 0],
+    },
+    properties: {},
+  };
+
   return (
     <View style={styles.container}>
-      <LocationSearchBar containerStyle={styles.searchbarContainer} />
-      <Mapbox.MapView styleURL={MAPBOX_STYLE_DARK} style={styles.map}>
-        <Mapbox.Camera followZoomLevel={12} followUserLocation />
-        <Mapbox.UserLocation
+      <MapView
+        styleURL={MAPBOX_STYLE_DARK}
+        style={styles.map}
+        projection="mercator"
+        pitchEnabled={false}
+        scaleBarEnabled={false}
+        attributionEnabled={false}
+        logoEnabled={false}
+        compassEnabled
+        compassViewPosition={3}
+        compassPosition={{ bottom: 75, right: 15 }}
+        onPress={e => {
+          getMarkerCoordinates(e.geometry as Point);
+        }}>
+        <Camera
+          defaultSettings={{
+            centerCoordinate: [
+              currentLocation?.longitude,
+              currentLocation?.longitude,
+            ],
+          }}
+          zoomLevel={13}
+          maxZoomLevel={14}
+          animationMode="flyTo"
+          centerCoordinate={coordinate}
+        />
+        {/* <UserLocation
           onPress={() => {
             console.log('User location');
           }}
-        />
-      </Mapbox.MapView>
+          showsUserHeadingIndicator
+        /> */}
+        <Images>
+          <Image name="icon-symbol-layer">
+            <IconButton icon={'map-marker'} size={32} iconColor={'yellow'} />
+          </Image>
+        </Images>
+        {coordinate !== undefined && (
+          <>
+            <MarkerView
+              coordinate={coordinate}
+              key={`MarkerView-${coordinate}`}
+            />
+
+            <ShapeSource id="ShapeSource" shape={shapeFeature}>
+              <CircleLayer id="circle-border-id" style={circleStyle} />
+
+              <CircleLayer id="circle-blur-id" style={circleBlurStyle} />
+
+              <SymbolLayer id="symbol-id" style={iconStyle} existing />
+            </ShapeSource>
+          </>
+        )}
+      </MapView>
+
+      <IconButton
+        icon={'arrow-left'}
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      />
+      <LocationSearchBar containerStyle={styles.searchbar} ref={searchBarRef} />
+
+      <IconButton
+        icon="crosshairs-gps"
+        style={styles.myLocation}
+        size={24}
+        onPress={() =>
+          setCoordinate([currentLocation.longitude, currentLocation.latitude])
+        }
+      />
+
+      <Button mode="contained" style={styles.button} onPress={handleSubmition}>
+        Done
+      </Button>
     </View>
   );
 };
@@ -23,9 +183,47 @@ export const SearchLocationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
-  map: { flex: 1 },
-  searchbarContainer: {},
+  map: { flex: 1, width: '100%', backgroundColor: 'black' },
+  headerContainer: {
+    position: 'absolute',
+    top: 10,
+    right: 15,
+    left: 5,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 6.5,
+  },
+  backButton: {
+    backgroundColor: MD3Colors.neutralVariant10,
+    position: 'absolute',
+    top: 15,
+    left: 15,
+  },
+  searchbar: {
+    position: 'absolute',
+    top: 10,
+    right: 15,
+    left: 75,
+  },
+  button: {
+    // display: 'none',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    marginVertical: PADDING.sm,
+    marginHorizontal: PADDING.sm,
+  },
+  myLocation: {
+    position: 'absolute',
+    bottom: 130,
+    right: 14,
+    backgroundColor: 'black',
+    borderWidth: 1,
+    borderColor: '#c9c9c9',
+    padding: 5,
+    borderRadius: 10,
+  },
 });

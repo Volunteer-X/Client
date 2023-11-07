@@ -1,3 +1,3 @@
-export { shuffleArray } from './shuffleUtils';
-
 export { getCurrentLocation } from './getCurrentLocation';
+
+export * from './array';

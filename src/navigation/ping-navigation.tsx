@@ -39,7 +39,14 @@ export const PingNavigation = () => {
         <Stack.Screen name="Body" component={PingBody} options={{}} />
           // * Search Location Screen
         */}
-        <Stack.Screen name="SearchLocation" component={SearchLocationScreen} />
+        <Stack.Screen
+          name="SearchLocation"
+          component={SearchLocationScreen}
+          options={{
+            headerShown: false,
+            headerTitle: 'Add location',
+          }}
+        />
       </Stack.Navigator>
     </>
   );

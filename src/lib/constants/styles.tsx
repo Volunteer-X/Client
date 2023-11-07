@@ -24,3 +24,5 @@ export const PING_STYLES = (theme: AppTheme) =>
       minHeight: DIMENSIONS.fullHeight / 5,
     },
   });
+
+export const circleStyle;

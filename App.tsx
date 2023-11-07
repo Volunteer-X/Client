@@ -24,6 +24,7 @@ import apolloClient from '@services/apolloClient';
 // import { MainNavigation } from './src/navigation';
 import { AuthProvider } from '@app/context/auth-context/AuthContext';
 import { RootNavController } from '@app/components';
+import { GeoLocationProvider } from '@app/context/geo-location';
 
 /* 
 TODO develop authProvider for persist store and authentication check
@@ -39,17 +40,19 @@ const App = () => {
         <PersistGate loading={null} persistor={persistor}>
           <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
             <AuthProvider>
-              <GestureHandlerRootView style={styles.gestureHandlerRootView}>
-                <AppThemeProvider value={themePreference}>
-                  <ThemeProvider>
-                    <PaperProvider theme={theme}>
-                      <NavigationContainer theme={theme}>
-                        <RootNavController />
-                      </NavigationContainer>
-                    </PaperProvider>
-                  </ThemeProvider>
-                </AppThemeProvider>
-              </GestureHandlerRootView>
+              <GeoLocationProvider>
+                <GestureHandlerRootView style={styles.gestureHandlerRootView}>
+                  <AppThemeProvider value={themePreference}>
+                    <ThemeProvider>
+                      <PaperProvider theme={theme}>
+                        <NavigationContainer theme={theme}>
+                          <RootNavController />
+                        </NavigationContainer>
+                      </PaperProvider>
+                    </ThemeProvider>
+                  </AppThemeProvider>
+                </GestureHandlerRootView>
+              </GeoLocationProvider>
             </AuthProvider>
           </Auth0Provider>
         </PersistGate>
