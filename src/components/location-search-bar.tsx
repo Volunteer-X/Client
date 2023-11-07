@@ -1,5 +1,11 @@
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
-import React, { forwardRef, Ref, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  Ref,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import { MAP_API_KEY } from '@env';
 import {
   GooglePlacesAutocomplete,
@@ -8,33 +14,37 @@ import {
 import { MD3Colors, TextInput } from 'react-native-paper';
 
 export type LocationSearchBarRef = {
-  getPoint?: (point: Point) => Point | undefined;
-  point: Point | undefined;
+  setPoint?: (point: Point) => void;
 };
 
 // Todo - Complete styling the search bar
+// * ForwardRef not in use could be removed
+// ! Stateless Component
 const LocationSearchBar = forwardRef(
   (
     {
       containerStyle,
+      defaultLocation,
+      getNewPoint,
     }: {
       containerStyle: StyleProp<ViewStyle>;
+      defaultLocation: Point;
+      getNewPoint: (newPoint: Point) => void;
     },
     ref?: Ref<LocationSearchBarRef>,
   ) => {
     const styles = makeStyle({ container: containerStyle });
 
-    const [point, setPoint] = useState<Point>();
+    // const [point, setPoint] = useState<Point>(defaultLocation);
 
-    // const _getPoint = (_point: Point | undefined) => {
-    //   setPoint(_point);
-    //   return point;
-    // };
+    const _setPoint = (_point: Point) => {
+      // console.log('Point changing');
+      // setPoint(_point);
 
-    useImperativeHandle(ref, () => ({
-      // getPoint: _getPoint,
-      point,
-    }));
+      getNewPoint(_point);
+    };
+
+    useImperativeHandle(ref, () => ({}), []);
 
     return (
       <>
@@ -63,7 +73,9 @@ const LocationSearchBar = forwardRef(
               fontSize: 14,
             },
           }}
-          onPress={(data, details) => setPoint(details?.geometry.location)}
+          onPress={(_, details) =>
+            _setPoint(details?.geometry.location as Point)
+          }
         />
       </>
     );

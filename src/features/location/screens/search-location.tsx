@@ -18,54 +18,32 @@ import LocationSearchBar, {
 import { Button, IconButton, MD3Colors } from 'react-native-paper';
 import { PADDING } from '@app/lib';
 import { Point, Feature } from 'geojson/index';
-import { useNavigation } from '@react-navigation/native';
+import { Point as RNPoint } from 'react-native-google-places-autocomplete';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { useGeoLocation } from '@app/context/geo-location';
+import { PSearchPlaceNav, PSearchPlaceRoute } from '@app/types/type';
 
 export const SearchLocationScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<PSearchPlaceNav>();
+  const route = useRoute<PSearchPlaceRoute>();
 
   const currentLocation = useGeoLocation();
 
   const [coordinate, setCoordinate] = useState<Array<number>>([
-    currentLocation?.longitude,
-    currentLocation?.latitude,
+    route.params.point?.lng,
+    route.params.point?.lat,
   ]);
 
   const searchBarRef = useRef<LocationSearchBarRef>(null);
 
-  // Todo :: Correct the search bar feature
-  useEffect(() => {
-    // console.log('Reached Here ', searchBarRef.current?.getLocation());
-
-    // if (searchBarRef.current?.getLocation()) {
-    //   console.log(
-    //     'swapped value::',
-    //     swapPointElements(searchBarRef.current?.getLocation()),
-    //   );
-
-    if (searchBarRef.current) {
-      let revPoint = searchBarRef.current?.point;
-
-      console.log('revPoint::', revPoint);
-
-      if (revPoint?.lat && revPoint.lng) {
-        setCoordinate([revPoint?.lng as number, revPoint?.lat as number]);
-      }
-    }
-
-    // }
-
-    return () => {};
-  }, []);
-
-  const getMarkerCoordinates = ({ coordinates }: Point) => {
-    // console.log('coordinates::', coordinates);
-
+  const setMarkerCoordinates = ({ coordinates }: Point) => {
     setCoordinate(coordinates);
   };
 
   const handleSubmition = () => {
-    console.log('finale Coordinates::', coordinate);
+    navigation.navigate('FinalPage', {
+      point: { lat: coordinate[1], lng: coordinate[0] },
+    });
   };
 
   const circleStyle = {
@@ -114,7 +92,7 @@ export const SearchLocationScreen = () => {
         compassViewPosition={3}
         compassPosition={{ bottom: 75, right: 15 }}
         onPress={e => {
-          getMarkerCoordinates(e.geometry as Point);
+          setMarkerCoordinates(e.geometry as Point);
         }}>
         <Camera
           defaultSettings={{
@@ -128,12 +106,6 @@ export const SearchLocationScreen = () => {
           animationMode="flyTo"
           centerCoordinate={coordinate}
         />
-        {/* <UserLocation
-          onPress={() => {
-            console.log('User location');
-          }}
-          showsUserHeadingIndicator
-        /> */}
         <Images>
           <Image name="icon-symbol-layer">
             <IconButton icon={'map-marker'} size={32} iconColor={'yellow'} />
@@ -162,7 +134,15 @@ export const SearchLocationScreen = () => {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       />
-      <LocationSearchBar containerStyle={styles.searchbar} ref={searchBarRef} />
+      <LocationSearchBar
+        ref={searchBarRef}
+        containerStyle={styles.searchbar}
+        defaultLocation={{
+          lat: currentLocation.latitude,
+          lng: currentLocation.longitude,
+        }}
+        getNewPoint={newPoint => setCoordinate([newPoint.lng, newPoint.lat])}
+      />
 
       <IconButton
         icon="crosshairs-gps"

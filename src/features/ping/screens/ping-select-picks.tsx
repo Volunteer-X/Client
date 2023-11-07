@@ -3,7 +3,7 @@ import React, { useCallback, useState } from 'react';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { Button, MD3Colors, Text } from 'react-native-paper';
-import { PicksSelectView } from '@app/components';
+import { MultiSelectView, PicksSelectView } from '@app/components';
 import { DIMENSIONS, PADDING, SIZES } from '@app/lib';
 import { Defaults } from '@app/lib/constants/values';
 import { useNavigation } from '@react-navigation/native';
@@ -60,6 +60,7 @@ export const PingSelectPicks = () => {
   return (
     <View style={styles.superContainer}>
       <PicksSelectView
+        // key={'PingSelectPicks'}
         numColumns={3}
         columnWrapperStyle={styles.columnWrapper}
         ListHeaderComponent={renderHeader}
@@ -71,6 +72,20 @@ export const PingSelectPicks = () => {
         chipTextStyle={styles.chipText}
         selectedPicks={getSelectedPicks}
       />
+      <PicksSelectView
+        // key={'PingSelectPicks1'}
+        numColumns={3}
+        columnWrapperStyle={styles.columnWrapper}
+        ListHeaderComponent={renderHeader}
+        // ListFooterComponent={renderFooter}
+        contentContainerStyle={styles.contentContainer}
+        // ListHeaderComponentStyle={styles.headerComponent}p
+        // ListFooterComponentStyle={styles.footerComponent}
+        chipStyle={styles.chip}
+        chipTextStyle={styles.chipText}
+        selectedPicks={getSelectedPicks}
+      />
+      {/* <MultiSelectView /> */}
     </View>
   );
 };

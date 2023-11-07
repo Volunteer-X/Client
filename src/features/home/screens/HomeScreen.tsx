@@ -25,6 +25,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
       {/* Flatlist Header Component */}
       <View>
         <PicksSelectView
+          key={'HomeScreen'}
           horizontal
           selectedPicks={() => {}}
           showsHorizontalScrollIndicator={false}

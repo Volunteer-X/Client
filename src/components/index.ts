@@ -17,3 +17,5 @@ export * from './headers/home-header';
 export * from './pull-to-refresh-list';
 
 export * from './PicksSelectView';
+
+export * from './mutliple-select-view';

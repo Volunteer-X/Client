@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { PicksChip } from '@components/chips';
-import { Pick, Picks } from '@app/lib/constants/picks';
+import { Pick, PicksIcon, PicksLabel } from '@app/lib/constants/picks';
 
 type Modify<T, R, S> = Omit<T, keyof R> & S;
 
@@ -25,6 +25,24 @@ type Props = {
 };
 
 type EnhancedProps = Modify<FlatListProps<Pick>, RemovedProps, Props>;
+
+const Picks: Array<Pick> = [
+  {
+    label: PicksLabel.Animal,
+    icon: PicksIcon.Animal,
+    isSelected: false,
+  },
+  {
+    label: PicksLabel.Art,
+    icon: PicksIcon.Art,
+    isSelected: false,
+  },
+  {
+    label: PicksLabel.Culture,
+    icon: PicksIcon.Culture,
+    isSelected: false,
+  },
+];
 
 /*
  * TODO: Long press display information setting

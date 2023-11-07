@@ -8,10 +8,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   Text,
-  withTheme,
   Chip,
   Divider,
   TextInput,
@@ -22,16 +21,20 @@ import {
 
 import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 
-import { PingFinalStepNavProp } from '@app/types/type';
+import { PFinalNavProp, PFinalRouteProp } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { PicksLabel, SIZES } from '@app/lib';
+import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
 
 import { MediaTypeView } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import { loremIpsum } from '@app/lib/constants/values';
+import { useGeoLocation } from '@app/context/geo-location';
+import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
+import EmptyPickView from '../components/empty-pick-view';
 
 const { height, width } = Dimensions.get('window');
 
@@ -39,13 +42,33 @@ export const PingFinalPage = () => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
+  const navigation = useNavigation<PFinalNavProp>();
+  const route = useRoute<PFinalRouteProp>();
+
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
 
   const [assets, setAssets] = useState<Array<Asset>>();
   const [showUrl, setShowUrl] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
 
-  const [location, setLocation] = useState();
+  const currentLocation = useGeoLocation();
+
+  const [selectedPoint, setSelectedPoint] = useState<Point>({
+    lat: currentLocation.latitude,
+    lng: currentLocation.longitude,
+  });
+
+  const [place, setPlace] = useState<string>();
+
+  useEffect(() => {
+    if (route.params && route.params.point !== undefined) {
+      setSelectedPoint(route.params.point);
+    }
+
+    getReverseGeocoding(selectedPoint)
+      .then(value => setPlace(value))
+      .catch(e => console.error(e));
+  }, [route.params, selectedPoint]);
 
   const textInputProps = {
     contentStyle: styles.textInputContent,
@@ -56,8 +79,6 @@ export const PingFinalPage = () => {
     textColor: theme.colors.onSurface,
   };
 
-  const navigation = useNavigation<PingFinalStepNavProp>();
-
   const _onMediaTypeResponse = useCallback(
     ({
       didCancel,
@@ -65,7 +86,7 @@ export const PingFinalPage = () => {
       errorMessage,
       assets: newAssets,
     }: ImagePickerResponse) => {
-      console.log('🚀 ~ file: PingA.tsx:56 ~ PingA ~ res:', newAssets);
+      // // // console.log('🚀 ~ file: PingA.tsx:56 ~ PingA ~ res:', newAssets);
 
       // * Do nothing on cancel
       if (didCancel) {
@@ -101,14 +122,13 @@ export const PingFinalPage = () => {
   return (
     <View style={styles.superContainer}>
       <StatusBar backgroundColor={MD3Colors.neutral0} />
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           {/* Picks */}
           <View style={[styles.subContainer, styles.picksContainer]}>
-            {/* <Text variant="titleLarge" style={styles.pickTitle}>
-              Picks
-            </Text> */}
-            <View style={styles.picksHorizontalContainer}>
+            {/* <View style={styles.picksHorizontalContainer}>
               <Chip
                 icon="home"
                 selected
@@ -153,7 +173,8 @@ export const PingFinalPage = () => {
               <Chip icon="plus" style={styles.chip} mode="outlined">
                 {'Add more'}
               </Chip>
-            </View>
+            </View> */}
+            <EmptyPickView />
           </View>
 
           {/* Media */}
@@ -205,7 +226,7 @@ export const PingFinalPage = () => {
               style={[styles.textInput, styles.textArea]}
               textContentType="none"
               textBreakStrategy="highQuality"
-              value={loremIpsum}
+              // value={loremIpsum}
               maxLength={500}
               dense
               {...textInputProps}
@@ -216,33 +237,37 @@ export const PingFinalPage = () => {
           </View>
 
           {/* Location */}
-          <View style={[styles.subContainer, { padding: 0 }]}>
-            <View>
-              <Pressable
-                style={styles.locationLabel}
-                // * navigates to search location screen
-                onPress={() => navigation.navigate('SearchLocation')}>
-                <Text>
-                  <Text variant="bodyLarge">Add location </Text>
-                  <Text
-                    variant="bodySmall"
-                    style={{ color: MD3Colors.neutral50 }}>
-                    (Optional)
-                  </Text>
+          <Pressable
+            style={[styles.subContainer, { padding: 0 }]}
+            // * navigates to search location screen
+            onPress={() =>
+              navigation.navigate('SearchLocation', { point: selectedPoint })
+            }>
+            <View style={styles.locationLabel}>
+              <Text>
+                <Text variant="bodyLarge">Change location </Text>
+                <Text
+                  variant="bodySmall"
+                  style={{ color: MD3Colors.neutral50 }}>
+                  (Optional)
                 </Text>
-              </Pressable>
+              </Text>
+              <Text variant="bodySmall" style={styles.selectedPlace}>
+                {place}
+              </Text>
             </View>
 
             <GoogleStaticMaps
               containerStyle={styles.mapContainerStyle}
-              center="Brooklyn Bridge,New York,NY"
+              center={selectedPoint}
               size={{ height: 600, width: 300 }}
-              zoom={13}
-              onError={() => {}}
-              onLoad={() => {}}
+              zoom={12}
+              markers={[
+                { location: selectedPoint, size: 'small', color: 'black' },
+              ]}
               apiKey={MAP_API_KEY}
             />
-          </View>
+          </Pressable>
         </View>
       </ScrollView>
       {/* Media Selections */}
@@ -329,6 +354,10 @@ const makeStyles = (theme: AppTheme) =>
     },
     locationLabel: {
       padding: 10,
+    },
+    selectedPlace: {
+      color: MD3Colors.neutral60,
+      fontWeight: '700',
     },
     mediaContainer: {
       paddingHorizontal: SIZES.medium,

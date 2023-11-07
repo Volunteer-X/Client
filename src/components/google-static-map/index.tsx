@@ -3,7 +3,7 @@ import { PixelRatio, StyleProp, ViewStyle } from 'react-native';
 import { Image } from '@rneui/themed';
 
 interface GoogleStaticMapsProps {
-  center: string | Location;
+  center: string | Point;
   zoom: number;
   size: Size;
   scale?: 1 | 2;
@@ -13,8 +13,8 @@ interface GoogleStaticMapsProps {
   region?: string;
   apiKey: string;
   signature?: string;
-  onError: Function;
-  onLoad: Function;
+  onError?: Function;
+  onLoad?: Function;
   blur?: number;
   mapID?: string;
   mapStyle?: Array<MapStyle>;
@@ -25,9 +25,9 @@ interface GoogleStaticMapsProps {
   enableImplicitPositioning?: boolean;
 }
 
-interface Location {
-  latitude: string;
-  longitude: string;
+interface Point {
+  lat: number;
+  lng: number;
 }
 
 interface MapStyle {
@@ -53,14 +53,14 @@ interface Size {
 }
 
 interface Path extends Color {
-  points: Array<string> | Array<Location>;
+  points: Array<string> | Array<Point>;
   weigth?: number;
   fillColor?: string;
   geodesic?: boolean;
 }
 
 interface Marker extends Color {
-  location: string | Location;
+  location: string | Point;
   size?: 'tiny' | 'mid' | 'small' | 'normal';
   label?: string;
   scale?: 1 | 2 | 4;
@@ -86,11 +86,9 @@ const defaultScale = () => {
   return isRetina ? 2 : 1;
 };
 
-const setLocations = (items: Array<string> | Array<Location>) => {
+const setLocations = (items: Array<string> | Array<Point>) => {
   return items
-    .map(item =>
-      typeof item === 'string' ? item : `${item.latitude},${item.longitude}`,
-    )
+    .map(item => (typeof item === 'string' ? item : `${item.lat},${item.lng}`))
     .join('|');
 };
 
@@ -126,7 +124,7 @@ const GoogleStaticMaps = ({
     if (!enableImplicitPositioning) {
       typeof center === 'string'
         ? params.append('center', center)
-        : params.append('center', `${center.latitude},${center.longitude}`);
+        : params.append('center', `${center.lat},${center.lng}`);
     } else if (!(markers || paths || visible)) {
       console.error(
         'If enableImplicitPositioning=true, add either a marker, path or visible',
@@ -193,7 +191,7 @@ const GoogleStaticMaps = ({
         let locationUri =
           typeof marker.location === 'string'
             ? marker.location
-            : `${marker.location.latitude},${marker.location.longitude}`;
+            : `${marker.location.lat},${marker.location.lng}`;
 
         params.append('markers', `${styleUri}${locationUri}`);
       });

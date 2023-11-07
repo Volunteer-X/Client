@@ -172,3 +172,5 @@ export const Picks: Array<Pick> = [
     isSelected: false,
   },
 ];
+
+console.log(Picks);

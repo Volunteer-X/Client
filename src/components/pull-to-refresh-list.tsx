@@ -174,6 +174,7 @@ const PullToRefreshList = () => {
 
         {/* <FlatList /> */}
         <PicksSelectView
+          key="PullToRefreshList"
           selectedPicks={() => {}}
           showsVerticalScrollIndicator={false}
           chipStyle={{ height: 100, margin: 10 }}

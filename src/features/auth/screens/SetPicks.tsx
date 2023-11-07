@@ -92,6 +92,7 @@ const SetPicks = ({
   return (
     <View style={styles.container}>
       <PicksSelectView
+        key="SetPicks"
         numColumns={3}
         columnWrapperStyle={styles.columnWrapper}
         ListHeaderComponent={renderHeader}
