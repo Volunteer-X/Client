@@ -1,20 +1,16 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet } from 'react-native';
 import React from 'react';
 import LottieView from 'lottie-react-native';
 import { DIMENSIONS } from '@app/lib';
-import { Button, Text } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
-import { PFinalNavProp } from '@app/types/type';
+import { Text } from 'react-native-paper';
 
-const EmptyPickView = () => {
-  const navigation = useNavigation<PFinalNavProp>();
-
+const EmptyPickView = ({
+  onClickEmptyScreen,
+}: {
+  onClickEmptyScreen: () => void;
+}) => {
   return (
-    <Pressable
-      style={styles.container}
-      onPress={() => {
-        navigation.navigate('SelectPicks');
-      }}>
+    <Pressable style={styles.container} onPress={onClickEmptyScreen}>
       <LottieView
         style={styles.lottieView}
         source={require('@assets/anims/empty-ping.json')}

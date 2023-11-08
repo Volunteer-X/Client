@@ -1,13 +1,11 @@
 /* eslint-disable react-native/no-inline-styles */
-import { PicksSelectView } from '@app/components';
-import PullToRefreshList from '@app/components/pull-to-refresh-list';
+import { MultiSelectView, PicksSelectView } from '@app/components';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { DIMENSIONS, PADDING } from '@app/lib';
+import { PADDING, Picks, Pick, PicksIcon, PicksLabel } from '@app/lib';
 import { AppTheme } from '@app/theme';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { View, StyleSheet, StatusBar, Text } from 'react-native';
-import { Button, MD3Colors } from 'react-native-paper';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
@@ -24,7 +22,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
       />
       {/* Flatlist Header Component */}
       <View>
-        <PicksSelectView
+        {/* <PicksSelectView
           key={'HomeScreen'}
           horizontal
           selectedPicks={() => {}}
@@ -37,9 +35,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
             marginTop: PADDING.sm,
             marginBottom: PADDING.sm,
           }}
-        />
+        /> */}
       </View>
-      <PullToRefreshList />
+      {/* <PullToRefreshList /> */}
     </View>
   );
 };

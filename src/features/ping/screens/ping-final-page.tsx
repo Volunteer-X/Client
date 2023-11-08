@@ -5,18 +5,17 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   Text,
-  Chip,
   Divider,
   TextInput,
   HelperText,
   MD3Colors,
   IconButton,
+  Chip,
 } from 'react-native-paper';
 
 import { ImagePickerResponse, Asset } from 'react-native-image-picker';
@@ -24,19 +23,18 @@ import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 import { PFinalNavProp, PFinalRouteProp } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
-import { PicksLabel, SIZES } from '@app/lib';
+import { SIZES } from '@app/lib';
 import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
 
 import { MediaTypeView } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
-import { loremIpsum } from '@app/lib/constants/values';
 import { useGeoLocation } from '@app/context/geo-location';
 import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
 import EmptyPickView from '../components/empty-pick-view';
 
-const { height, width } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 export const PingFinalPage = () => {
   const { theme } = useAppTheme();
@@ -51,15 +49,21 @@ export const PingFinalPage = () => {
   const [showUrl, setShowUrl] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
 
+  // * Get current location
   const currentLocation = useGeoLocation();
 
+  // * Get selected point
   const [selectedPoint, setSelectedPoint] = useState<Point>({
     lat: currentLocation.latitude,
     lng: currentLocation.longitude,
   });
 
+  // * Get reverse geocoding
   const [place, setPlace] = useState<string>();
+  // * Get picks
+  const [picks, setPicks] = useState<Array<string>>([]);
 
+  // * Update place on navigation back
   useEffect(() => {
     if (route.params && route.params.point !== undefined) {
       setSelectedPoint(route.params.point);
@@ -69,6 +73,18 @@ export const PingFinalPage = () => {
       .then(value => setPlace(value))
       .catch(e => console.error(e));
   }, [route.params, selectedPoint]);
+
+  // * Navigate to pick select screen
+  const navigateToPickSelect = () => {
+    navigation.navigate('SelectPicks', { picks });
+  };
+
+  // * Update picks on navigation back
+  useEffect(() => {
+    if (route.params && route.params.picks) {
+      setPicks(route.params.picks);
+    }
+  }, [picks, route.params]);
 
   const textInputProps = {
     contentStyle: styles.textInputContent,
@@ -86,8 +102,6 @@ export const PingFinalPage = () => {
       errorMessage,
       assets: newAssets,
     }: ImagePickerResponse) => {
-      // // // console.log('🚀 ~ file: PingA.tsx:56 ~ PingA ~ res:', newAssets);
-
       // * Do nothing on cancel
       if (didCancel) {
         return;
@@ -128,6 +142,32 @@ export const PingFinalPage = () => {
         <View style={styles.container}>
           {/* Picks */}
           <View style={[styles.subContainer, styles.picksContainer]}>
+            {picks.length > 0 ? (
+              <View style={styles.picksHorizontalContainer}>
+                {picks.map(pick => (
+                  <Chip
+                    key={`Chip-${pick}`}
+                    icon="home"
+                    selected
+                    showSelectedOverlay
+                    style={styles.chip}
+                    mode="outlined">
+                    {pick}
+                  </Chip>
+                ))}
+                {picks.length < 5 && (
+                  <Chip
+                    icon="plus"
+                    style={styles.chip}
+                    mode="outlined"
+                    onPress={navigateToPickSelect}>
+                    {'Add more'}
+                  </Chip>
+                )}
+              </View>
+            ) : (
+              <EmptyPickView onClickEmptyScreen={navigateToPickSelect} />
+            )}
             {/* <View style={styles.picksHorizontalContainer}>
               <Chip
                 icon="home"
@@ -174,7 +214,6 @@ export const PingFinalPage = () => {
                 {'Add more'}
               </Chip>
             </View> */}
-            <EmptyPickView />
           </View>
 
           {/* Media */}

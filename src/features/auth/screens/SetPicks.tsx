@@ -21,28 +21,32 @@ const SetPicks = ({
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
-  const selectedPicks = useRef<Array<string>>([]);
+  // const selectedPicks = useRef<Array<string>>([]);
+  const [selectedPicks, setSelectedPicks] = useState<Array<string>>([]);
+
   const [canContinue, setCanContinue] = useState<boolean>(false);
 
   const username = route.params?.username;
   const styles = makeStyles(theme);
 
-  const getSelectedPicks = useCallback((_selectedPicks: Array<string>) => {
-    if (_selectedPicks.length < Defaults.MIN_NUM_PICKS) {
-      setCanContinue(false);
-    } else {
+  const handlePickSelect = useCallback((_selectedPicks: Array<string>) => {
+    console.log(_selectedPicks);
+
+    if (_selectedPicks.length >= Defaults.MIN_NUM_PICKS) {
       setCanContinue(true);
-      selectedPicks.current = _selectedPicks;
+    } else {
+      setCanContinue(false);
     }
+    setSelectedPicks(_selectedPicks);
   }, []);
 
   const handleOnSubmition = useCallback(() => {
-    console.log(selectedPicks.current);
+    console.log(selectedPicks);
     navigation.navigate('LoadingScreen', {
       username,
-      picks: selectedPicks.current,
+      picks: selectedPicks,
     });
-  }, [navigation, username]);
+  }, [navigation, selectedPicks, username]);
 
   const renderHeader = useCallback(() => {
     return (
@@ -102,7 +106,8 @@ const SetPicks = ({
         ListFooterComponentStyle={styles.footerComponent}
         chipStyle={styles.chip}
         chipTextStyle={styles.chipText}
-        selectedPicks={getSelectedPicks}
+        onPickSelect={handlePickSelect}
+        selectedPicks={selectedPicks}
       />
     </View>
   );

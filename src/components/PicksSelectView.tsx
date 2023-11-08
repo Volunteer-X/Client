@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   FlatList,
   FlatListProps,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 
 import { PicksChip } from '@components/chips';
-import { Pick, PicksIcon, PicksLabel } from '@app/lib/constants/picks';
+import { Pick, Picks } from '@app/lib';
 
 type Modify<T, R, S> = Omit<T, keyof R> & S;
 
@@ -19,69 +19,55 @@ type RemovedProps = {
 };
 
 type Props = {
-  selectedPicks: (selectedPicks: Array<string>) => void;
+  max?: number;
+  selectedPicks: Array<string>;
+  onPickSelect: (selectedPicks: string[]) => void;
   chipTextStyle?: StyleProp<TextStyle>;
   chipStyle?: StyleProp<ViewStyle>;
 };
 
 type EnhancedProps = Modify<FlatListProps<Pick>, RemovedProps, Props>;
 
-const Picks: Array<Pick> = [
-  {
-    label: PicksLabel.Animal,
-    icon: PicksIcon.Animal,
-    isSelected: false,
-  },
-  {
-    label: PicksLabel.Art,
-    icon: PicksIcon.Art,
-    isSelected: false,
-  },
-  {
-    label: PicksLabel.Culture,
-    icon: PicksIcon.Culture,
-    isSelected: false,
-  },
-];
-
 /*
  * TODO: Long press display information setting
  */
 export const PicksSelectView = ({
   selectedPicks,
+  onPickSelect,
   chipStyle,
   chipTextStyle,
+  max,
   ...flatListProps
 }: EnhancedProps) => {
-  const [picks, setPicks] = useState(Picks);
-
-  const onSelectItemsChange = (index: number) => {
-    picks[index].isSelected = !picks[index].isSelected;
-    setPicks([...picks]);
+  const toggleSelection = (label: string) => {
+    if (selectedPicks.includes(label)) {
+      onPickSelect(selectedPicks.filter(val => val !== label));
+    } else {
+      onPickSelect([...selectedPicks, label]);
+    }
   };
 
-  useEffect(() => {
-    selectedPicks(
-      picks.filter(item => item.isSelected).map(item => item.label),
+  const isDisabled = max ? selectedPicks.length > max : false;
+
+  const renderItem: ListRenderItem<Pick> = ({ item }) => {
+    item.isSelected = selectedPicks.includes(item.label);
+
+    return (
+      <PicksChip
+        onSelect={toggleSelection}
+        onDeselect={toggleSelection}
+        pick={item}
+        chipStyle={chipStyle}
+        chipTextStyle={chipTextStyle}
+        disabled={isDisabled}
+      />
     );
-
-    return () => {};
-  }, [picks, selectedPicks]);
-
-  const renderItem: ListRenderItem<Pick> = ({ item, index }) => (
-    <PicksChip
-      onSelection={onSelectItemsChange}
-      index={index}
-      datum={item}
-      chipStyle={chipStyle}
-      chipTextStyle={chipTextStyle}
-    />
-  );
+  };
 
   return (
     <>
       <FlatList
-        data={picks}
+        data={Picks}
         renderItem={renderItem}
         keyExtractor={item => `Key-${item.label}`}
         {...flatListProps}

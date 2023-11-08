@@ -1,22 +1,29 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { Button, MD3Colors, Text } from 'react-native-paper';
-import { MultiSelectView, PicksSelectView } from '@app/components';
+import { PicksSelectView } from '@app/components';
 import { DIMENSIONS, PADDING, SIZES } from '@app/lib';
-import { Defaults } from '@app/lib/constants/values';
-import { useNavigation } from '@react-navigation/native';
-import { SelectPicksNavigationProp } from '@app/types/type';
+import { Defaults } from '@app/lib';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { PSelectPicksNavProp, PSelectPicksRoute } from '@app/types/type';
 
 export const PingSelectPicks = () => {
-  const navigation = useNavigation<SelectPicksNavigationProp>();
+  const navigation = useNavigation<PSelectPicksNavProp>();
+  const route = useRoute<PSelectPicksRoute>();
 
-  const [selectedPicks, setSelectedPicks] = useState<Array<string>>([]);
+  const [selectedPicks, setSelectedPicks] = useState<string[]>(() => {
+    if (route.params && route.params.picks) {
+      return route.params.picks;
+    }
 
-  const getSelectedPicks = useCallback((selectedPicks: Array<string>) => {
-    setSelectedPicks(selectedPicks);
-  }, []);
+    return [];
+  });
+
+  const handlePickSelect = (pickLabels: string[]) => {
+    setSelectedPicks(pickLabels);
+  };
 
   /*
    * handle redux storing and handling
@@ -24,7 +31,8 @@ export const PingSelectPicks = () => {
    */
   const handleOnSubmtition = useCallback(() => {
     console.log('Pick Count', selectedPicks.length, selectedPicks);
-    navigation.navigate('Body');
+    navigation.navigate('FinalPage', { picks: selectedPicks });
+    // navigation.navigate('Body');
   }, [navigation, selectedPicks]);
 
   const renderHeader = () => {
@@ -60,30 +68,15 @@ export const PingSelectPicks = () => {
   return (
     <View style={styles.superContainer}>
       <PicksSelectView
-        // key={'PingSelectPicks'}
+        key={'PingSelectPicks'}
         numColumns={3}
         columnWrapperStyle={styles.columnWrapper}
         ListHeaderComponent={renderHeader}
-        // ListFooterComponent={renderFooter}
         contentContainerStyle={styles.contentContainer}
-        // ListHeaderComponentStyle={styles.headerComponent}p
-        // ListFooterComponentStyle={styles.footerComponent}
         chipStyle={styles.chip}
         chipTextStyle={styles.chipText}
-        selectedPicks={getSelectedPicks}
-      />
-      <PicksSelectView
-        // key={'PingSelectPicks1'}
-        numColumns={3}
-        columnWrapperStyle={styles.columnWrapper}
-        ListHeaderComponent={renderHeader}
-        // ListFooterComponent={renderFooter}
-        contentContainerStyle={styles.contentContainer}
-        // ListHeaderComponentStyle={styles.headerComponent}p
-        // ListFooterComponentStyle={styles.footerComponent}
-        chipStyle={styles.chip}
-        chipTextStyle={styles.chipText}
-        selectedPicks={getSelectedPicks}
+        selectedPicks={selectedPicks}
+        onPickSelect={handlePickSelect}
       />
       {/* <MultiSelectView /> */}
     </View>

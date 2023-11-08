@@ -1,5 +1,4 @@
 import React from 'react';
-import { Picks, Pick } from '@app/lib';
 import {
   FlatList,
   FlatListProps,
@@ -8,40 +7,54 @@ import {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import { Modify } from '@app/types/utility-types';
-import { PicksChip } from './chips';
-import { Chip } from 'react-native-paper';
+
+import { Pick, Picks } from '@app/lib/constants/picks';
+import { PickChip } from './chips/NewChip';
+
+type Modify<T, R, S> = Omit<T, keyof R> & S;
 
 type RemovedProps = {
-  data: Array<Pick>;
   renderItem?: ListRenderItem<Pick>;
 };
 
 type Props = {
-  chipStyle?: StyleProp<ViewStyle>;
+  data?: Array<Pick>;
+  selectedPicks: Array<string>;
+  onPickSelect: (selectedPicks: string[]) => void;
   chipTextStyle?: StyleProp<TextStyle>;
+  chipStyle?: StyleProp<ViewStyle>;
 };
 
 type EnhancedProps = Modify<FlatListProps<Pick>, RemovedProps, Props>;
 
+/*
+ * TODO: Long press display information setting
+ */
 export const MultiSelectView = ({
-  chipStyle,
-  chipTextStyle,
+  data,
+  selectedPicks,
+  onPickSelect,
   ...flatListProps
 }: EnhancedProps) => {
-  const renderItem: ListRenderItem<Pick> = ({ item, index }) => {
-    const { label, icon } = item;
+  const toggleSelection = (label: string) => {
+    if (selectedPicks.includes(label)) {
+      onPickSelect(selectedPicks.filter(val => val !== label));
+    } else {
+      onPickSelect([...selectedPicks, label]);
+    }
+  };
 
-    const isSelected = Picks.filter(i => i.label === label).length > 0;
+  const renderItem: ListRenderItem<Pick> = ({ item }) => {
+    item.isSelected = selectedPicks.includes(item.label);
 
     return (
-      <Chip
-        mode={isSelected ? 'flat' : 'outlined'}
-        onPress={() => {
-          console.log(label);
-        }}>
-        {label}
-      </Chip>
+      <>
+        <PickChip
+          pick={item}
+          onSelect={toggleSelection}
+          onDeselect={toggleSelection}
+        />
+      </>
     );
   };
 
@@ -50,7 +63,7 @@ export const MultiSelectView = ({
       <FlatList
         data={Picks}
         renderItem={renderItem}
-        keyExtractor={(item: Pick) => `Key-${item.label}`}
+        keyExtractor={item => `Key-${item.label}`}
         {...flatListProps}
       />
     </>

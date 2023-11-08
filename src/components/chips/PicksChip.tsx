@@ -7,24 +7,34 @@ import { AppTheme } from '@theme/index';
 import { Pick } from '@app/lib/constants/picks';
 
 export type ChipProps = {
-  datum: Pick;
-  index: number;
-  onSelection: (index: number) => void;
+  pick: Pick;
+  disabled?: boolean;
+  onSelect: (pick: string) => void;
+  onDeselect: (pick: string) => void;
   chipTextStyle?: StyleProp<TextStyle>;
   chipStyle?: StyleProp<ViewStyle>;
 };
 
 const PicksChip = ({
-  index,
-  datum,
-  onSelection,
+  pick,
+  disabled,
+  onSelect,
+  onDeselect,
   chipTextStyle,
   chipStyle,
 }: ChipProps) => {
   const { theme } = useAppTheme();
   const style = makeStyles(theme);
 
-  const { isSelected, label, icon } = datum;
+  const { isSelected, label, icon } = pick;
+
+  const toggleSelection = () => {
+    if (isSelected) {
+      onDeselect(label);
+    } else {
+      onSelect(label);
+    }
+  };
 
   return (
     <>
@@ -34,7 +44,8 @@ const PicksChip = ({
         icon={icon}
         mode={isSelected ? 'flat' : 'outlined'}
         selected={isSelected}
-        onPress={() => onSelection(index)}>
+        onPress={toggleSelection}
+        disabled={disabled}>
         {label}
       </Chip>
     </>

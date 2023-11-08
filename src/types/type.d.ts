@@ -6,8 +6,8 @@ import { Point } from './utility-types';
  * PingStackParamList
  */
 export type PingStackParamList = {
-  FinalPage: { point?: Point };
-  SelectPicks: undefined;
+  FinalPage: { point?: Point; picks?: Array<string> };
+  SelectPicks: { picks?: Array<string> };
   SearchLocation: { point: Point };
 };
 
@@ -19,10 +19,11 @@ export type PFinalNavProp = StackNavigationProp<
 export type PFinalRouteProp = RouteProp<PingStackParamList, 'FinalPage'>;
 
 // * Select picks
-export type SelectPicksNavProp = StackNavigationProp<
+export type PSelectPicksNavProp = StackNavigationProp<
   PingStackParamList,
   'SelectPicks'
 >;
+export type PSelectPicksRoute = RouteProp<PingStackParamList, 'SelectPicks'>;
 
 // * Body select
 export type PingBodyNavProp = StackNavigationProp<PingStackParamList, 'Body'>;
