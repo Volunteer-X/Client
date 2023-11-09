@@ -7,8 +7,8 @@ export { default as ActivityScreen } from './activity/screens/ActivityScreen';
 // Feature -- Map
 export { default as MapScreen } from './maps/screens/MapScreen';
 
-// // Feature -- Ping
-// export { default as Pin } from './ping/screens/index';
+// Feature -- Ping
+// export { default as Ping } from './ping/screens/index';
 
 // Feature -- Profile
 export { default as ProfileScreen } from './profile/screens/ProfileScreen';

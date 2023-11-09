@@ -26,7 +26,7 @@ export const PingNavigation = () => {
         <Stack.Screen
           name="FinalPage"
           component={PingFinalPage}
-          options={{ headerShown: true }}
+          // options={{ headerShown: true }}
         />
         <Stack.Screen
           name="SelectPicks"

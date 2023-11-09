@@ -19,3 +19,5 @@ export * from './pull-to-refresh-list';
 export * from './PicksSelectView';
 
 export * from './mutliple-select-view';
+
+export * from './text-input-enhanced';

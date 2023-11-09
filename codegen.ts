@@ -18,7 +18,10 @@ const config: CodegenConfig = {
   generates: {
     './src/__generated__/gql/': {
       schema: 'http://localhost:3500/graphql/',
-      documents: ['./src/features/auth/graphql/auth.*.ts'],
+      documents: [
+        './src/features/auth/graphql/auth.*.ts',
+        './src/features/ping/graphql/ping.*.ts',
+      ],
       preset: 'client',
       config: {
         scalars: {
@@ -32,6 +35,7 @@ const config: CodegenConfig = {
       },
     },
   },
+
   ignoreNoDocuments: true,
 };
 

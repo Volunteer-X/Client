@@ -1,5 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import {
+  Alert,
   Dimensions,
   Pressable,
   ScrollView,
@@ -16,6 +23,7 @@ import {
   MD3Colors,
   IconButton,
   Chip,
+  Button,
 } from 'react-native-paper';
 
 import { ImagePickerResponse, Asset } from 'react-native-image-picker';
@@ -28,11 +36,14 @@ import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
 
-import { MediaTypeView } from '@app/components';
+import { MediaTypeView, TextInputEnhanced } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import { useGeoLocation } from '@app/context/geo-location';
 import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
 import EmptyPickView from '../components/empty-pick-view';
+import { findPickFromLabel } from '@app/utils/pick-finder';
+import LottieView from 'lottie-react-native';
+import { pick } from 'lodash';
 
 const { height } = Dimensions.get('window');
 
@@ -53,10 +64,24 @@ export const PingFinalPage = () => {
   const currentLocation = useGeoLocation();
 
   // * Get selected point
-  const [selectedPoint, setSelectedPoint] = useState<Point>({
+  const [selectedPoint, setSelectedPoint] = useState<Point>(() => ({
     lat: currentLocation.latitude,
     lng: currentLocation.longitude,
-  });
+  }));
+
+  // * Update selected point if current location changes
+  // ! possible bug when user location changes
+  useEffect(() => {
+    if (
+      selectedPoint.lat !== currentLocation.latitude ||
+      selectedPoint.lng !== currentLocation.longitude
+    ) {
+      setSelectedPoint({
+        lat: currentLocation.latitude,
+        lng: currentLocation.longitude,
+      });
+    }
+  }, [currentLocation, selectedPoint]);
 
   // * Get reverse geocoding
   const [place, setPlace] = useState<string>();
@@ -72,7 +97,7 @@ export const PingFinalPage = () => {
     getReverseGeocoding(selectedPoint)
       .then(value => setPlace(value))
       .catch(e => console.error(e));
-  }, [route.params, selectedPoint]);
+  }, [currentLocation, route.params, selectedPoint]);
 
   // * Navigate to pick select screen
   const navigateToPickSelect = () => {
@@ -133,6 +158,87 @@ export const PingFinalPage = () => {
     }
   }, [assets, showUrl]);
 
+  // * Get title text
+  const [titleText, setTitleText] = useState<string>('');
+  const [titleError, setTitleError] = useState<boolean>(false);
+
+  // * Get description text
+  const [descriptionText, setDescriptionText] = useState<string>('');
+
+  // * Get url text
+  const [urlText, setUrlText] = useState<string | undefined>();
+
+  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] =
+    useState<boolean>(false);
+
+  /*
+   * Handle text changes
+    @param text : string , title
+   */
+  const handleTitleTextChange = (text: string) => {
+    setTitleText(text);
+    if (text.trim().length > 0) {
+      setTitleError(false);
+    }
+  };
+
+  /*
+    * Handle text changes
+    @param text : string , description
+  */
+  const handleDescriptionTextChange = (text: string) => {
+    setDescriptionText(text);
+  };
+
+  const headerRight = () => {
+    return (
+      <IconButton
+        icon={'send'}
+        iconColor="green"
+        onPress={() => {
+          if (titleText.length === 0 || picks.length === 0) {
+            Alert.alert(
+              'Ping',
+              'Please enter a title and select at least one pick',
+            );
+          } else if (titleText.length === 0) {
+            // * Show error
+            // ! Change to modal
+            Alert.alert('Ping', 'Please enter a title');
+            return;
+          } else if (picks.length === 0) {
+            // * Show error
+            // ! Change to modal
+            Alert.alert('Ping', 'Please select at least one pick');
+            return;
+          } else {
+            console.log(
+              'Ping',
+              titleText,
+              descriptionText,
+              urlText,
+              picks,
+              selectedPoint,
+            );
+
+            Alert.alert('Ping', 'Are you sure you want to ping?');
+          }
+        }}
+        disabled={isSubmitButtonDisabled}
+      />
+    );
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerTitle: 'Create a ping',
+      headerRight,
+      headerStyle: styles.header,
+    }),
+      [navigation];
+  });
+
   return (
     <View style={styles.superContainer}>
       <StatusBar backgroundColor={MD3Colors.neutral0} />
@@ -144,76 +250,33 @@ export const PingFinalPage = () => {
           <View style={[styles.subContainer, styles.picksContainer]}>
             {picks.length > 0 ? (
               <View style={styles.picksHorizontalContainer}>
-                {picks.map(pick => (
+                {picks.map(pick => {
+                  let p = findPickFromLabel(pick);
+                  return (
+                    <Chip
+                      key={`Chip-${pick}`}
+                      icon={p?.icon}
+                      selected
+                      showSelectedOverlay
+                      style={styles.chip}
+                      mode="outlined">
+                      {pick}
+                    </Chip>
+                  );
+                })}
+                {
                   <Chip
-                    key={`Chip-${pick}`}
-                    icon="home"
-                    selected
-                    showSelectedOverlay
-                    style={styles.chip}
-                    mode="outlined">
-                    {pick}
-                  </Chip>
-                ))}
-                {picks.length < 5 && (
-                  <Chip
-                    icon="plus"
+                    icon={picks.length < 5 ? 'plus' : 'pencil'}
                     style={styles.chip}
                     mode="outlined"
                     onPress={navigateToPickSelect}>
-                    {'Add more'}
+                    {picks.length < 5 ? 'Add more' : 'Edit picks'}
                   </Chip>
-                )}
+                }
               </View>
             ) : (
               <EmptyPickView onClickEmptyScreen={navigateToPickSelect} />
             )}
-            {/* <View style={styles.picksHorizontalContainer}>
-              <Chip
-                icon="home"
-                selected
-                showSelectedOverlay
-                style={styles.chip}
-                mode="outlined">
-                {PicksLabel.Technology}
-              </Chip>
-              <Chip
-                icon="home"
-                selected
-                showSelectedOverlay
-                style={styles.chip}
-                mode="outlined">
-                {PicksLabel.Art}
-              </Chip>
-              <Chip
-                icon="home"
-                selected
-                showSelectedOverlay
-                style={styles.chip}
-                mode="outlined">
-                {PicksLabel.Children}
-              </Chip>
-              <Chip
-                icon="home"
-                selected
-                showSelectedOverlay
-                style={styles.chip}
-                mode="outlined">
-                {PicksLabel.Disaster}
-              </Chip>
-              <Chip
-                icon="home"
-                style={styles.chip}
-                mode="outlined"
-                selected
-                showSelectedOverlay
-                compact>
-                {PicksLabel.Environment}
-              </Chip>
-              <Chip icon="plus" style={styles.chip} mode="outlined">
-                {'Add more'}
-              </Chip>
-            </View> */}
           </View>
 
           {/* Media */}
@@ -223,17 +286,20 @@ export const PingFinalPage = () => {
 
           {/* Text & URL */}
           <View style={[styles.subContainer]}>
-            <TextInput
-              placeholder="An interesting title"
-              style={styles.textInput}
-              textContentType="none"
-              textBreakStrategy="highQuality"
+            <TextInputEnhanced
+              multiline
+              maxLength={80}
+              minLength={10}
+              required={titleError}
               dense
+              textContentType="none"
+              blurOnSubmit
+              style={[styles.textInput, { fontSize: 14 }]}
               {...textInputProps}
+              placeholder={'An interesting title'}
+              onTextChanged={handleTitleTextChange}
             />
-            <HelperText type="error" visible>
-              Required
-            </HelperText>
+
             <Divider bold style={{ marginVertical: SIZES.xxSmall }} />
             {/* URL */}
             {showUrl && (
@@ -258,21 +324,19 @@ export const PingFinalPage = () => {
               </View>
             )}
 
-            {/* Text Area */}
-            <TextInput
-              multiline
-              placeholder="What's happening?"
-              style={[styles.textInput, styles.textArea]}
-              textContentType="none"
-              textBreakStrategy="highQuality"
-              // value={loremIpsum}
+            {/*
+             * Text Area
+             */}
+            <TextInputEnhanced
               maxLength={500}
+              placeholder="What's happening? (Optional)"
+              style={[styles.textInput, styles.textArea]}
               dense
+              multiline
+              value={descriptionText}
+              onTextChanged={handleDescriptionTextChange}
               {...textInputProps}
             />
-            <HelperText type="info" visible style={{ textAlign: 'right' }}>
-              500/500
-            </HelperText>
           </View>
 
           {/* Location */}
@@ -353,9 +417,8 @@ const makeStyles = (theme: AppTheme) =>
       backgroundColor: theme.dark ? MD3Colors.neutral10 : MD3Colors.neutral90,
     },
     header: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
+      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral90,
+      elevation: 0,
     },
     headerTitle: {
       fontWeight: 'bold',
