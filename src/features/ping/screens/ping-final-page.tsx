@@ -219,6 +219,7 @@ export const PingFinalPage = () => {
               urlText,
               picks,
               selectedPoint,
+              assets,
             );
 
             Alert.alert('Ping', 'Are you sure you want to ping?');

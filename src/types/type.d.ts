@@ -57,3 +57,7 @@ export type MainNavList = {
 // Drawer
 
 export type HomeNavigationProps = {};
+
+export type ActivityStackParamList = {
+  Activity: undefined;
+};

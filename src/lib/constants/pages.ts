@@ -6,7 +6,7 @@ export const PageNames = {
   Map: 'Map',
   CreatePing: 'Create ping',
   Search: 'Search',
-  Activity: 'Activity',
+  ActivityList: 'ActivityList',
   UserFeeds: 'UserFeeds',
   AuthHome: 'AuthHome',
   SetUsername: 'SetUsername',

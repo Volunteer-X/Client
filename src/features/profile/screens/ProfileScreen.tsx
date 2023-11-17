@@ -6,7 +6,7 @@ import { Text } from 'react-native-paper';
 
 import { PageNames } from '../../../lib';
 import UserFeeds from './UserFeeds';
-import ActivityScreen from '../../activity/screens/ActivityScreen';
+import ActivityScreen from '../../activity/screens/ActivityListScreen';
 
 const StatView = ({
   statCount,

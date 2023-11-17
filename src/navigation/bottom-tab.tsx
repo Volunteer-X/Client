@@ -4,12 +4,11 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Avatar, MD3Colors } from 'react-native-paper';
-import { Pressable, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import { PageNames } from '../lib';
 import {
-  ActivityScreen,
+  ActivityListScreen,
   HomeScreen,
   MapScreen,
   SearchScreen,
@@ -17,7 +16,7 @@ import {
 import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
-import { HomeHeader, PingHeaderLeft, PingHeaderRight } from '@app/components';
+import { HomeHeader } from '@app/components';
 
 function tabBarIcon({
   color,
@@ -44,7 +43,7 @@ function tabBarIcon({
     case 'Search':
       iconName = focused ? 'search' : 'search-outline';
       break;
-    case 'Activity':
+    case 'ActivityList':
       iconName = focused ? 'newspaper' : 'newspaper-outline';
       break;
     default:
@@ -91,7 +90,11 @@ const BottomTabNavigation = () => {
         })}
       />
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />
-      <Tab.Screen name={PageNames.Activity} component={ActivityScreen} />
+      <Tab.Screen
+        name={PageNames.ActivityList}
+        component={ActivityListScreen}
+        options={{ headerShown: false }}
+      />
     </Tab.Navigator>
   );
 };
