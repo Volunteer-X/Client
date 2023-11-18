@@ -2,22 +2,24 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Avatar, IconButton, Text } from 'react-native-paper';
 import { PADDING } from '@app/lib';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const ActivityCard = () => {
   return (
     <View
       style={{
-        paddingVertical: PADDING.md,
+        // paddingVertical: PADDING.sm,
         gap: 15,
         flexDirection: 'row',
-        height: 'auto',
-
-        backgroundColor: 'red',
+        // marginVertical: PADDING.sm,
+        // backgroundColor: 'red',
+        // borderRadius: 10,
       }}>
       {/* Left side */}
       <View
         style={{
-          height: 'auto',
+          // height: '100%',
+          flex: 0,
           flexDirection: 'column',
           alignItems: 'center',
           columnGap: 10,
@@ -29,8 +31,9 @@ const ActivityCard = () => {
         />
         <View
           style={{
+            flex: 1,
             width: 1,
-            height: 'auto',
+            height: '100%',
             backgroundColor: '#c5c5c5',
             marginVertical: PADDING.sm,
           }}
@@ -71,16 +74,17 @@ const ActivityCard = () => {
             voluptatum? Quo, quia. Quisquam, voluptatum voluptates? Quisquam,
             voluptatum voluptates?
           </Text>
+          {/* URL */}
+          {/* Media */}
           {/* Actions */}
-          <View style={{ flexDirection: 'row', display: 'none' }}>
-            <IconButton
-              icon={'heart'}
+          <View style={{ flexDirection: 'row', display: 'flex' }}>
+            <Icon
+              name="heart-outline"
               size={24}
-              iconColor="#FFF"
-              containerColor="transparent"
+              color="#FFF"
               style={{
                 padding: 0,
-                margin: 0,
+                marginVertical: 5,
               }}
             />
           </View>

@@ -93,7 +93,7 @@ const BottomTabNavigation = () => {
       <Tab.Screen
         name={PageNames.ActivityList}
         component={ActivityListScreen}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
       />
     </Tab.Navigator>
   );
