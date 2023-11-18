@@ -13,9 +13,11 @@ import {
   Text,
   TextInput,
 } from 'react-native-paper';
-import { DIMENSIONS, PADDING } from '@app/lib';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import { DIMENSIONS, PADDING } from '@app/lib';
 import ActivityCard from '@app/components/activity-card';
+import { is } from 'immer/dist/internal';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -23,7 +25,8 @@ const ActivityScreen = () => {
   const styles = makeStyles(inset);
 
   // States
-  const [isOwner, setIsOwner] = React.useState(true);
+  const [isOwner, setIsOwner] = React.useState(false);
+  const [isMember, setIsMember] = React.useState(true);
 
   return (
     <View style={[styles.page]}>
@@ -46,23 +49,44 @@ const ActivityScreen = () => {
                   padding: 0,
                   margin: 15,
                   position: 'absolute',
-                  top: 0,
-                  right: 0,
+                  top: 10,
+                  right: 10,
+                  gap: 5,
                 }}>
-                <IconButton
-                  icon={'account-plus'}
-                  size={30}
-                  iconColor="#FFF"
-                  containerColor="#000"
-                  style={{ padding: 5 }}
-                />
-                <IconButton
-                  icon={'chat'}
-                  size={30}
-                  iconColor="#FFF"
-                  containerColor="#000"
+                {/* Show add only if you are member */}
+                {!isOwner && !isMember && (
+                  <Ionicon
+                    name="person-add"
+                    size={24}
+                    style={{
+                      color: '#FFF',
+                      backgroundColor: '#000',
+                      borderRadius: 50,
+                      padding: 10,
+                    }}
+                  />
+                )}
+                {/* show  */}
+                {isOwner && (
+                  <Ionicon
+                    name="cog"
+                    size={24}
+                    style={{
+                      color: '#FFF',
+                      backgroundColor: '#000',
+                      borderRadius: 50,
+                      padding: 10,
+                    }}
+                  />
+                )}
+                <Ionicon
+                  name="chatbubble"
+                  size={24}
                   style={{
-                    padding: 5,
+                    color: '#FFF',
+                    backgroundColor: '#000',
+                    borderRadius: 50,
+                    padding: 10,
                   }}
                 />
               </View>
@@ -172,6 +196,30 @@ const ActivityScreen = () => {
                     cursorColor={'#000'}
                   />
                   <Button>Post</Button>
+                </View>
+              )}
+              {!isOwner && (
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-evenly',
+                    alignItems: 'center',
+                    padding: 10,
+                    marginBottom: 10,
+                    gap: 10,
+                  }}>
+                  {!isMember && (
+                    <Button
+                      icon={'account-plus'}
+                      mode="contained"
+                      style={{ flex: 1 }}>
+                      Join
+                    </Button>
+                  )}
+
+                  <Button icon={'chat'} mode="contained" style={{ flex: 1 }}>
+                    Forum
+                  </Button>
                 </View>
               )}
               {/* Activity Body */}
