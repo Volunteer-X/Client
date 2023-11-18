@@ -9,8 +9,8 @@ import { Pick } from '@app/lib/constants/picks';
 export type ChipProps = {
   pick: Pick;
   disabled?: boolean;
-  onSelect: (pick: string) => void;
-  onDeselect: (pick: string) => void;
+  onSelect?: (pick: string) => void;
+  onDeselect?: (pick: string) => void;
   chipTextStyle?: StyleProp<TextStyle>;
   chipStyle?: StyleProp<ViewStyle>;
 };
@@ -18,8 +18,8 @@ export type ChipProps = {
 const PicksChip = ({
   pick,
   disabled,
-  onSelect,
-  onDeselect,
+  onSelect = () => {},
+  onDeselect = () => {},
   chipTextStyle,
   chipStyle,
 }: ChipProps) => {

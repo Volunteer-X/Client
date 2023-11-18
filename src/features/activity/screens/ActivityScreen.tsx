@@ -9,15 +9,15 @@ import React from 'react';
 import {
   Avatar,
   Button,
+  Chip,
   IconButton,
   Text,
   TextInput,
 } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import { DIMENSIONS, PADDING } from '@app/lib';
+import { PADDING, Picks } from '@app/lib';
 import ActivityCard from '@app/components/activity-card';
-import { is } from 'immer/dist/internal';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -121,6 +121,30 @@ const ActivityScreen = () => {
                     variant="bodySmall"
                     style={{ color: '#000' }}>{`5 Members`}</Text>
                 </Text>
+              </View>
+              {/* Picks */}
+              <View
+                style={{
+                  flexDirection: 'row',
+                  gap: 2.5,
+                  marginTop: 5,
+                }}>
+                {Picks.slice(9, 14).map(pick => (
+                  <Chip
+                    key={pick.label}
+                    mode="outlined"
+                    compact
+                    disabled
+                    textStyle={{ fontSize: 12, color: '#000' }}
+                    style={{
+                      padding: 0,
+                      margin: 0,
+                      borderColor: '#000',
+                      borderRadius: 10,
+                    }}>
+                    {pick.label}
+                  </Chip>
+                ))}
               </View>
             </View>
             {/* Member container */}
@@ -268,9 +292,10 @@ const makeStyles = (inset: EdgeInsets) =>
     header: {
       justifyContent: 'center',
       alignItems: 'center',
-      gap: 5,
+      gap: 1.5,
       // backgroundColor: 'red',
-      paddingVertical: PADDING.md,
+      paddingTop: PADDING.md,
+      paddingBottom: PADDING.sm,
     },
     activityTitle: {
       fontWeight: 'bold',
