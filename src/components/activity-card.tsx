@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Avatar, Divider, Text } from 'react-native-paper';
 import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -19,6 +19,7 @@ type ActivityCardProps = {
   timestamp: string;
   showPicks?: boolean;
   showStar?: boolean;
+  onMenuClick?: () => void;
 };
 
 const ActivityCard = ({
@@ -29,6 +30,7 @@ const ActivityCard = ({
   url,
   showPicks = false,
   showStar = false,
+  onMenuClick,
 }: ActivityCardProps) => {
   ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
   const media: Asset[] | undefined = undefined;
@@ -98,7 +100,12 @@ const ActivityCard = ({
             <Text variant="bodySmall" style={{}}>
               {`${timestamp} ago`}
             </Text>
-            <Ionicons name="ellipsis-horizontal" size={20} style={{}} />
+            <Ionicons
+              name="ellipsis-horizontal"
+              size={20}
+              style={{}}
+              onPress={onMenuClick}
+            />
           </View>
         </View>
         {/* Content */}

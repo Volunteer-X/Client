@@ -14,8 +14,8 @@ import BottomSheet, {
 } from '@gorhom/bottom-sheet';
 import { Button, Divider } from '@rneui/themed';
 
-import { DefaultValue, PICKS_DATA } from '../../lib';
-import { useAppDispatch, useAppSelector } from '../../hooks';
+import { DefaultValue, PICKS_DATA } from '@app/lib';
+import { useAppDispatch, useAppSelector } from '@hooks';
 
 import { PicksChip } from '../chips';
 import { onSelection } from '../../features/picks/slices/picksSlice';

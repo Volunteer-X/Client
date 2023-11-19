@@ -1,6 +1,5 @@
 import {
   ImageBackground,
-  Image,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -10,27 +9,41 @@ import React from 'react';
 import {
   Avatar,
   Button,
-  Chip,
   IconButton,
   Text,
   TextInput,
 } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import { EPicksIcon, PADDING, Picks } from '@app/lib';
+import { PADDING, Picks } from '@app/lib';
 import ActivityCard from '@app/components/activity-card';
-import Health from '@assets/icons/picks/health.svg';
-import { SvgUri } from 'react-native-svg';
 import { PicksIcon } from '@app/components';
+import {
+  ActivitySettingModal,
+  BottomSheetRefProps,
+} from '@app/components/bottom-sheets';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
 
   const styles = makeStyles(inset);
 
+  // Refs
+  const settingModalRef = React.useRef<BottomSheetRefProps>(null);
+
   // States
   const [isOwner, setIsOwner] = React.useState(false);
   const [isMember, setIsMember] = React.useState(true);
+
+  // Bottom sheet Handlers
+  // Activity Setting Modal
+  const handleOnMenuClick = () => {
+    console.log('Menu Clicked');
+
+    if (settingModalRef.current) {
+      settingModalRef.current.openModal();
+    }
+  };
 
   return (
     <View style={[styles.page]}>
@@ -45,6 +58,8 @@ const ActivityScreen = () => {
           style={styles.scrollView}
           contentContainerStyle={{ flexGrow: 1 }}>
           <View style={{ flex: 1 }}>
+            <ActivitySettingModal ref={settingModalRef} />
+
             {/* Avatar and Activity Title  */}
             <View style={styles.header}>
               <View
@@ -245,6 +260,7 @@ const ActivityScreen = () => {
                 username="docren155"
                 showStar
                 url="https://www.youtube.com/watch?v=5qap5aO4i9A"
+                onMenuClick={handleOnMenuClick}
               />
               <ActivityCard
                 text="Lorem ipsum"

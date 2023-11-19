@@ -25,6 +25,7 @@ import apolloClient from '@services/apolloClient';
 import { AuthProvider } from '@app/context/auth-context/AuthContext';
 import { RootNavController } from '@app/components';
 import { GeoLocationProvider } from '@app/context/geo-location';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 /* 
 TODO develop authProvider for persist store and authentication check
@@ -42,15 +43,17 @@ const App = () => {
             <AuthProvider>
               <GeoLocationProvider>
                 <GestureHandlerRootView style={styles.gestureHandlerRootView}>
-                  <AppThemeProvider value={themePreference}>
-                    <ThemeProvider>
-                      <PaperProvider theme={theme}>
-                        <NavigationContainer theme={theme}>
-                          <RootNavController />
-                        </NavigationContainer>
-                      </PaperProvider>
-                    </ThemeProvider>
-                  </AppThemeProvider>
+                  <BottomSheetModalProvider>
+                    <AppThemeProvider value={themePreference}>
+                      <ThemeProvider>
+                        <PaperProvider theme={theme}>
+                          <NavigationContainer theme={theme}>
+                            <RootNavController />
+                          </NavigationContainer>
+                        </PaperProvider>
+                      </ThemeProvider>
+                    </AppThemeProvider>
+                  </BottomSheetModalProvider>
                 </GestureHandlerRootView>
               </GeoLocationProvider>
             </AuthProvider>
