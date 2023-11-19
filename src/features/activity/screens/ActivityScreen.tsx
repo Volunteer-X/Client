@@ -134,6 +134,7 @@ const ActivityScreen = () => {
                     key={pick.label}
                     mode="outlined"
                     compact
+                    icon={prop => <Ionicon {...prop} name={'home'} size={12} />}
                     disabled
                     textStyle={{ fontSize: 12, color: '#000' }}
                     style={{
