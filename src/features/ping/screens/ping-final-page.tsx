@@ -28,15 +28,17 @@ import {
 
 import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 
+import Ionicon from 'react-native-vector-icons/Ionicons';
+
 import { PFinalNavProp, PFinalRouteProp } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
-import { SIZES } from '@app/lib';
+import { EPicksIcon, SIZES } from '@app/lib';
 import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
 
-import { MediaTypeView, TextInputEnhanced } from '@app/components';
+import { MediaTypeView, PicksIcon, TextInputEnhanced } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import { useGeoLocation } from '@app/context/geo-location';
 import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
@@ -44,6 +46,7 @@ import EmptyPickView from '../components/empty-pick-view';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import LottieView from 'lottie-react-native';
 import { pick } from 'lodash';
+import { IconSource } from 'react-native-paper/lib/typescript/src/components/Icon';
 
 const { height } = Dimensions.get('window');
 
@@ -251,28 +254,54 @@ export const PingFinalPage = () => {
           <View style={[styles.subContainer, styles.picksContainer]}>
             {picks.length > 0 ? (
               <View style={styles.picksHorizontalContainer}>
-                {picks.map(pick => {
-                  let p = findPickFromLabel(pick);
+                {picks.map(label => {
+                  let _pick = findPickFromLabel(label);
                   return (
-                    <Chip
-                      key={`Chip-${pick}`}
-                      icon={p?.icon}
-                      selected
-                      showSelectedOverlay
-                      style={styles.chip}
-                      mode="outlined">
-                      {pick}
-                    </Chip>
+                    <View
+                      key={label}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 10,
+                        margin: 5,
+                        padding: 10,
+                        borderRadius: 10,
+                        borderWidth: 1,
+                        borderColor: '#f9f9f9',
+                        backgroundColor: '#000',
+                      }}>
+                      <PicksIcon
+                        icon={_pick.icon}
+                        size={SIZES.small}
+                        containerStyle={styles.iconContainerStyle}
+                      />
+                      <Text>{label}</Text>
+                    </View>
                   );
                 })}
                 {
-                  <Chip
-                    icon={picks.length < 5 ? 'plus' : 'pencil'}
-                    style={styles.chip}
-                    mode="outlined"
+                  <Pressable
+                    style={[
+                      styles.chip,
+                      {
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 5,
+                        backgroundColor: '#282a2f',
+                        borderRadius: 10,
+                        paddingHorizontal: 10,
+                      },
+                    ]}
                     onPress={navigateToPickSelect}>
-                    {picks.length < 5 ? 'Add more' : 'Edit picks'}
-                  </Chip>
+                    <Ionicon
+                      name={picks.length < 5 ? 'add-outline' : 'create'}
+                      size={SIZES.medium}
+                      style={{}}
+                    />
+                    <Text>{picks.length < 5 ? 'Add more' : 'Edit picks'}</Text>
+                  </Pressable>
                 }
               </View>
             ) : (
@@ -441,6 +470,13 @@ const makeStyles = (theme: AppTheme) =>
       paddingVertical: 5,
       marginRight: 7.5,
       marginVertical: 5,
+    },
+    iconContainerStyle: {
+      backgroundColor: 'transparent',
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      marginHorizontal: 0,
+      marginVertical: 0,
     },
     textInput: {
       backgroundColor: 'transparent',

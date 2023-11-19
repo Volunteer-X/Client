@@ -1,5 +1,5 @@
 import { StyleProp, StyleSheet, Text, View, ViewStyle } from 'react-native';
-import React from 'react';
+import React, { SVGProps } from 'react';
 import { EPicksIcon } from '@app/lib';
 
 import Animal from '@assets/icons/picks/animal.svg';
@@ -32,35 +32,71 @@ export const PicksIcon = ({
   iconStyle?: StyleProp<ViewStyle>;
 }) => {
   let IconLayer: React.ReactNode;
+
+  const svgProps = {
+    fill: '#f9f9f9',
+    fillOpacity: 1,
+  };
+
   switch (icon) {
     case EPicksIcon.Animal:
       IconLayer = (
-        <Animal width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Animal
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Art:
       IconLayer = (
-        <Art width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Art
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Children:
       IconLayer = (
-        <Children width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Children
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Culture:
       IconLayer = (
-        <Culture width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Culture
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Civil:
       IconLayer = (
-        <Civil width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Civil
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Disaster:
       IconLayer = (
-        <Disaster width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Disaster
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Economic:
@@ -68,6 +104,7 @@ export const PicksIcon = ({
         <Economics
           width={size}
           height={size}
+          {...svgProps}
           style={[styles.icon, iconStyle]}
         />
       );
@@ -77,6 +114,7 @@ export const PicksIcon = ({
         <Education
           width={size}
           height={size}
+          {...svgProps}
           style={[styles.icon, iconStyle]}
         />
       );
@@ -86,38 +124,69 @@ export const PicksIcon = ({
         <Environment
           width={size}
           height={size}
+          {...svgProps}
           style={[styles.icon, iconStyle]}
         />
       );
       break;
     case EPicksIcon.Health:
       IconLayer = (
-        <Health width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Health
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Human:
       IconLayer = (
-        <Human width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Human
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Poverty:
       IconLayer = (
-        <Poverty width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Poverty
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Politics:
       IconLayer = (
-        <Politics width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Politics
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Science:
       IconLayer = (
-        <Science width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Science
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Social:
       IconLayer = (
-        <Social width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Social
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     case EPicksIcon.Technology:
@@ -125,18 +194,29 @@ export const PicksIcon = ({
         <Technology
           width={size}
           height={size}
+          {...svgProps}
           style={[styles.icon, iconStyle]}
         />
       );
       break;
     case EPicksIcon.Women:
       IconLayer = (
-        <Women width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Women
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
       break;
     default:
       IconLayer = (
-        <Animal width={size} height={size} style={[styles.icon, iconStyle]} />
+        <Animal
+          width={size}
+          height={size}
+          {...svgProps}
+          style={[styles.icon, iconStyle]}
+        />
       );
   }
 

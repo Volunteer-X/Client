@@ -134,7 +134,7 @@ const ActivityScreen = () => {
                   marginTop: 5,
                 }}>
                 {Picks.slice(9, 14).map(pick => (
-                  <PicksIcon icon={pick.icon} size={20} />
+                  <PicksIcon key={pick.label} icon={pick.icon} size={20} />
                 ))}
               </View>
             </View>
