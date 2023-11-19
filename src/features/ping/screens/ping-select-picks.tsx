@@ -78,7 +78,6 @@ export const PingSelectPicks = () => {
         selectedPicks={selectedPicks}
         onPickSelect={handlePickSelect}
       />
-      {/* <MultiSelectView /> */}
     </View>
   );
 };

@@ -238,8 +238,19 @@ const ActivityScreen = () => {
                 </View>
               )}
               {/* Activity Body */}
-              <ActivityCard />
-              <ActivityCard />
+              <ActivityCard
+                isOriginalPing={true}
+                text="Lorem ipsum"
+                timestamp="2h"
+                username="docren155"
+                showStar
+                url="https://www.youtube.com/watch?v=5qap5aO4i9A"
+              />
+              <ActivityCard
+                text="Lorem ipsum"
+                timestamp="2h"
+                username="docren155"
+              />
             </View>
           </View>
         </ScrollView>

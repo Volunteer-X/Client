@@ -230,8 +230,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 50,
-    backgroundColor: 'white',
-    padding: 5,
+    backgroundColor: '#000',
+    padding: 6.6,
   },
   icon: {
     // color: 'green',

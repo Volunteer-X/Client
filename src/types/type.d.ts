@@ -58,6 +58,10 @@ export type MainNavList = {
 
 export type HomeNavigationProps = {};
 
+// * Activity
 export type ActivityStackParamList = {
   Activity: undefined;
+  Members: undefined;
+  Setting: undefined;
+  Profile: undefined;
 };

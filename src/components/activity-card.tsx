@@ -1,20 +1,35 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Avatar, Divider, Text } from 'react-native-paper';
-import { PADDING } from '@app/lib';
+import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import { Image } from 'react-native';
 import { MediaFlatlist } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
+import { PicksIcon } from './picks-icon';
 
-type ActivityCardProps = {};
+type ActivityCardProps = {
+  isOriginalPing?: boolean;
+  url?: string;
+  media?: Asset[];
+  text: string;
+  username: string;
+  timestamp: string;
+  showPicks?: boolean;
+  showStar?: boolean;
+};
 
-const ActivityCard = () => {
-  const isOriginalPing = true;
-
-  const url: string | undefined = undefined;
+const ActivityCard = ({
+  isOriginalPing = false,
+  text,
+  username,
+  timestamp,
+  url,
+  showPicks = false,
+  showStar = false,
+}: ActivityCardProps) => {
   ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
   const media: Asset[] | undefined = undefined;
   // [
@@ -70,10 +85,10 @@ const ActivityCard = () => {
             alignItems: 'flex-start',
           }}>
           <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
-            username
+            {username}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-            {isOriginalPing && (
+            {showStar && isOriginalPing && (
               <AntDesign
                 name="star"
                 size={14}
@@ -81,18 +96,36 @@ const ActivityCard = () => {
               />
             )}
             <Text variant="bodySmall" style={{}}>
-              2h
+              {`${timestamp} ago`}
             </Text>
             <Ionicons name="ellipsis-horizontal" size={20} style={{}} />
           </View>
         </View>
         {/* Content */}
-        <View style={{ flexDirection: 'column', gap: 10 }}>
-          <Text>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates,
-            voluptatum? Quo, quia. Quisquam, voluptatum voluptates? Quisquam,
-            voluptatum voluptates?
-          </Text>
+        <View style={{ gap: 10 }}>
+          {/* Picks */}
+          {showPicks && (
+            <View
+              style={{
+                flexDirection: 'row',
+                gap: 1,
+                marginTop: 5,
+                backgroundColor: '#16161d',
+                paddingVertical: 1.5,
+                paddingHorizontal: 1.5,
+                borderRadius: 10,
+              }}>
+              {Picks.slice(9, 14).map(pick => (
+                <PicksIcon
+                  key={pick.label}
+                  icon={pick.icon}
+                  size={14}
+                  iconStyle={{ opacity: 0.75 }}
+                />
+              ))}
+            </View>
+          )}
+          <Text>{text}</Text>
           {/* URL */}
           {url && (
             <LinkPreview
@@ -141,7 +174,7 @@ const ActivityCard = () => {
                 }
               }}
               enableAnimation
-              text="https://www.youtube.com/watch?v=QwievZ1Tx-8"
+              text={url}
             />
           )}
           {/* Media */}
