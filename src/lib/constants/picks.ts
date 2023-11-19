@@ -57,7 +57,7 @@ export enum PicksLabel {
   Technology = 'Technology',
   Women = 'Women',
 }
-export enum PicksIcon {
+export enum EPicksIcon {
   Animal = 'animal',
   Art = 'art',
   Children = 'children',
@@ -88,87 +88,87 @@ export interface Pick {
 export const Picks: Array<Pick> = [
   {
     label: PicksLabel.Animal,
-    icon: PicksIcon.Animal,
+    icon: EPicksIcon.Animal,
     isSelected: false,
   },
   {
     label: PicksLabel.Art,
-    icon: PicksIcon.Art,
+    icon: EPicksIcon.Art,
     isSelected: false,
   },
   {
     label: PicksLabel.Culture,
-    icon: PicksIcon.Culture,
+    icon: EPicksIcon.Culture,
     isSelected: false,
   },
   {
     label: PicksLabel.Children,
-    icon: PicksIcon.Children,
+    icon: EPicksIcon.Children,
     isSelected: false,
   },
   {
     label: PicksLabel.Civil,
-    icon: PicksIcon.Civil,
+    icon: EPicksIcon.Civil,
     isSelected: false,
   },
   {
     label: PicksLabel.Disaster,
-    icon: PicksIcon.Disaster,
+    icon: EPicksIcon.Disaster,
     isSelected: false,
   },
   {
     label: PicksLabel.Economic,
-    icon: PicksIcon.Economic,
+    icon: EPicksIcon.Economic,
     isSelected: false,
   },
   {
     label: PicksLabel.Education,
-    icon: PicksIcon.Education,
+    icon: EPicksIcon.Education,
     isSelected: false,
   },
   {
     label: PicksLabel.Environment,
-    icon: PicksIcon.Environment,
+    icon: EPicksIcon.Environment,
     isSelected: false,
   },
   {
     label: PicksLabel.Health,
-    icon: PicksIcon.Health,
+    icon: EPicksIcon.Health,
     isSelected: false,
   },
   {
     label: PicksLabel.Human,
-    icon: PicksIcon.Human,
+    icon: EPicksIcon.Human,
     isSelected: false,
   },
   {
     label: PicksLabel.Poverty,
-    icon: PicksIcon.Poverty,
+    icon: EPicksIcon.Poverty,
     isSelected: false,
   },
   {
     label: PicksLabel.Politics,
-    icon: PicksIcon.Politics,
+    icon: EPicksIcon.Politics,
     isSelected: false,
   },
   {
     label: PicksLabel.Science,
-    icon: PicksIcon.Science,
+    icon: EPicksIcon.Science,
     isSelected: false,
   },
   {
     label: PicksLabel.Social,
-    icon: PicksIcon.Social,
+    icon: EPicksIcon.Social,
     isSelected: false,
   },
   {
     label: PicksLabel.Technology,
-    icon: PicksIcon.Technology,
+    icon: EPicksIcon.Technology,
     isSelected: false,
   },
   {
     label: PicksLabel.Women,
-    icon: PicksIcon.Women,
+    icon: EPicksIcon.Women,
     isSelected: false,
   },
 ];

@@ -1,5 +1,6 @@
 import {
   ImageBackground,
+  Image,
   ScrollView,
   StatusBar,
   StyleSheet,
@@ -16,8 +17,11 @@ import {
 } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import { PADDING, Picks } from '@app/lib';
+import { EPicksIcon, PADDING, Picks } from '@app/lib';
 import ActivityCard from '@app/components/activity-card';
+import Health from '@assets/icons/picks/health.svg';
+import { SvgUri } from 'react-native-svg';
+import { PicksIcon } from '@app/components';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -130,21 +134,7 @@ const ActivityScreen = () => {
                   marginTop: 5,
                 }}>
                 {Picks.slice(9, 14).map(pick => (
-                  <Chip
-                    key={pick.label}
-                    mode="outlined"
-                    compact
-                    icon={prop => <Ionicon {...prop} name={'home'} size={12} />}
-                    disabled
-                    textStyle={{ fontSize: 12, color: '#000' }}
-                    style={{
-                      padding: 0,
-                      margin: 0,
-                      borderColor: '#000',
-                      borderRadius: 10,
-                    }}>
-                    {pick.label}
-                  </Chip>
+                  <PicksIcon icon={pick.icon} size={20} />
                 ))}
               </View>
             </View>

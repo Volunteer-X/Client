@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import { MultiSelectView, PicksSelectView } from '@app/components';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { PADDING, Picks, Pick, PicksIcon, PicksLabel } from '@app/lib';
+import { PADDING, Picks, Pick, EPicksIcon, PicksLabel } from '@app/lib';
 import { AppTheme } from '@app/theme';
 import React, { useEffect, useState } from 'react';
 

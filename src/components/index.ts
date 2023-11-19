@@ -23,3 +23,5 @@ export * from './mutliple-select-view';
 export * from './text-input-enhanced';
 
 export * from './activity-card';
+
+export * from './picks-icon';
