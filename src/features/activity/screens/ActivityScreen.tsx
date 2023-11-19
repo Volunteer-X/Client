@@ -119,7 +119,7 @@ const ActivityScreen = () => {
                     style={{
                       fontWeight: '800',
                       color: '#000',
-                    }}>{`@username`}</Text>
+                    }}>{`username`}</Text>
                   {'  |  '}
                   <Text
                     variant="bodySmall"
