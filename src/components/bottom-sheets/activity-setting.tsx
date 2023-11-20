@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { View, Text } from 'react-native';
+import { View, Pressable } from 'react-native';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { makeStyles } from './activity-setting.style';
 import {
@@ -15,38 +15,75 @@ import {
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
 import { BottomSheetRefProps, settingProps } from './bottom-sheet.type';
+import { Text } from 'react-native-paper';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+import { SIZES } from '@app/lib';
+
+enum ActivitySettingLabel {
+  Delete = 'Delete',
+  Report = 'Report',
+  Profile = 'About the creator',
+  Edit = 'Edit',
+}
+
+enum ActivitySettingIcon {
+  Delete = 'trash',
+  Report = 'flag',
+  Profile = 'person-circle',
+  Edit = 'create-outline',
+}
+
+const ActivitySettingList = [
+  {
+    label: ActivitySettingLabel.Edit,
+    icon: ActivitySettingIcon.Edit,
+    forOwner: true,
+    danger: false,
+  },
+  {
+    label: ActivitySettingLabel.Profile,
+    icon: ActivitySettingIcon.Profile,
+    forOwner: false,
+    danger: false,
+  },
+  {
+    label: ActivitySettingLabel.Delete,
+    icon: ActivitySettingIcon.Delete,
+    forOwner: true,
+    danger: true,
+  },
+  {
+    label: ActivitySettingLabel.Report,
+    icon: ActivitySettingIcon.Report,
+    forOwner: false,
+    danger: true,
+  },
+];
 
 export const ActivitySettingModal = forwardRef(
-  ({}: settingProps, ref: Ref<BottomSheetRefProps>) => {
+  ({ isOwner = true }: settingProps, ref: Ref<BottomSheetRefProps>) => {
     const { theme } = useAppTheme();
     const styles = makeStyles(theme);
 
     const bottomSheetRef = useRef<BottomSheetModal>(null);
 
-    const closeModal = () => {
-      if (bottomSheetRef.current) {
-        bottomSheetRef.current.close();
-      }
-    };
-
-    const openModal = () => {
-      if (bottomSheetRef.current) {
-        console.log('openModal');
-
-        bottomSheetRef.current.present();
-      }
-    };
-
     useImperativeHandle(ref, () => ({
-      openModal,
+      openModal: () => {
+        if (bottomSheetRef.current) {
+          console.log('openModal');
+
+          bottomSheetRef.current.present();
+        }
+      },
     }));
 
-    const snapPoints = useMemo(() => ['50%'], []);
+    const snapPoints = useMemo(() => ['20%'], []);
 
     const renderBackdrop = useCallback(
       (props: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
           {...props}
+          opacity={0.85}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
           enableTouchThrough
@@ -60,9 +97,29 @@ export const ActivitySettingModal = forwardRef(
         ref={bottomSheetRef}
         backdropComponent={renderBackdrop}
         index={0}
+        enableOverDrag={false}
+        style={styles.bottomSheetModal}
+        handleStyle={styles.handleStyle}
+        handleIndicatorStyle={styles.handleIndicatorStyle}
         snapPoints={snapPoints}>
         <View style={styles.contentContainer}>
-          <Text>Content</Text>
+          {ActivitySettingList.filter(val => {
+            if (isOwner) {
+              return val.forOwner === true;
+            }
+            return val.forOwner === false;
+          }).map((setting, index) => (
+            <Pressable key={index} style={styles.subContainer}>
+              <Ionicon
+                name={setting.icon}
+                size={SIZES.large}
+                color={setting.danger ? '#bf3939' : '#e3e1e1'}
+              />
+              <Text variant="labelLarge" style={styles.label}>
+                {setting.label}
+              </Text>
+            </Pressable>
+          ))}
         </View>
       </BottomSheetModal>
     );

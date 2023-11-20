@@ -2,4 +2,6 @@ export type BottomSheetRefProps = {
   openModal: () => void;
 };
 
-export type settingProps = {};
+export type settingProps = {
+  isOwner?: boolean;
+};

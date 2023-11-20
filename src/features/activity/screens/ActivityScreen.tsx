@@ -197,6 +197,7 @@ const ActivityScreen = () => {
                 <Text variant="bodySmall">View all</Text>
               </View>
             </View>
+            {/* Body container */}
             <View style={styles.bodyContainer}>
               {/* Update option, only for owner */}
               {isOwner && (
