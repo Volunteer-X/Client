@@ -21,4 +21,4 @@ export { default as SearchScreen } from './search/screens/SearchScreen';
 export { default as SettingScreen } from './setting/screens/SettingScreen';
 
 // Feature -- Forum
-export { default as ForumListScreen } from './forum/screens/ForumListScreen';
+export { ForumListScreen } from './forum/screens/ForumListScreen';

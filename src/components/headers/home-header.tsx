@@ -33,7 +33,10 @@ export const HomeHeader = () => {
       </Text>
       <IconButton
         icon={AppIcons.FORUM}
-        onPress={() => {}}
+        onPress={() => {
+          // console.log('Forum');
+          // navigation.navigate('Home', { screen: 'ForumNav' });
+        }}
         size={SIZES.xLarge}
       />
     </View>
