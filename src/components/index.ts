@@ -23,3 +23,5 @@ export * from './text-input-enhanced';
 export { default as ActivityCard } from './activity-card';
 
 export * from './picks-icon';
+
+export * from './view-more-text';

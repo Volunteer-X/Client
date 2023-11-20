@@ -9,6 +9,7 @@ import { Image } from 'react-native';
 import { MediaFlatlist } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
+import { ViewMoreText } from './view-more-text';
 
 type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -104,7 +105,9 @@ const ActivityCard = ({
             {title}
           </Text>
           {/* Description */}
-          <Text>{text}</Text>
+          <ViewMoreText numberOfLines={3}>
+            <Text variant="bodyMedium">{text}</Text>
+          </ViewMoreText>
           {/* URL */}
           {url && (
             <LinkPreview
