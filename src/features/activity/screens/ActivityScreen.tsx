@@ -16,7 +16,7 @@ import {
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { PADDING, Picks } from '@app/lib';
-import ActivityCard from '@app/components/activity-card';
+import { ActivityCard } from '@app/components';
 import { PicksIcon } from '@app/components';
 import {
   ActivitySettingModal,

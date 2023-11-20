@@ -7,16 +7,12 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 
 import { PageNames } from '../lib';
-import {
-  ActivityListScreen,
-  HomeScreen,
-  MapScreen,
-  SearchScreen,
-} from '@features/index';
+import { HomeScreen, MapScreen, SearchScreen } from '@features/index';
 import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { HomeHeader } from '@app/components';
+import { ActivityNavigation } from './activity-navigation';
 
 function tabBarIcon({
   color,
@@ -92,8 +88,8 @@ const BottomTabNavigation = () => {
       <Tab.Screen name={PageNames.Search} component={SearchScreen} />
       <Tab.Screen
         name={PageNames.ActivityList}
-        component={ActivityListScreen}
-        options={{ headerShown: false, tabBarStyle: { display: 'none' } }}
+        component={ActivityNavigation}
+        options={{ headerShown: false }}
       />
     </Tab.Navigator>
   );

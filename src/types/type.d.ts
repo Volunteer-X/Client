@@ -60,6 +60,7 @@ export type HomeNavigationProps = {};
 
 // * Activity
 export type ActivityStackParamList = {
+  List: undefined;
   Activity: undefined;
   Members: undefined;
   Setting: undefined;

@@ -2,7 +2,8 @@
 export { default as HomeScreen } from './home/screens/HomeScreen';
 
 // Feature -- Activity
-export { default as ActivityListScreen } from './activity/screens/ActivityListScreen';
+export { ActivityListScreen } from './activity/screens/ActivityListScreen';
+export { default as ActivityScreen } from './activity/screens/ActivityScreen';
 
 // Feature -- Map
 export { default as MapScreen } from './maps/screens/MapScreen';

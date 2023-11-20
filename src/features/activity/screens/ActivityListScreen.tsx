@@ -1,17 +1,12 @@
-import { ActivityStackParamList } from '@app/types/type';
-import { createStackNavigator } from '@react-navigation/stack';
+import { ActivityCard } from '@app/components';
 import React from 'react';
-import { View, Text } from 'react-native';
-import ActivityScreen from './ActivityScreen';
+import { View } from 'react-native';
+import { Text } from 'react-native-paper';
 
-const ActivityListScreen = () => {
-  const Stack = createStackNavigator<ActivityStackParamList>();
-
+export const ActivityListScreen = () => {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Activity" component={ActivityScreen} />
-    </Stack.Navigator>
+    <View>
+      <ActivityCard text="" username="" timestamp="" />
+    </View>
   );
 };
-
-export default ActivityListScreen;

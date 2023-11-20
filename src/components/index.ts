@@ -20,6 +20,6 @@ export * from './PicksSelectView';
 
 export * from './text-input-enhanced';
 
-export * from './activity-card';
+export { default as ActivityCard } from './activity-card';
 
 export * from './picks-icon';
