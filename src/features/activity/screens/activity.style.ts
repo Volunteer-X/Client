@@ -22,6 +22,7 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       // flexDirection: 'row',
       //   backgroundColor: 'red',
       marginHorizontal: PADDING.sm,
+      marginBottom: 5,
     },
     chipStyle: { padding: 5, margin: 5 },
     chipTextStyle: { fontSize: 14, lineHeight: 20 },
@@ -30,7 +31,7 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       alignItems: 'center',
       borderRadius: 10,
       marginHorizontal: 15,
-      marginVertical: 10,
+      marginVertical: 2.5,
       backgroundColor: 'theme.colors.background',
     },
   });

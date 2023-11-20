@@ -4,6 +4,7 @@ import { Button, IconButton } from 'react-native-paper';
 import useAppTheme from '@hooks/useAppTheme';
 import { RouteProp } from '@react-navigation/native';
 import { PingStackParamList } from '@app/types/type';
+import { AppIcons } from '@app/theme/icon';
 
 /*
 * Ping Header
@@ -18,7 +19,7 @@ export const PingHeaderLeft = (props: {
 }) => {
   return (
     <IconButton
-      icon="close"
+      icon={AppIcons.CLOSE}
       size={25}
       {...props}
       onPress={() => {

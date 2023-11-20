@@ -26,6 +26,7 @@ import { PicksSelectView } from '@app/components';
 import { IconButton } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 import { PanGestureHandler } from 'react-native-gesture-handler';
+import { AppIcons } from '@app/theme/icon';
 
 const REFRESH_AREA_HEIGHT = 130 as const;
 
@@ -157,7 +158,7 @@ const PullToRefreshList = () => {
         <Animated.View style={[styles.pullToRefreshArea, animatedSpace]}>
           <Animated.View style={[styles.center, pullUpTranslationStyle]}>
             <Animated.View style={pullDownIconSection}>
-              <IconButton icon="arrow-down-circle" />
+              <IconButton icon={AppIcons.ARROW_DOWN_CIRCLE} />
             </Animated.View>
             <Text>Pull down to refresh</Text>
           </Animated.View>

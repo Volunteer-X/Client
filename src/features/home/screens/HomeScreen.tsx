@@ -1,12 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
-import { MultiSelectView, PicksSelectView } from '@app/components';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { PADDING, Picks, Pick, EPicksIcon, PicksLabel } from '@app/lib';
 import { AppTheme } from '@app/theme';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { View, StyleSheet, StatusBar } from 'react-native';
-import { Button } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {

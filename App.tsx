@@ -12,6 +12,7 @@ import { AUTH0_DOMAIN, AUTH0_CLIENT, MAPBOX_API } from '@env';
 import { ApolloProvider } from '@apollo/client';
 import { PersistGate } from 'redux-persist/integration/react';
 import Mapbox from '@rnmapbox/maps';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { store, persistor } from './app/store';
 
@@ -26,6 +27,7 @@ import { AuthProvider } from '@app/context/auth-context/AuthContext';
 import { RootNavController } from '@app/components';
 import { GeoLocationProvider } from '@app/context/geo-location';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { IconProps } from 'react-native-vector-icons/Icon';
 
 /* 
 TODO develop authProvider for persist store and authentication check
@@ -34,6 +36,14 @@ const App = () => {
   const { themePreference, theme } = useAppTheme();
 
   Mapbox.setAccessToken(MAPBOX_API);
+
+  const customIcon = (
+    props: React.JSX.IntrinsicAttributes &
+      React.JSX.IntrinsicClassAttributes<Ionicons> &
+      Readonly<IconProps>,
+  ) => {
+    return <Ionicons {...props} />;
+  };
 
   return (
     <ApolloProvider client={apolloClient}>
@@ -46,7 +56,12 @@ const App = () => {
                   <BottomSheetModalProvider>
                     <AppThemeProvider value={themePreference}>
                       <ThemeProvider>
-                        <PaperProvider theme={theme}>
+                        <PaperProvider
+                          theme={theme}
+                          settings={{
+                            rippleEffectEnabled: false,
+                            icon: customIcon,
+                          }}>
                           <NavigationContainer theme={theme}>
                             <RootNavController />
                           </NavigationContainer>

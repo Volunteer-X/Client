@@ -1,10 +1,4 @@
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import React, { useCallback, useRef, useState } from 'react';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@app/hooks/useAppTheme';
@@ -24,14 +18,15 @@ import { MAP_API_KEY } from '@env';
 import { MediaTypeView } from '@app/components';
 import { ImagePickerResponse } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import { PingBodyNavigationProp } from '@app/types/type';
+import { PingBodyNavProp } from '@app/types/type';
+import { AppIcons } from '@app/theme/icon';
 
 export const PingBody = () => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
   const [showUrl, setShowUrl] = useState<boolean>(true);
 
-  const navigation = useNavigation<PingBodyNavigationProp>();
+  const navigation = useNavigation<PingBodyNavProp>();
 
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
 
@@ -81,7 +76,7 @@ export const PingBody = () => {
       <View style={styles.headerContainer}>
         {/* Back Button */}
         <IconButton
-          icon="chevron-left"
+          icon={AppIcons.ARROW_BACK}
           size={SIZES.xLarge}
           onPress={() => {
             navigation.goBack();
@@ -126,7 +121,7 @@ export const PingBody = () => {
                   {...textInputProps}
                 />
                 <IconButton
-                  icon="close"
+                  icon={AppIcons.CLOSE}
                   onPress={() => {
                     setShowUrl(false);
                   }}
@@ -190,7 +185,7 @@ export const PingBody = () => {
           disabled
         />
         <IconButton
-          icon="link"
+          icon={AppIcons.LINK}
           iconColor={theme.dark ? MD3Colors.neutral60 : MD3Colors.neutral40}
           size={SIZES.xLarge}
           style={styles.mediaTypeIcon}

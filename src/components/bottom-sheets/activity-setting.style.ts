@@ -17,14 +17,16 @@ export const makeStyles = (theme: AppTheme) =>
     },
     handleIndicatorStyle: {
       backgroundColor: theme.colors.onBackground,
-      borderRadius: 20,
+      // borderRadius: 20,
     },
     subContainer: {
       flexDirection: 'row',
       marginVertical: 5,
       gap: 20,
       alignItems: 'center',
-      marginBottom: 20,
+      marginTop: 0,
+      marginBottom: 5,
+      paddingVertical: 10,
     },
     label: {
       fontSize: 16,

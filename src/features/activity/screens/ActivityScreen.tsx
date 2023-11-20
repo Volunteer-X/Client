@@ -22,6 +22,7 @@ import {
   ActivitySettingModal,
   BottomSheetRefProps,
 } from '@app/components/bottom-sheets';
+import { AppIcons } from '@app/theme/icon';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -75,7 +76,7 @@ const ActivityScreen = () => {
                 {/* Show add only if you are member */}
                 {!isOwner && !isMember && (
                   <Ionicon
-                    name="person-add"
+                    name={AppIcons.PERSON_ADD}
                     size={24}
                     style={{
                       color: '#FFF',
@@ -88,7 +89,7 @@ const ActivityScreen = () => {
                 {/* show  */}
                 {isOwner && (
                   <Ionicon
-                    name="cog"
+                    name={AppIcons.SETTINGS}
                     size={24}
                     style={{
                       color: '#FFF',
@@ -99,7 +100,7 @@ const ActivityScreen = () => {
                   />
                 )}
                 <Ionicon
-                  name="chatbubble"
+                  name={AppIcons.FORUM}
                   size={24}
                   style={{
                     color: '#FFF',
@@ -118,7 +119,7 @@ const ActivityScreen = () => {
                   />
                 </View>
                 <IconButton
-                  icon={'pencil'}
+                  icon={AppIcons.PENCIL}
                   size={16}
                   iconColor="#b2b2b2"
                   style={styles.editBadge}
@@ -189,7 +190,7 @@ const ActivityScreen = () => {
                   gap: 5,
                 }}>
                 <IconButton
-                  icon={'dots-horizontal'}
+                  icon={`${AppIcons.MENU_X}-outline`}
                   size={32}
                   iconColor="#b2b2b2"
                   style={{ backgroundColor: '#FFF', padding: 0, margin: 0 }}

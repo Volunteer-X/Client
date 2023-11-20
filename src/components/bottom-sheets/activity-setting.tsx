@@ -18,6 +18,7 @@ import { BottomSheetRefProps, settingProps } from './bottom-sheet.type';
 import { Text } from 'react-native-paper';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { SIZES } from '@app/lib';
+import { AppIcons } from '@app/theme/icon';
 
 enum ActivitySettingLabel {
   Delete = 'Delete',
@@ -26,35 +27,28 @@ enum ActivitySettingLabel {
   Edit = 'Edit',
 }
 
-enum ActivitySettingIcon {
-  Delete = 'trash',
-  Report = 'flag',
-  Profile = 'person-circle',
-  Edit = 'create-outline',
-}
-
 const ActivitySettingList = [
   {
     label: ActivitySettingLabel.Edit,
-    icon: ActivitySettingIcon.Edit,
+    icon: `${AppIcons.EDIT}-outline`,
     forOwner: true,
     danger: false,
   },
   {
     label: ActivitySettingLabel.Profile,
-    icon: ActivitySettingIcon.Profile,
+    icon: AppIcons.PERSON,
     forOwner: false,
     danger: false,
   },
   {
     label: ActivitySettingLabel.Delete,
-    icon: ActivitySettingIcon.Delete,
+    icon: AppIcons.DELETE,
     forOwner: true,
     danger: true,
   },
   {
     label: ActivitySettingLabel.Report,
-    icon: ActivitySettingIcon.Report,
+    icon: AppIcons.REPORT,
     forOwner: false,
     danger: true,
   },

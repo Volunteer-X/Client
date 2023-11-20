@@ -47,6 +47,7 @@ import { findPickFromLabel } from '@app/utils/pick-finder';
 import LottieView from 'lottie-react-native';
 import { pick } from 'lodash';
 import { IconSource } from 'react-native-paper/lib/typescript/src/components/Icon';
+import { AppIcons } from '@app/theme/icon';
 
 const { height } = Dimensions.get('window');
 
@@ -196,7 +197,7 @@ export const PingFinalPage = () => {
   const headerRight = () => {
     return (
       <IconButton
-        icon={'send'}
+        icon={AppIcons.SEND}
         iconColor="green"
         onPress={() => {
           if (titleText.length === 0 || picks.length === 0) {
@@ -344,7 +345,7 @@ export const PingFinalPage = () => {
                     {...textInputProps}
                   />
                   <IconButton
-                    icon="close"
+                    icon={AppIcons.CLOSE}
                     onPress={() => {
                       setShowUrl(false);
                     }}
@@ -412,7 +413,7 @@ export const PingFinalPage = () => {
           disabled={disabled}
         />
         <IconButton
-          icon="link"
+          icon={AppIcons.LINK}
           iconColor={theme.dark ? MD3Colors.neutral60 : MD3Colors.neutral40}
           size={SIZES.xLarge}
           style={styles.mediaTypeIcon}

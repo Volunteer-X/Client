@@ -6,7 +6,6 @@ import {
   createDrawerNavigator,
 } from '@react-navigation/drawer';
 import {
-  Avatar,
   Button,
   Divider,
   IconButton,
@@ -19,11 +18,12 @@ import { DevSettings, Pressable, StyleSheet, View } from 'react-native';
 import BottomTabNavigation from '../bottom-tab';
 
 import { PageNames, SIZES } from '@app/lib/index';
-import { BackButton } from '@components/index';
 import { ProfileScreen, SettingScreen } from '@features/index';
 import UserAvatar from '@app/components/user-avatar';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
+import { AppIcons } from '@app/theme/icon';
+import { DrawerParamList } from '@ts-types/type';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   const { clearSession } = useAuth0();
@@ -55,11 +55,11 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
           {/*
            * Pick Viewer
            */}
-          <IconButton
+          {/* <IconButton
             icon="circle"
             style={styles.picksButton}
             onPress={() => {}}
-          />
+          /> */}
           <View style={styles.nameContainer}>
             <Text variant="bodyLarge">Amil Muhammed Hamza</Text>
             <Text style={styles.username} variant="bodySmall">
@@ -96,7 +96,7 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
         {/*
          * Theme Control
          */}
-        <IconButton icon="weather-night" onPress={() => {}} />
+        <IconButton icon={AppIcons.NIGHT} onPress={() => {}} />
         <Button mode="text" onPress={() => {}} compact>
           About
         </Button>
@@ -141,30 +141,30 @@ const makeStyles = (theme: AppTheme) =>
   });
 
 const HomeDrawer = (): React.JSX.Element => {
-  const Drawer = createDrawerNavigator();
+  const Drawer = createDrawerNavigator<DrawerParamList>();
 
   return (
     <Drawer.Navigator
       detachInactiveScreens
-      initialRouteName={PageNames.MainPage}
+      initialRouteName="Main"
       screenOptions={{ headerShown: false }}
       drawerContent={props => HomeDrawerContent(props)}>
       <Drawer.Screen
-        name={PageNames.MainPage}
+        name="Main"
         component={BottomTabNavigation}
         options={{ drawerItemStyle: { display: 'none' } }}
       />
       <Drawer.Screen
-        name={PageNames.Profile}
+        name="Profile"
         component={ProfileScreen}
         options={{
           headerShown: true,
           headerLeft(props) {
-            return BackButton(props);
+            // return BackButton(props);
           },
         }}
       />
-      <Drawer.Screen name={PageNames.Settings} component={SettingScreen} />
+      <Drawer.Screen name="Settings" component={SettingScreen} />
     </Drawer.Navigator>
   );
 };

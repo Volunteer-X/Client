@@ -1,18 +1,17 @@
 import React from 'react';
-import {
-  BottomTabHeaderProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 
-import { PageNames } from '../lib';
-import { HomeScreen, MapScreen, SearchScreen } from '@features/index';
+import { MapScreen, SearchScreen } from '@features/index';
 import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { HomeHeader } from '@app/components';
 import { ActivityNavigation } from './activity-navigation';
+import { BottomTabParamList } from '@ts-types/type';
+import { RouteProp } from '@react-navigation/native';
+import { HomeNavigation } from './home-navigation';
 
 function tabBarIcon({
   color,
@@ -23,23 +22,23 @@ function tabBarIcon({
   color: string;
   focused: boolean;
   size: number;
-  route: any;
+  route: RouteProp<BottomTabParamList, keyof BottomTabParamList>;
 }) {
   let iconName: string;
   switch (route.name) {
     case 'Home':
       iconName = focused ? 'home' : 'home-outline';
       break;
-    case 'Map':
+    case 'Nearby':
       iconName = focused ? 'map' : 'map-outline';
       break;
-    case 'Create ping':
+    case 'Ping':
       iconName = focused ? 'megaphone' : 'megaphone-outline';
       break;
     case 'Search':
       iconName = focused ? 'search' : 'search-outline';
       break;
-    case 'ActivityList':
+    case 'Activity':
       iconName = focused ? 'pulse' : 'pulse-outline';
       break;
     default:
@@ -54,40 +53,46 @@ const BottomTabNavigation = () => {
 
   const styles = makeStyles(theme);
 
-  const Tab = createBottomTabNavigator();
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
 
   return (
     <Tab.Navigator
-      initialRouteName={PageNames.Home}
+      backBehavior="history"
+      initialRouteName="Home"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarHideOnKeyboard: true,
+        tabBarStyle: {
+          backgroundColor: '#000',
+        },
+        tabBarInactiveTintColor: '#c9c9c9',
+        tabBarActiveTintColor: '#e8e8e8',
         tabBarIcon: ({ color, focused, size }) =>
           tabBarIcon({ color, focused, size, route }),
       })}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeNavigation}
         options={{
-          header: (props: BottomTabHeaderProps) => HomeHeader(props),
+          header: () => HomeHeader(),
         }}
       />
       <Tab.Screen
-        name={PageNames.Map}
+        name="Nearby"
         component={MapScreen}
         options={{ headerShown: false }}
       />
       <Tab.Screen
-        name={PageNames.CreatePing}
+        name="Ping"
         component={PingNavigation}
         options={({ route, navigation }) => ({
           headerShown: false,
           tabBarStyle: { display: 'none' },
         })}
       />
-      <Tab.Screen name={PageNames.Search} component={SearchScreen} />
+      <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen
-        name={PageNames.ActivityList}
+        name="Activity"
         component={ActivityNavigation}
         options={{ headerShown: false }}
       />

@@ -22,6 +22,7 @@ import { Point as RNPoint } from 'react-native-google-places-autocomplete';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useGeoLocation } from '@app/context/geo-location';
 import { PSearchPlaceNav, PSearchPlaceRoute } from '@app/types/type';
+import { AppIcons } from '@app/theme/icon';
 
 export const SearchLocationScreen = () => {
   const navigation = useNavigation<PSearchPlaceNav>();
@@ -108,7 +109,7 @@ export const SearchLocationScreen = () => {
         />
         <Images>
           <Image name="icon-symbol-layer">
-            <IconButton icon={'map-marker'} size={32} iconColor={'yellow'} />
+            <IconButton icon={AppIcons.PIN} size={32} iconColor={'yellow'} />
           </Image>
         </Images>
         {coordinate !== undefined && (
@@ -130,7 +131,7 @@ export const SearchLocationScreen = () => {
       </MapView>
 
       <IconButton
-        icon={'arrow-left'}
+        icon={AppIcons.ARROW_BACK}
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       />
@@ -145,7 +146,7 @@ export const SearchLocationScreen = () => {
       />
 
       <IconButton
-        icon="crosshairs-gps"
+        icon={AppIcons.GPS}
         style={styles.myLocation}
         size={24}
         onPress={() =>

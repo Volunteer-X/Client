@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import React, { useCallback } from 'react';
 import { Avatar, Divider, Text } from 'react-native-paper';
 import { PADDING, Picks } from '@app/lib';
@@ -18,6 +18,7 @@ type ActivityCardProps = {
   title: string;
   text: string;
   username: string;
+  picks?: string[];
   timestamp: string;
   showPicks?: boolean;
   showStar?: boolean;
@@ -32,6 +33,7 @@ const ActivityCard = ({
   timestamp,
   url,
   media,
+  picks,
   showPicks = false,
   showStar = false,
   onMenuClick,
@@ -49,7 +51,7 @@ const ActivityCard = ({
   // ];
 
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={() => console.log('pressed')}>
       {/* Left side */}
       <View style={styles.leftContainer}>
         <Avatar.Image
@@ -88,16 +90,19 @@ const ActivityCard = ({
         {/* Content */}
         <View style={{ gap: 10 }}>
           {/* Picks */}
-          {showPicks && (
+          {picks && showPicks && (
             <View style={[styles.picksContainer]}>
-              {Picks.slice(9, 14).map(pick => (
-                <PicksIcon
-                  key={pick.label}
-                  icon={pick.icon}
-                  size={14}
-                  iconStyle={{ opacity: 0.75 }}
-                />
-              ))}
+              {picks.map(pick => {
+                const pickObj = Picks.find(val => val.label === pick);
+                return (
+                  <PicksIcon
+                    key={pickObj?.label}
+                    icon={pickObj?.icon ? pickObj.icon : 'star'}
+                    size={16}
+                    iconStyle={{ opacity: 0.75 }}
+                  />
+                );
+              })}
             </View>
           )}
           {/* Title */}
@@ -148,7 +153,7 @@ const ActivityCard = ({
           )}
           {/* Media */}
           {media && (
-            <View style={{ maxHeight: 200 }}>
+            <View style={{ maxHeight: 200, overflow: 'hidden' }}>
               <MediaFlatlist assets={media} paddingOffset={38.5} />
             </View>
           )}
@@ -166,7 +171,7 @@ const ActivityCard = ({
           </View>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 };
 

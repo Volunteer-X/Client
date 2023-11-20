@@ -1,4 +1,16 @@
-import { RouteProp } from '@react-navigation/native';
+import {
+  BottomTabNavigationProp,
+  BottomTabScreenProps,
+} from '@react-navigation/bottom-tabs';
+import {
+  DrawerNavigationProp,
+  DrawerScreenProps,
+} from '@react-navigation/drawer';
+import {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  RouteProp,
+} from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Point } from './utility-types';
 
@@ -56,23 +68,50 @@ export type MainNavList = {
 
 // Drawer
 
+export type DrawerParamList = {
+  Main: undefined;
+  Profile: undefined;
+  Settings: undefined;
+};
+
+// Bottom tab
+export type BottomTabParamList = {
+  Home: undefined;
+  Activity: undefined;
+  Ping: undefined;
+  Nearby: undefined;
+  Search: undefined;
+};
+
+// * Home
+export type HomeStackParamList = {
+  HomeScreen: undefined;
+  ForumNav: undefined;
+};
+
+// * Home Screen
+export type HomeScreenNavigationProps = CompositeNavigationProp<
+  BottomTabNavigationProp<BottomTabParamList, 'Home'>,
+  DrawerNavigationProp<DrawerParamList, 'Main'>
+>;
+
 export type HomeNavigationProps = {};
 
 // * Activity
 export type ActivityStackParamList = {
-  List: undefined;
-  Activity: undefined;
-  Members: undefined;
-  Setting: undefined;
+  ActivityList: undefined;
+  ActivityScreen: undefined;
+  ActivityMembers: undefined;
+  ActivitySetting: undefined;
   Profile: undefined;
 };
 
-export type ActivityNavProp = StackNavigationProp<
+export type ActivityScreenNavProp = StackNavigationProp<
   ActivityStackParamList,
-  'Activity'
+  'ActivityScreen'
 >;
 
 export type ActivityListNavProp = StackNavigationProp<
   ActivityStackParamList,
-  'List'
+  'ActivityList'
 >;

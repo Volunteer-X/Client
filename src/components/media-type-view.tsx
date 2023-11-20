@@ -17,10 +17,11 @@ import {
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppMediaTypes, SIZES } from '@app/lib';
+import { AppIcons } from '@app/theme/icon';
 
 const mediaTypes = [
-  { icon: 'camera', label: AppMediaTypes.CAMERA },
-  { icon: 'video-image', label: AppMediaTypes.MEDIA },
+  { icon: AppIcons.CAMERA, label: AppMediaTypes.CAMERA },
+  { icon: AppIcons.MEDIA, label: AppMediaTypes.MEDIA },
   // { icon: 'image', label: AppMediaTypes.IMAGE },
   // { icon: 'play-circle-outline', label: AppMediaTypes.VIDEO },
 ] as const;

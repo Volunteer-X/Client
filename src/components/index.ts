@@ -25,3 +25,5 @@ export { default as ActivityCard } from './activity-card';
 export * from './picks-icon';
 
 export * from './view-more-text';
+
+export * from './FAB/activity-list-fab';
