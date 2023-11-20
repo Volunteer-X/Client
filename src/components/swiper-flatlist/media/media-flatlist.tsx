@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Dimensions, ListRenderItem, StyleSheet, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
@@ -25,7 +25,9 @@ const MediaFlatlist = ({
 }: MediaFlatlistProps<T>) => {
   const { theme } = useAppTheme();
 
-  const styles = makeStyles(theme, paddingOffset);
+  const [calculatedWidth, setCalculatedWidth] = useState(0);
+
+  const styles = makeStyles(theme, calculatedWidth);
 
   const _renderItem: ListRenderItem<{ uri: string; type: string }> =
     useCallback(
@@ -65,24 +67,28 @@ const MediaFlatlist = ({
   }));
 
   return (
-    <>
+    <View
+      onLayout={event => {
+        setCalculatedWidth(event.nativeEvent.layout.width);
+      }}>
       <SwiperFlatlist
         style={{}}
         data={listData}
         showPagination
         renderItem={_renderItem}
       />
-    </>
+    </View>
   );
 };
 
 export default MediaFlatlist;
 
-const makeStyles = (theme: AppTheme, paddingOffset: number) =>
+const makeStyles = (theme: AppTheme, calculatedWidth: number) =>
   StyleSheet.create({
     renderItemContainer: {
       flexDirection: 'column',
-      width: width - 2 * paddingOffset,
+      // width: width - 2 * paddingOffset,
+      width: calculatedWidth,
       justifyContent: 'flex-start',
     },
     renderItemMedia: {

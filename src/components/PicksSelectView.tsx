@@ -24,6 +24,7 @@ type Props = {
   onPickSelect: (selectedPicks: string[]) => void;
   chipTextStyle?: StyleProp<TextStyle>;
   chipStyle?: StyleProp<ViewStyle>;
+  iconSize?: number;
 };
 
 type EnhancedProps = Modify<FlatListProps<Pick>, RemovedProps, Props>;
@@ -37,6 +38,7 @@ export const PicksSelectView = ({
   chipStyle,
   chipTextStyle,
   max,
+  iconSize,
   ...flatListProps
 }: EnhancedProps) => {
   const toggleSelection = (label: string) => {
@@ -60,6 +62,7 @@ export const PicksSelectView = ({
         chipStyle={chipStyle}
         chipTextStyle={chipTextStyle}
         disabled={isDisabled}
+        iconSize={iconSize}
       />
     );
   };

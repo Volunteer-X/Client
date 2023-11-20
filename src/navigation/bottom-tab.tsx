@@ -31,16 +31,16 @@ function tabBarIcon({
       iconName = focused ? 'home' : 'home-outline';
       break;
     case 'Map':
-      iconName = focused ? 'location' : 'location-outline';
+      iconName = focused ? 'map' : 'map-outline';
       break;
     case 'Create ping':
-      iconName = focused ? 'flame' : 'flame-outline';
+      iconName = focused ? 'megaphone' : 'megaphone-outline';
       break;
     case 'Search':
       iconName = focused ? 'search' : 'search-outline';
       break;
     case 'ActivityList':
-      iconName = focused ? 'newspaper' : 'newspaper-outline';
+      iconName = focused ? 'pulse' : 'pulse-outline';
       break;
     default:
       iconName = '';

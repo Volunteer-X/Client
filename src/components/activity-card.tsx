@@ -14,6 +14,7 @@ type ActivityCardProps = {
   isOriginalPing?: boolean;
   url?: string;
   media?: Asset[];
+  title: string;
   text: string;
   username: string;
   timestamp: string;
@@ -24,16 +25,17 @@ type ActivityCardProps = {
 
 const ActivityCard = ({
   isOriginalPing = false,
+  title,
   text,
   username,
   timestamp,
   url,
+  media,
   showPicks = false,
   showStar = false,
   onMenuClick,
 }: ActivityCardProps) => {
   ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
-  const media: Asset[] | undefined = undefined;
   // [
   //   {
   //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
@@ -46,50 +48,24 @@ const ActivityCard = ({
   // ];
 
   return (
-    <View
-      style={{
-        gap: 15,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}>
+    <View style={styles.container}>
       {/* Left side */}
-      <View
-        style={{
-          // height: '100%',
-          flex: 0,
-          flexDirection: 'column',
-          alignItems: 'center',
-          columnGap: 10,
-        }}>
+      <View style={styles.leftContainer}>
         <Avatar.Image
           source={require('@assets/images/placeholder.jpg')}
           size={32}
           style={styles.avatar}
         />
-        <Divider
-          bold
-          style={{
-            flex: 1,
-            width: 1,
-            height: '100%',
-            backgroundColor: '#c5c5c5',
-            marginVertical: PADDING.sm,
-          }}
-        />
+        <Divider bold style={styles.verticalDivider} />
       </View>
       {/* Right side */}
-      <View style={{ flex: 1 }}>
+      <View style={styles.rightContainer}>
         {/* Username, timeline, options */}
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start',
-          }}>
-          <Text variant="bodyLarge" style={{ fontWeight: 'bold' }}>
+        <View style={styles.header}>
+          <Text variant="bodyLarge" style={styles.bold}>
             {username}
           </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+          <View style={styles.starTimeAndMenu}>
             {showStar && isOriginalPing && (
               <AntDesign
                 name="star"
@@ -112,16 +88,7 @@ const ActivityCard = ({
         <View style={{ gap: 10 }}>
           {/* Picks */}
           {showPicks && (
-            <View
-              style={{
-                flexDirection: 'row',
-                gap: 1,
-                marginTop: 5,
-                backgroundColor: '#16161d',
-                paddingVertical: 1.5,
-                paddingHorizontal: 1.5,
-                borderRadius: 10,
-              }}>
+            <View style={styles.picksContainer}>
               {Picks.slice(9, 14).map(pick => (
                 <PicksIcon
                   key={pick.label}
@@ -132,6 +99,11 @@ const ActivityCard = ({
               ))}
             </View>
           )}
+          {/* Title */}
+          <Text variant="labelLarge" numberOfLines={2} style={styles.title}>
+            {title}
+          </Text>
+          {/* Description */}
           <Text>{text}</Text>
           {/* URL */}
           {url && (
@@ -142,15 +114,7 @@ const ActivityCard = ({
                   const { previewData } = payload;
                   const uri = previewData.image?.url;
                   return (
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        width: '100%',
-                        overflow: 'hidden',
-                        borderRadius: 10,
-                        backgroundColor: '#2b2b2b',
-                      }}>
+                    <View style={styles.urlContainer}>
                       <View style={{ flex: 1, padding: 10 }}>
                         <Text
                           variant="labelSmall"
@@ -163,18 +127,13 @@ const ActivityCard = ({
                           variant="labelMedium"
                           numberOfLines={2}
                           ellipsizeMode="tail"
-                          style={{ fontWeight: 'bold' }}>
+                          style={styles.bold}>
                           {payload.previewData.title}
                         </Text>
                       </View>
                       <Image
                         source={{ uri: uri }}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          // aspectRatio: aspectRatio,
-                          resizeMode: 'cover',
-                        }}
+                        style={styles.minimizedImage}
                       />
                     </View>
                   );
@@ -186,7 +145,7 @@ const ActivityCard = ({
           )}
           {/* Media */}
           {media && (
-            <View>
+            <View style={{ maxHeight: 200 }}>
               <MediaFlatlist assets={media} paddingOffset={38.5} />
             </View>
           )}
@@ -211,9 +170,67 @@ const ActivityCard = ({
 export default ActivityCard;
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 15,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+
+  leftContainer: {
+    // height: '100%',
+    flex: 0,
+    flexDirection: 'column',
+    alignItems: 'center',
+    columnGap: 10,
+  },
+
   avatar: {
     padding: 0,
     margin: 0,
     elevation: 1,
+  },
+  verticalDivider: {
+    flex: 1,
+    width: 1,
+    height: '100%',
+    backgroundColor: '#c5c5c5',
+    marginTop: PADDING.sm,
+  },
+  rightContainer: { flex: 1 },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
+  starTimeAndMenu: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  picksContainer: {
+    flexDirection: 'row',
+    gap: 1,
+    marginTop: 5,
+    paddingVertical: 1.5,
+    paddingHorizontal: 1.5,
+    borderRadius: 10,
+    backgroundColor: '#16161d',
+  },
+  title: {
+    fontWeight: '800',
+    fontStyle: 'italic',
+  },
+  urlContainer: {
+    // flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    overflow: 'hidden',
+    borderRadius: 10,
+    backgroundColor: '#2b2b2b',
+  },
+  minimizedImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
   },
 });

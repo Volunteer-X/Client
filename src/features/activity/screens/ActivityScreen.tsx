@@ -260,13 +260,35 @@ const ActivityScreen = () => {
                 timestamp="2h"
                 username="docren155"
                 showStar
-                url="https://www.youtube.com/watch?v=5qap5aO4i9A"
+                showPicks
+                // url="https://www.youtube.com/watch?v=5qap5aO4i9A"
+                // media={[
+                //   {
+                //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+                //     type: 'image/jpeg',
+                //   },
+                //   {
+                //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+                //     type: 'image/jpeg',
+                //   },
+                // ]}
                 onMenuClick={handleOnMenuClick}
               />
               <ActivityCard
                 text="Lorem ipsum"
                 timestamp="2h"
+                url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
                 username="docren155"
+                media={[
+                  {
+                    uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+                    type: 'image/jpeg',
+                  },
+                  {
+                    uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+                    type: 'image/jpeg',
+                  },
+                ]}
               />
             </View>
           </View>

@@ -66,3 +66,13 @@ export type ActivityStackParamList = {
   Setting: undefined;
   Profile: undefined;
 };
+
+export type ActivityNavProp = StackNavigationProp<
+  ActivityStackParamList,
+  'Activity'
+>;
+
+export type ActivityListNavProp = StackNavigationProp<
+  ActivityStackParamList,
+  'List'
+>;
