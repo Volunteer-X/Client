@@ -89,7 +89,7 @@ const ActivityCard = ({
         <View style={{ gap: 10 }}>
           {/* Picks */}
           {showPicks && (
-            <View style={styles.picksContainer}>
+            <View style={[styles.picksContainer]}>
               {Picks.slice(9, 14).map(pick => (
                 <PicksIcon
                   key={pick.label}

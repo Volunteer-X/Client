@@ -5,7 +5,10 @@ import { EdgeInsets } from 'react-native-safe-area-context';
 
 export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
   StyleSheet.create({
-    page: { flex: 1 },
+    page: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
     header: {
       height: 80,
       elevation: 0,
