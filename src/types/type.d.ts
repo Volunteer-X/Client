@@ -115,3 +115,12 @@ export type ActivityListNavProp = StackNavigationProp<
   ActivityStackParamList,
   'ActivityList'
 >;
+
+// * Forum
+export type ForumStackParamList = {
+  ForumList: undefined;
+  ForumScreen: undefined;
+  ForumMembers: undefined;
+  ForumSetting: undefined;
+  Profile: undefined;
+};
