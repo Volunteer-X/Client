@@ -19,8 +19,6 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
     headerTitleText: { letterSpacing: 0.5, fontStyle: 'italic' },
     filterPinsContainer: {
-      // flexDirection: 'row',
-      //   backgroundColor: 'red',
       marginHorizontal: PADDING.sm,
       marginBottom: 5,
     },

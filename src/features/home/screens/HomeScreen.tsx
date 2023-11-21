@@ -23,7 +23,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         backgroundColor={theme.colors.background}
       />
       {/* Flatlist Header Component */}
-      <ScrollView style={{ flexGrow: 1, padding: 10 }}>
+      <ScrollView
+        overScrollMode="never"
+        showsVerticalScrollIndicator={false}
+        style={{ flexGrow: 1, padding: 10 }}>
         <MediaFlatlist
           assets={[
             {

@@ -25,6 +25,7 @@ type Props = {
   chipTextStyle?: StyleProp<TextStyle>;
   chipStyle?: StyleProp<ViewStyle>;
   iconSize?: number;
+  extras?: { label: string; icon: string; isSelected: boolean }[];
 };
 
 type EnhancedProps = Modify<FlatListProps<Pick>, RemovedProps, Props>;
@@ -39,8 +40,20 @@ export const PicksSelectView = ({
   chipTextStyle,
   max,
   iconSize,
+  extras,
   ...flatListProps
 }: EnhancedProps) => {
+  const _Picks = extras
+    ? [
+        ...Picks,
+        ...extras.map(item => ({
+          label: item.label,
+          icon: item.icon,
+          isSelected: item.isSelected,
+        })),
+      ]
+    : Picks;
+
   const toggleSelection = (label: string) => {
     if (selectedPicks.includes(label)) {
       onPickSelect(selectedPicks.filter(val => val !== label));
@@ -70,7 +83,7 @@ export const PicksSelectView = ({
   return (
     <>
       <FlatList
-        data={Picks}
+        data={_Picks}
         renderItem={renderItem}
         keyExtractor={item => `Key-${item.label}`}
         {...flatListProps}

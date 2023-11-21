@@ -51,7 +51,7 @@ const ActivityCard = ({
   // ];
 
   return (
-    <View>
+    <View style={{ width: '100%' }}>
       <Pressable
         style={{
           position: 'absolute',
