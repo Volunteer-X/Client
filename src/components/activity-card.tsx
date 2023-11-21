@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Avatar, Divider, Text } from 'react-native-paper';
 import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -10,7 +10,6 @@ import { MediaFlatlist } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
-import GoogleStaticMaps from './google-static-map';
 
 type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -39,7 +38,7 @@ const ActivityCard = ({
   showStar = false,
   onMenuClick,
 }: ActivityCardProps) => {
-  ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
+  // ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
   // [
   //   {
   //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
@@ -52,7 +51,7 @@ const ActivityCard = ({
   // ];
 
   return (
-    <Pressable style={styles.container}>
+    <View style={styles.container}>
       {/* Left side */}
       <View style={styles.leftContainer}>
         <Avatar.Image
@@ -150,8 +149,14 @@ const ActivityCard = ({
           )}
           {/* Media */}
           {media && (
-            <View style={{ maxHeight: 200, overflow: 'hidden' }}>
-              <MediaFlatlist assets={media} paddingOffset={38.5} />
+            <View
+              hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
+              style={{
+                maxHeight: 200,
+                overflow: 'hidden',
+                borderRadius: 15,
+              }}>
+              <MediaFlatlist assets={media} />
             </View>
           )}
           {/* Description */}
@@ -178,7 +183,7 @@ const ActivityCard = ({
           /> */}
         </View>
       </View>
-    </Pressable>
+    </View>
   );
 };
 

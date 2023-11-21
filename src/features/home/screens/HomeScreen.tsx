@@ -1,9 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
+import { ActivityCard } from '@app/components';
+import PullToRefreshList from '@app/components/pull-to-refresh-list';
+import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import React from 'react';
 
 import { View, StyleSheet, StatusBar } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
@@ -19,22 +23,50 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         backgroundColor={theme.colors.background}
       />
       {/* Flatlist Header Component */}
-      <View>
-        {/* <PicksSelectView
-          key={'HomeScreen'}
-          horizontal
-          selectedPicks={() => {}}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: PADDING.sm,
-          }}
-          chipStyle={{
-            marginHorizontal: 4,
-            marginTop: PADDING.sm,
-            marginBottom: PADDING.sm,
-          }}
-        /> */}
-      </View>
+      <ScrollView style={{ flexGrow: 1, padding: 10 }}>
+        <MediaFlatlist
+          assets={[
+            {
+              uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+              type: 'image/jpeg',
+            },
+            {
+              uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+              type: 'image/jpeg',
+            },
+          ]}
+        />
+        <ActivityCard
+          title="Lorem ipsum"
+          text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu"
+          timestamp="2h"
+          // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
+          username="docren155"
+          media={[
+            {
+              uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+              type: 'image/jpeg',
+            },
+            {
+              uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+              type: 'image/jpeg',
+            },
+          ]}
+        />
+        <ActivityCard
+          title="Lorem ipsum"
+          text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,"
+          timestamp="2h"
+          url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
+          username="docren155"
+        />
+        <ActivityCard
+          title="Lorem ipsum"
+          text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+          timestamp="2h"
+          username="docren155"
+        />
+      </ScrollView>
       {/* <PullToRefreshList /> */}
     </View>
   );

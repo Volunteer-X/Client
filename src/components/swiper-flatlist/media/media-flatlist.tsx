@@ -92,6 +92,5 @@ const makeStyles = (theme: AppTheme, calculatedWidth: number) =>
     renderItemMedia: {
       height: HEIGHTS.postMedia,
       width: '100%',
-      borderRadius: SIZES.medium,
     },
   });

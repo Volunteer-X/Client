@@ -1,10 +1,4 @@
-import {
-  ImageBackground,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { ImageBackground, StatusBar, StyleSheet, View } from 'react-native';
 import React from 'react';
 import {
   Avatar,
@@ -23,6 +17,7 @@ import {
   BottomSheetRefProps,
 } from '@app/components/bottom-sheets';
 import { AppIcons } from '@app/theme/icon';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();

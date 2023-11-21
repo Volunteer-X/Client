@@ -306,8 +306,13 @@ export const PingFinalPage = () => {
           </View>
 
           {/* Media */}
-          <View style={[{ borderRadius: SIZES.xSmall }]}>
-            <MediaFlatlist assets={assets} paddingOffset={SIZES.medium} />
+          <View
+            style={{
+              maxHeight: 200,
+              overflow: 'hidden',
+              borderRadius: SIZES.medium,
+            }}>
+            <MediaFlatlist assets={assets} />
           </View>
 
           {/* Text & URL */}
