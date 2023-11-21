@@ -17,7 +17,7 @@ import { DevSettings, Pressable, StyleSheet, View } from 'react-native';
 
 import BottomTabNavigation from '../bottom-tab';
 
-import { PageNames, SIZES } from '@app/lib/index';
+import { SIZES } from '@app/lib/index';
 import { ProfileScreen, SettingScreen } from '@features/index';
 import UserAvatar from '@app/components/user-avatar';
 import useAppTheme from '@app/hooks/useAppTheme';
@@ -146,11 +146,11 @@ const HomeDrawer = (): React.JSX.Element => {
   return (
     <Drawer.Navigator
       detachInactiveScreens
-      initialRouteName="Main"
+      initialRouteName="BottomTab"
       screenOptions={{ headerShown: false }}
       drawerContent={props => HomeDrawerContent(props)}>
       <Drawer.Screen
-        name="Main"
+        name="BottomTab"
         component={BottomTabNavigation}
         options={{ drawerItemStyle: { display: 'none' } }}
       />
@@ -164,7 +164,11 @@ const HomeDrawer = (): React.JSX.Element => {
           },
         }}
       />
-      <Drawer.Screen name="Settings" component={SettingScreen} />
+      <Drawer.Screen
+        name="AppSettings"
+        options={{ title: 'Settings' }}
+        component={SettingScreen}
+      />
     </Drawer.Navigator>
   );
 };

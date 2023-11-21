@@ -6,7 +6,6 @@ import { Text } from 'react-native-paper';
 
 import { PageNames } from '../../../lib';
 import UserFeeds from './UserFeeds';
-import ActivityScreen from '../../activity/screens/ActivityListScreen';
 
 const StatView = ({
   statCount,
@@ -41,7 +40,7 @@ const TabIcon = (
       iconName = 'home';
       iconType = 'feather';
       break;
-    case PageNames.Activity:
+    case 'ActivityTab':
       iconName = 'activity';
       iconType = 'feather';
       break;
@@ -130,14 +129,14 @@ const ProfileScreen = () => {
       </View>
       {/* Profile tabs */}
       <Tab.Navigator
-        initialRouteName={PageNames.Activity}
+        // initialRouteName={'ActivityTab'}
         initialLayout={{ width: Dimensions.get('window').width }}
         screenOptions={({ route }) => ({
           tabBarShowLabel: false,
           tabBarShowIcon: true,
           tabBarIcon: props => TabIcon(props, route.name),
         })}>
-        <Tab.Screen name={PageNames.Activity} component={ActivityScreen} />
+        {/* <Tab.Screen name="ActivityTab" component={ActivityScreen} /> */}
         <Tab.Screen name={PageNames.UserFeeds} component={UserFeeds} />
       </Tab.Navigator>
     </View>

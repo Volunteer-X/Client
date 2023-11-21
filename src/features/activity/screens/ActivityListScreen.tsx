@@ -9,7 +9,7 @@ import {
 } from '@app/components/bottom-sheets';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { PicksLabel } from '@app/lib';
-import { ActivityListNavProp } from '@app/types/type';
+import { ActivityStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
@@ -19,7 +19,8 @@ import { makeStyles } from './activity.style';
 
 export const ActivityListScreen = () => {
   // Navigation
-  const navigation = useNavigation<ActivityListNavProp>();
+  const navigation =
+    useNavigation<ActivityStackScreenProps<'ActivityList'>['navigation']>();
 
   // Theme
   const { theme } = useAppTheme();

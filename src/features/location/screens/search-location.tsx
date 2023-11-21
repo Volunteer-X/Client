@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Camera,
   CircleLayer,
@@ -9,7 +9,6 @@ import {
   MarkerView,
   ShapeSource,
   SymbolLayer,
-  UserLocation,
 } from '@rnmapbox/maps';
 import { MAPBOX_STYLE_DARK } from '@env';
 import LocationSearchBar, {
@@ -18,15 +17,15 @@ import LocationSearchBar, {
 import { Button, IconButton, MD3Colors } from 'react-native-paper';
 import { PADDING } from '@app/lib';
 import { Point, Feature } from 'geojson/index';
-import { Point as RNPoint } from 'react-native-google-places-autocomplete';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useGeoLocation } from '@app/context/geo-location';
-import { PSearchPlaceNav, PSearchPlaceRoute } from '@app/types/type';
+import { PingStackScreenProps } from '@ts-types/type';
 import { AppIcons } from '@app/theme/icon';
 
 export const SearchLocationScreen = () => {
-  const navigation = useNavigation<PSearchPlaceNav>();
-  const route = useRoute<PSearchPlaceRoute>();
+  const navigation =
+    useNavigation<PingStackScreenProps<'SearchLocation'>['navigation']>();
+  const route = useRoute<PingStackScreenProps<'SearchLocation'>['route']>();
 
   const currentLocation = useGeoLocation();
 

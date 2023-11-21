@@ -13,6 +13,7 @@ import { GET_USER_BY_EMAIL } from '@app/features/auth/graphql/auth.queries';
 import { setRegistrationState } from '@app/features/auth/slices/registrationCheckSlice';
 import { setUser, User } from '@app/features/auth/slices/userSlice';
 import { AUTHSTAGE, useAppAuth } from '@app/context/auth-context';
+import { RootNavigation } from './root-navigation';
 
 const MainNavigation = ({ authStage }: { authStage: AUTHSTAGE }) => {
   const componentSelector = useRef<boolean>(true);
@@ -123,7 +124,7 @@ const MainNavigation = ({ authStage }: { authStage: AUTHSTAGE }) => {
       )} */}
 
       {componentSelector ? (
-        <Stack.Screen name="Drawer" component={HomeDrawer} />
+        <Stack.Screen name="Root" component={RootNavigation} />
       ) : (
         <Stack.Screen name="AuthStack" component={AuthNavigation} />
       )}

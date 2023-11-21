@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { Button, MD3Colors, Text } from 'react-native-paper';
@@ -7,11 +7,12 @@ import { PicksSelectView } from '@app/components';
 import { DIMENSIONS, PADDING, SIZES } from '@app/lib';
 import { Defaults } from '@app/lib';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { PSelectPicksNavProp, PSelectPicksRoute } from '@app/types/type';
+import { PingStackScreenProps } from '@app/types/type';
 
 export const PingSelectPicks = () => {
-  const navigation = useNavigation<PSelectPicksNavProp>();
-  const route = useRoute<PSelectPicksRoute>();
+  const navigation =
+    useNavigation<PingStackScreenProps<'SelectPicks'>['navigation']>();
+  const route = useRoute<PingStackScreenProps<'SelectPicks'>['route']>();
 
   const [selectedPicks, setSelectedPicks] = useState<string[]>(() => {
     if (route.params && route.params.picks) {

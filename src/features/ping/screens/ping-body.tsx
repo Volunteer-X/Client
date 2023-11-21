@@ -18,7 +18,6 @@ import { MAP_API_KEY } from '@env';
 import { MediaTypeView } from '@app/components';
 import { ImagePickerResponse } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import { PingBodyNavProp } from '@app/types/type';
 import { AppIcons } from '@app/theme/icon';
 
 export const PingBody = () => {
@@ -26,7 +25,7 @@ export const PingBody = () => {
   const styles = makeStyles(theme);
   const [showUrl, setShowUrl] = useState<boolean>(true);
 
-  const navigation = useNavigation<PingBodyNavProp>();
+  const navigation = useNavigation();
 
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
 

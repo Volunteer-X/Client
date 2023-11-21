@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 
-import { MapScreen, SearchScreen } from '@features/index';
+import { HomeScreen, MapScreen, SearchScreen } from '@features/index';
 import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
@@ -72,7 +72,7 @@ const BottomTabNavigation = () => {
       })}>
       <Tab.Screen
         name="Home"
-        component={HomeNavigation}
+        component={HomeScreen}
         options={{
           header: () => HomeHeader(),
         }}

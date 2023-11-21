@@ -3,7 +3,7 @@ import { HEIGHTS, SIZES } from '@app/lib';
 import { APP_NAME } from '@app/lib/constants/values';
 import { AppTheme } from '@app/theme';
 import { AppIcons } from '@app/theme/icon';
-import { HomeScreenNavigationProps } from '@ts-types/type';
+import { BottomTabStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
@@ -16,7 +16,8 @@ const { height } = Dimensions.get('window');
 export const HomeHeader = () => {
   const { theme } = useAppTheme();
 
-  const navigation = useNavigation<HomeScreenNavigationProps>();
+  const navigation =
+    useNavigation<BottomTabStackScreenProps<'Home'>['navigation']>();
 
   const styles = makeStyles(theme);
 
@@ -34,8 +35,7 @@ export const HomeHeader = () => {
       <IconButton
         icon={AppIcons.FORUM}
         onPress={() => {
-          // console.log('Forum');
-          // navigation.navigate('Home', { screen: 'ForumNav' });
+          navigation.push('ForumNavigation');
         }}
         size={SIZES.xLarge}
       />

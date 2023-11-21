@@ -19,21 +19,18 @@ import {
   Text,
   Divider,
   TextInput,
-  HelperText,
   MD3Colors,
   IconButton,
-  Chip,
-  Button,
 } from 'react-native-paper';
 
 import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
-import { PFinalNavProp, PFinalRouteProp } from '@app/types/type';
+import { PingStackScreenProps } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
-import { EPicksIcon, SIZES } from '@app/lib';
+import { SIZES } from '@app/lib';
 import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 import { MAP_API_KEY } from '@env';
@@ -44,9 +41,6 @@ import { useGeoLocation } from '@app/context/geo-location';
 import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
 import EmptyPickView from '../components/empty-pick-view';
 import { findPickFromLabel } from '@app/utils/pick-finder';
-import LottieView from 'lottie-react-native';
-import { pick } from 'lodash';
-import { IconSource } from 'react-native-paper/lib/typescript/src/components/Icon';
 import { AppIcons } from '@app/theme/icon';
 
 const { height } = Dimensions.get('window');
@@ -55,8 +49,9 @@ export const PingFinalPage = () => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const navigation = useNavigation<PFinalNavProp>();
-  const route = useRoute<PFinalRouteProp>();
+  const navigation =
+    useNavigation<PingStackScreenProps<'FinalPage'>['navigation']>();
+  const route = useRoute<PingStackScreenProps<'FinalPage'>['route']>();
 
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
 
