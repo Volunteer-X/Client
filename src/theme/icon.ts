@@ -22,4 +22,5 @@ export enum AppIcons {
   TIME = 'time',
   HOT = 'flame',
   FILTER = 'filter',
+  SEARCH = 'search',
 }
