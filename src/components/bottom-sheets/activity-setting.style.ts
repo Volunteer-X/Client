@@ -14,9 +14,11 @@ export const makeStyles = (theme: AppTheme) =>
     },
     handleStyle: {
       backgroundColor: theme.colors.background,
+      marginBottom: -1,
     },
     handleIndicatorStyle: {
       backgroundColor: theme.colors.onBackground,
+
       // borderRadius: 20,
     },
     subContainer: {

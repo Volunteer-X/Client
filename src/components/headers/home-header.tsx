@@ -35,7 +35,7 @@ export const HomeHeader = () => {
       <IconButton
         icon={AppIcons.FORUM}
         onPress={() => {
-          navigation.push('ForumNavigation');
+          navigation.push('ForumNavigation', { screen: 'Forums' });
         }}
         size={SIZES.xLarge}
       />

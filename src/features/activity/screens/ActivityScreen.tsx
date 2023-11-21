@@ -34,7 +34,7 @@ const ActivityScreen = () => {
 
   // States
   const [isOwner, setIsOwner] = React.useState(false);
-  const [isMember, setIsMember] = React.useState(true);
+  const [isMember, setIsMember] = React.useState(false);
 
   // Bottom sheet Handlers
   // Activity Setting Modal
@@ -118,12 +118,12 @@ const ActivityScreen = () => {
                     style={styles.avatar}
                   />
                 </View>
-                <IconButton
+                {/* <IconButton
                   icon={AppIcons.PENCIL}
                   size={16}
                   iconColor="#b2b2b2"
                   style={styles.editBadge}
-                />
+                /> */}
               </View>
               <Text variant="bodyLarge" style={styles.activityTitle}>
                 Activity Name
@@ -242,14 +242,17 @@ const ActivityScreen = () => {
                   }}>
                   {!isMember && (
                     <Button
-                      icon={'account-plus'}
+                      icon={AppIcons.PERSON_ADD}
                       mode="contained"
                       style={{ flex: 1 }}>
                       Join
                     </Button>
                   )}
 
-                  <Button icon={'chat'} mode="contained" style={{ flex: 1 }}>
+                  <Button
+                    icon={AppIcons.FORUM}
+                    mode="contained"
+                    style={{ flex: 1 }}>
                     Forum
                   </Button>
                 </View>
@@ -257,6 +260,7 @@ const ActivityScreen = () => {
               {/* Activity Body */}
               <ActivityCard
                 isOriginalPing={true}
+                title="Lorem ipsum"
                 text="Lorem ipsum"
                 timestamp="2h"
                 username="docren155"

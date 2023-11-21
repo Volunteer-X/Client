@@ -1,17 +1,10 @@
-import {
-  BottomTabNavigationProp,
-  BottomTabScreenProps,
-} from '@react-navigation/bottom-tabs';
-import {
-  DrawerNavigationProp,
-  DrawerScreenProps,
-} from '@react-navigation/drawer';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { DrawerScreenProps } from '@react-navigation/drawer';
 import type {
-  CompositeNavigationProp,
   CompositeScreenProps,
   NavigatorScreenParams,
 } from '@react-navigation/native';
-import { StackNavigationProp, StackScreenProps } from '@react-navigation/stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import { Point } from './utility-types';
 
 /*
@@ -50,6 +43,9 @@ export type RootStackParamList = {
   ForumNavigation: NavigatorScreenParams<ForumStackParamList>;
 };
 
+type RootStackScreenProps<T extends keyof RootStackParamList> =
+  StackScreenProps<RootStackParamList, T>;
+
 // Drawer
 export type DrawerParamList = {
   BottomTab: NavigatorScreenParams<BottomTabParamList>;
@@ -73,12 +69,12 @@ export type BottomTabStackScreenProps<T extends keyof BottomTabParamList> =
       BottomTabScreenProps<BottomTabParamList, T>,
       DrawerScreenProps<DrawerParamList, 'BottomTab'>
     >,
-    StackScreenProps<RootStackParamList, 'ForumNavigation'>
+    RootStackScreenProps<keyof RootStackParamList>
   >;
 
 // * Activity
 export type ActivityStackParamList = {
-  ActivityList: undefined;
+  Activities: undefined;
   ActivityScreen: undefined;
   ActivityMembers: undefined;
   ActivitySetting: undefined;
@@ -90,9 +86,18 @@ export type ActivityStackScreenProps<T extends keyof ActivityStackParamList> =
 
 // * Forum
 export type ForumStackParamList = {
-  ForumList: undefined;
+  Forums: undefined;
   ForumScreen: undefined;
   ForumMembers: undefined;
   ForumSetting: undefined;
   Profile: undefined;
 };
+
+export type ForumStackScreenProps<T extends keyof ForumStackParamList> =
+  StackScreenProps<ForumStackParamList, T>;
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}

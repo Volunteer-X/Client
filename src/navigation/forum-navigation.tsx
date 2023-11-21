@@ -8,7 +8,7 @@ export const ForumNavigation = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen name="ForumList" component={ForumListScreen} />
+      <Stack.Screen name="Forums" component={ForumListScreen} />
     </Stack.Navigator>
   );
 };

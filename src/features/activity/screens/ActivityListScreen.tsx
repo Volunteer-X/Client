@@ -20,7 +20,7 @@ import { makeStyles } from './activity.style';
 export const ActivityListScreen = () => {
   // Navigation
   const navigation =
-    useNavigation<ActivityStackScreenProps<'ActivityList'>['navigation']>();
+    useNavigation<ActivityStackScreenProps<'Activities'>['navigation']>();
 
   // Theme
   const { theme } = useAppTheme();

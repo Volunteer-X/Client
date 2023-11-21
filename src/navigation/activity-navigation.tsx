@@ -8,8 +8,8 @@ export const ActivityNavigation = () => {
   const Stack = createStackNavigator<ActivityStackParamList>();
 
   return (
-    <Stack.Navigator initialRouteName="ActivityList">
-      <Stack.Screen name="ActivityList" component={ActivityListScreen} />
+    <Stack.Navigator initialRouteName="ActivityScreen">
+      <Stack.Screen name="Activities" component={ActivityListScreen} />
       <Stack.Screen
         name="ActivityScreen"
         component={ActivityScreen}
