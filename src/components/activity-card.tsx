@@ -10,6 +10,7 @@ import { MediaFlatlist } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
+import GoogleStaticMaps from './google-static-map';
 
 type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -51,7 +52,7 @@ const ActivityCard = ({
   // ];
 
   return (
-    <Pressable style={styles.container} onPress={() => console.log('pressed')}>
+    <Pressable style={styles.container}>
       {/* Left side */}
       <View style={styles.leftContainer}>
         <Avatar.Image
@@ -109,10 +110,6 @@ const ActivityCard = ({
           <Text variant="labelLarge" numberOfLines={2} style={styles.title}>
             {title}
           </Text>
-          {/* Description */}
-          <ViewMoreText numberOfLines={3}>
-            <Text variant="bodyMedium">{text}</Text>
-          </ViewMoreText>
           {/* URL */}
           {url && (
             <LinkPreview
@@ -157,8 +154,12 @@ const ActivityCard = ({
               <MediaFlatlist assets={media} paddingOffset={38.5} />
             </View>
           )}
+          {/* Description */}
+          <ViewMoreText numberOfLines={3}>
+            <Text variant="bodyMedium">{text}</Text>
+          </ViewMoreText>
           {/* Actions */}
-          <View style={{ flexDirection: 'row', display: 'flex' }}>
+          {/* <View style={{ flexDirection: 'row', display: 'flex' }}>
             <Ionicons
               name="heart-outline"
               size={24}
@@ -168,7 +169,13 @@ const ActivityCard = ({
                 marginVertical: 5,
               }}
             />
-          </View>
+          </View> */}
+          {/* <GoogleStaticMaps
+            center={'43, High Drive, New Malden, UK'}
+            zoom={14}
+            size={{ height: 600, width: 300 }}
+            containerStyle={{ borderRadius: 10, height: 100 }}
+          /> */}
         </View>
       </View>
     </Pressable>

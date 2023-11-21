@@ -17,12 +17,9 @@ function getType(str: string): string {
 }
 
 /*
-  Todo Setup onclick, preview function for the media, delete option 
+  Todo Setup onclick, preview function for the media, delete option
 */
-const MediaFlatlist = ({
-  assets,
-  paddingOffset = 0,
-}: MediaFlatlistProps<T>) => {
+const MediaFlatlist = ({ assets, ...props }: MediaFlatlistProps<T>) => {
   const { theme } = useAppTheme();
 
   const [calculatedWidth, setCalculatedWidth] = useState(0);
@@ -75,6 +72,7 @@ const MediaFlatlist = ({
         style={{}}
         data={listData}
         showPagination
+        {...props}
         renderItem={_renderItem}
       />
     </View>

@@ -1,17 +1,18 @@
 import React from 'react';
 import { PixelRatio, StyleProp, ViewStyle } from 'react-native';
 import { Image } from '@rneui/themed';
+import { MAP_API_KEY } from '@env';
 
 interface GoogleStaticMapsProps {
   center: string | Point;
-  zoom: number;
+  zoom?: number;
   size: Size;
   scale?: 1 | 2;
   format?: 'png' | 'png32' | 'gif' | 'jpg' | 'jpg-baseline';
   mapType?: 'roadmap' | 'satellite' | 'hybrid' | 'terrain';
   language?: string;
   region?: string;
-  apiKey: string;
+  apiKey?: string;
   signature?: string;
   onError?: Function;
   onLoad?: Function;
@@ -103,7 +104,7 @@ const GoogleStaticMaps = ({
   region,
   mapID,
   mapStyle,
-  apiKey,
+  apiKey = MAP_API_KEY,
   blur = 0,
   paths,
   markers,

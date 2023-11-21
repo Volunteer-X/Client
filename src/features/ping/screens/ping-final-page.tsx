@@ -394,7 +394,7 @@ export const PingFinalPage = () => {
               markers={[
                 { location: selectedPoint, size: 'small', color: 'black' },
               ]}
-              apiKey={MAP_API_KEY}
+              // apiKey={MAP_API_KEY}
             />
           </Pressable>
         </View>

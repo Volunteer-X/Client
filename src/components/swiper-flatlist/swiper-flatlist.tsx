@@ -180,6 +180,7 @@ const SwiperFlatlist = React.forwardRef(
       horizontal: !vertical,
       showsHorizontalScrollIndicator: false,
       showsVerticalScrollIndicator: false,
+      nestedScrollEnabled: true,
       pagingEnabled: true,
       onMomentumScrollEnd: _onMomentumScrollEnd,
       data: _data,

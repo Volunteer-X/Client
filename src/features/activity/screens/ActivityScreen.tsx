@@ -56,6 +56,8 @@ const ActivityScreen = () => {
         style={styles.imageBackground}>
         <ScrollView
           showsVerticalScrollIndicator={false}
+          overScrollMode="never"
+          nestedScrollEnabled
           style={styles.scrollView}
           contentContainerStyle={{ flexGrow: 1 }}>
           <View style={{ flex: 1 }}>
@@ -259,30 +261,10 @@ const ActivityScreen = () => {
               )}
               {/* Activity Body */}
               <ActivityCard
-                isOriginalPing={true}
                 title="Lorem ipsum"
-                text="Lorem ipsum"
+                text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu"
                 timestamp="2h"
-                username="docren155"
-                showStar
-                showPicks
-                // url="https://www.youtube.com/watch?v=5qap5aO4i9A"
-                // media={[
-                //   {
-                //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                //     type: 'image/jpeg',
-                //   },
-                //   {
-                //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                //     type: 'image/jpeg',
-                //   },
-                // ]}
-                onMenuClick={handleOnMenuClick}
-              />
-              <ActivityCard
-                text="Lorem ipsum"
-                timestamp="2h"
-                url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
+                // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
                 username="docren155"
                 media={[
                   {
@@ -294,6 +276,7 @@ const ActivityScreen = () => {
                     type: 'image/jpeg',
                   },
                 ]}
+                onMenuClick={handleOnMenuClick}
               />
             </View>
           </View>

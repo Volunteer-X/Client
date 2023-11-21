@@ -61,6 +61,7 @@ export const ActivityListScreen = () => {
           <ActivityListFab />
           <PicksSelectView
             showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled
             horizontal
             contentContainerStyle={styles.filterPinsContainer}
             chipStyle={styles.chipStyle}
@@ -71,6 +72,7 @@ export const ActivityListScreen = () => {
           <ActivitySettingModal ref={settingModalRef} />
           <FlatList
             overScrollMode="never"
+            nestedScrollEnabled
             showsVerticalScrollIndicator={false}
             data={Array(2).fill(0)}
             renderItem={item => (
@@ -87,20 +89,20 @@ export const ActivityListScreen = () => {
                     PicksLabel.Disaster,
                     PicksLabel.Economic,
                   ]}
-                  url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
+                  // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
                   onMenuClick={() => {
                     settingModalRef.current?.openModal();
                   }}
-                  // media={[
-                  //   {
-                  //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                  //     type: 'image/jpeg',
-                  //   },
-                  //   {
-                  //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                  //     type: 'image/jpeg',
-                  //   },
-                  // ]}
+                  media={[
+                    {
+                      uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+                      type: 'image/jpeg',
+                    },
+                    {
+                      uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
+                      type: 'image/jpeg',
+                    },
+                  ]}
                   showPicks
                 />
               </View>
