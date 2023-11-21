@@ -51,120 +51,131 @@ const ActivityCard = ({
   // ];
 
   return (
-    <View style={styles.container}>
-      {/* Left side */}
-      <View style={styles.leftContainer}>
-        <Avatar.Image
-          source={require('@assets/images/placeholder.jpg')}
-          size={32}
-          style={styles.avatar}
-        />
-        <Divider bold style={styles.verticalDivider} />
-      </View>
-      {/* Right side */}
-      <View style={styles.rightContainer}>
-        {/* Username, timeline, options */}
-        <View style={styles.header}>
-          <Text variant="bodyLarge" style={styles.bold}>
-            {username}
-          </Text>
-          <View style={styles.starTimeAndMenu}>
-            {showStar && isOriginalPing && (
-              <AntDesign
-                name="star"
-                size={14}
-                style={{ transform: [{ scaleX: -1 }] }}
+    <View>
+      <Pressable
+        style={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          left: 0,
+          bottom: 0,
+        }}
+        onPress={() => console.log('Pressed')}
+      />
+      <View style={styles.container}>
+        {/* Left side */}
+        <View style={styles.leftContainer}>
+          <Avatar.Image
+            source={require('@assets/images/placeholder.jpg')}
+            size={32}
+            style={styles.avatar}
+          />
+          <Divider bold style={styles.verticalDivider} />
+        </View>
+        {/* Right side */}
+        <View style={styles.rightContainer}>
+          {/* Username, timeline, options */}
+          <View style={styles.header}>
+            <Text variant="bodyLarge" style={styles.bold}>
+              {username}
+            </Text>
+            <View style={styles.starTimeAndMenu}>
+              {showStar && isOriginalPing && (
+                <AntDesign
+                  name="star"
+                  size={14}
+                  style={{ transform: [{ scaleX: -1 }] }}
+                />
+              )}
+              <Text variant="bodySmall" style={{}}>
+                {`${timestamp} ago`}
+              </Text>
+              <Ionicons
+                name="ellipsis-horizontal"
+                size={20}
+                style={{}}
+                onPress={onMenuClick}
+              />
+            </View>
+          </View>
+          {/* Content */}
+          <View style={{ gap: 10 }}>
+            {/* Picks */}
+            {picks && showPicks && (
+              <View style={[styles.picksContainer]}>
+                {picks.map(pick => {
+                  const pickObj = Picks.find(val => val.label === pick);
+                  return (
+                    <PicksIcon
+                      key={pickObj?.label}
+                      icon={pickObj?.icon ? pickObj.icon : 'star'}
+                      size={16}
+                      iconStyle={{ opacity: 0.75 }}
+                    />
+                  );
+                })}
+              </View>
+            )}
+            {/* Title */}
+            <Text variant="labelLarge" numberOfLines={2} style={styles.title}>
+              {title}
+            </Text>
+            {/* URL */}
+            {url && (
+              <LinkPreview
+                renderLinkPreview={payload => {
+                  // console.log(payload);
+                  if (payload.previewData && payload.previewData.image?.url) {
+                    const { previewData } = payload;
+                    const uri = previewData.image?.url;
+                    return (
+                      <View style={styles.urlContainer}>
+                        <View style={{ flex: 1, padding: 10 }}>
+                          <Text
+                            variant="labelSmall"
+                            numberOfLines={2}
+                            ellipsizeMode="tail"
+                            style={{}}>
+                            {payload.previewData.link}
+                          </Text>
+                          <Text
+                            variant="labelMedium"
+                            numberOfLines={2}
+                            ellipsizeMode="tail"
+                            style={styles.bold}>
+                            {payload.previewData.title}
+                          </Text>
+                        </View>
+                        <Image
+                          source={{ uri: uri }}
+                          style={styles.minimizedImage}
+                        />
+                      </View>
+                    );
+                  }
+                }}
+                enableAnimation
+                text={url}
               />
             )}
-            <Text variant="bodySmall" style={{}}>
-              {`${timestamp} ago`}
-            </Text>
-            <Ionicons
-              name="ellipsis-horizontal"
-              size={20}
-              style={{}}
-              onPress={onMenuClick}
-            />
-          </View>
-        </View>
-        {/* Content */}
-        <View style={{ gap: 10 }}>
-          {/* Picks */}
-          {picks && showPicks && (
-            <View style={[styles.picksContainer]}>
-              {picks.map(pick => {
-                const pickObj = Picks.find(val => val.label === pick);
-                return (
-                  <PicksIcon
-                    key={pickObj?.label}
-                    icon={pickObj?.icon ? pickObj.icon : 'star'}
-                    size={16}
-                    iconStyle={{ opacity: 0.75 }}
-                  />
-                );
-              })}
-            </View>
-          )}
-          {/* Title */}
-          <Text variant="labelLarge" numberOfLines={2} style={styles.title}>
-            {title}
-          </Text>
-          {/* URL */}
-          {url && (
-            <LinkPreview
-              renderLinkPreview={payload => {
-                // console.log(payload);
-                if (payload.previewData && payload.previewData.image?.url) {
-                  const { previewData } = payload;
-                  const uri = previewData.image?.url;
-                  return (
-                    <View style={styles.urlContainer}>
-                      <View style={{ flex: 1, padding: 10 }}>
-                        <Text
-                          variant="labelSmall"
-                          numberOfLines={2}
-                          ellipsizeMode="tail"
-                          style={{}}>
-                          {payload.previewData.link}
-                        </Text>
-                        <Text
-                          variant="labelMedium"
-                          numberOfLines={2}
-                          ellipsizeMode="tail"
-                          style={styles.bold}>
-                          {payload.previewData.title}
-                        </Text>
-                      </View>
-                      <Image
-                        source={{ uri: uri }}
-                        style={styles.minimizedImage}
-                      />
-                    </View>
-                  );
-                }
-              }}
-              enableAnimation
-              text={url}
-            />
-          )}
-          {/* Media */}
-          {media && (
-            <View
-              hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
-              style={{
-                maxHeight: 200,
-                overflow: 'hidden',
-                borderRadius: 15,
-              }}>
-              <MediaFlatlist assets={media} />
-            </View>
-          )}
-          {/* Description */}
-          <ViewMoreText numberOfLines={3}>
-            <Text variant="bodyMedium">{text}</Text>
-          </ViewMoreText>
-          {/* Actions */}
-          {/* <View style={{ flexDirection: 'row', display: 'flex' }}>
+            {/* Media */}
+            {media && (
+              <View
+                hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                style={{
+                  maxHeight: 200,
+                  overflow: 'hidden',
+                  borderRadius: 15,
+                }}>
+                <MediaFlatlist assets={media} />
+              </View>
+            )}
+            {/* Description */}
+            <ViewMoreText numberOfLines={3}>
+              <Text variant="bodyMedium">{text}</Text>
+            </ViewMoreText>
+            {/* Actions */}
+            {/* <View style={{ flexDirection: 'row', display: 'flex' }}>
             <Ionicons
               name="heart-outline"
               size={24}
@@ -175,12 +186,13 @@ const ActivityCard = ({
               }}
             />
           </View> */}
-          {/* <GoogleStaticMaps
+            {/* <GoogleStaticMaps
             center={'43, High Drive, New Malden, UK'}
             zoom={14}
             size={{ height: 600, width: 300 }}
             containerStyle={{ borderRadius: 10, height: 100 }}
           /> */}
+          </View>
         </View>
       </View>
     </View>
