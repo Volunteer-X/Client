@@ -66,10 +66,14 @@ export const ForumListScreen = () => {
     });
   }, [navigation, styles.header]);
 
+  const handleOnClick = () => {
+    navigation.navigate('ForumScreen');
+  };
+
   // Render item
   const _renderItem: ListRenderItem<Forum> = ({ item: forum }) => {
     return (
-      <Pressable>
+      <Pressable onPress={handleOnClick}>
         <View style={styles.forumContainer}>
           <View style={styles.avatarContainer}>
             <Avatar.Image
