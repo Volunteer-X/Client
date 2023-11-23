@@ -33,7 +33,6 @@ import useAppTheme from '@hooks/useAppTheme';
 import { SIZES } from '@app/lib';
 import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
-import { MAP_API_KEY } from '@env';
 
 import { MediaTypeView, PicksIcon, TextInputEnhanced } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
@@ -46,15 +45,19 @@ import { AppIcons } from '@app/theme/icon';
 const { height } = Dimensions.get('window');
 
 export const PingFinalPage = () => {
+  // Themeing
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
+  // Navigation
   const navigation =
     useNavigation<PingStackScreenProps<'FinalPage'>['navigation']>();
   const route = useRoute<PingStackScreenProps<'FinalPage'>['route']>();
 
+  // Media handling
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
 
+  // States
   const [assets, setAssets] = useState<Array<Asset>>();
   const [showUrl, setShowUrl] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(false);
@@ -119,6 +122,7 @@ export const PingFinalPage = () => {
     textColor: theme.colors.onSurface,
   };
 
+  // * Handle media type response
   const _onMediaTypeResponse = useCallback(
     ({
       didCancel,
