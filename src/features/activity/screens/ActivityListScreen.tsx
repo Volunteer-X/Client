@@ -104,6 +104,9 @@ export const ActivityListScreen = () => {
                     },
                   ]}
                   showPicks
+                  onPress={() => {
+                    navigation.navigate('ActivityScreen');
+                  }}
                 />
               </View>
             )}

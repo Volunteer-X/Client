@@ -27,3 +27,5 @@ export * from './picks-icon';
 export * from './view-more-text';
 
 export * from './FAB/activity-list-fab';
+
+export * from './avatar/Avatar';

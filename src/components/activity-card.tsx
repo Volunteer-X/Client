@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Avatar, Divider, Text } from 'react-native-paper';
+import { Divider, Text } from 'react-native-paper';
 import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -10,6 +10,8 @@ import { MediaFlatlist } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
+import { Avatar } from './avatar/Avatar';
+import { useNavigation } from '@react-navigation/native';
 
 type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -23,6 +25,7 @@ type ActivityCardProps = {
   showPicks?: boolean;
   showStar?: boolean;
   onMenuClick?: () => void;
+  onPress?: () => void;
 };
 
 const ActivityCard = ({
@@ -37,6 +40,7 @@ const ActivityCard = ({
   showPicks = false,
   showStar = false,
   onMenuClick,
+  onPress,
 }: ActivityCardProps) => {
   // ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
   // [
@@ -60,15 +64,17 @@ const ActivityCard = ({
           left: 0,
           bottom: 0,
         }}
-        onPress={() => console.log('Pressed')}
+        onPress={() => onPress && onPress()}
       />
       <View style={styles.container}>
         {/* Left side */}
         <View style={styles.leftContainer}>
-          <Avatar.Image
-            source={require('@assets/images/placeholder.jpg')}
+          <Avatar
+            name="John Doe"
+            // source={require('@assets/images/placeholder.jpg')}
             size={32}
-            style={styles.avatar}
+
+            // style={styles.avatar}
           />
           <Divider bold style={styles.verticalDivider} />
         </View>

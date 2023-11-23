@@ -7,7 +7,7 @@ import {
   StatusBar,
   View,
 } from 'react-native';
-import { Avatar, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import { makeStyles } from './forum.style';
@@ -15,8 +15,7 @@ import useAppTheme from '@app/hooks/useAppTheme';
 import { ForumStackScreenProps } from '@ts-types/type';
 import { AppIcons } from '@app/theme/icon';
 import { EmptyScreen } from './EmptyScreen';
-import { PicksSelectView } from '@app/components';
-import { Picks } from '@app/lib';
+import { Avatar } from '@app/components';
 
 type Forum = {
   forumID: string;
@@ -76,13 +75,7 @@ export const ForumListScreen = () => {
       <Pressable onPress={handleOnClick}>
         <View style={styles.forumContainer}>
           <View style={styles.avatarContainer}>
-            <Avatar.Image
-              size={50}
-              style={styles.avatar}
-              source={{
-                uri: forum.picture,
-              }}
-            />
+            <Avatar size={50} showBorder uri={forum.picture} />
           </View>
           <View style={{ gap: 5, flex: 1 }}>
             <Text

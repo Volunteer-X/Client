@@ -1,16 +1,10 @@
 import { ImageBackground, StatusBar, StyleSheet, View } from 'react-native';
 import React from 'react';
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Text,
-  TextInput,
-} from 'react-native-paper';
+import { Button, IconButton, Text, TextInput } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { PADDING, Picks } from '@app/lib';
-import { ActivityCard } from '@app/components';
+import { ActivityCard, Avatar } from '@app/components';
 import { PicksIcon } from '@app/components';
 import {
   ActivitySettingModal,
@@ -109,11 +103,7 @@ const ActivityScreen = () => {
               </View>
               <View style={[styles.avatarContainer]}>
                 <View style={styles.avatarBorder}>
-                  <Avatar.Image
-                    source={require('@assets/images/placeholder.jpg')}
-                    size={75}
-                    style={styles.avatar}
-                  />
+                  <Avatar size={75} showBorder borderColor="#000" />
                 </View>
                 {/* <IconButton
                   icon={AppIcons.PENCIL}
@@ -172,11 +162,7 @@ const ActivityScreen = () => {
                         justifyContent: 'center',
                         alignItems: 'center',
                       }}>
-                      <Avatar.Image
-                        source={require('@assets/images/placeholder.jpg')}
-                        size={45}
-                        style={styles.avatar}
-                      />
+                      <Avatar size={45} showBorder borderColor="#FFF" />
                     </View>
                     <Text variant="bodySmall">Members</Text>
                   </View>
