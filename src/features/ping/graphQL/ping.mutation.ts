@@ -7,6 +7,7 @@ mutation createPing($createPingInput: CreatePingInput!) {
         title
         description
         createdAt
+        userID   
     }
     }
     `);

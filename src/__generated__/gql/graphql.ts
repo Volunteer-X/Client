@@ -86,8 +86,8 @@ export type Ping = {
   id: Scalars['ObjectID']['output'];
   latitude: Scalars['Latitude']['output'];
   longitude: Scalars['Longitude']['output'];
-  mediaIDs?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   picks: Array<Scalars['String']['output']>;
+  radius?: Maybe<Scalars['Float']['output']>;
   title: Scalars['String']['output'];
   url?: Maybe<Scalars['URL']['output']>;
   userID: Scalars['ObjectID']['output'];
