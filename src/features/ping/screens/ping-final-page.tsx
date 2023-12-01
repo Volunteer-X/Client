@@ -41,7 +41,7 @@ import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
 import EmptyPickView from '../components/empty-pick-view';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import { AppIcons } from '@app/theme/icon';
-import { useS3Upload } from '../hooks/useMediaAPI';
+import { useS3Upload } from '../hooks/useS3Upload';
 
 const { height } = Dimensions.get('window');
 

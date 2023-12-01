@@ -1,6 +1,5 @@
-import { DEV_FILE_PATH, DEV_HOST } from '@env';
 import axios, { AxiosRequestConfig } from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
 
 type URIResponse = {
