@@ -57,10 +57,12 @@ export const MediaTypeView = React.forwardRef(
         presentationStyle: 'currentContext',
         selectionLimit: 10,
         quality: 1,
+        includeBase64: true,
       };
       const camerOptions: Partial<CameraOptions> = {
         durationLimit: 60,
         cameraType: 'back',
+        includeBase64: true,
       };
       switch (type) {
         case AppMediaTypes.CAMERA:

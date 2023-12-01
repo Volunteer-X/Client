@@ -41,6 +41,7 @@ import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
 import EmptyPickView from '../components/empty-pick-view';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import { AppIcons } from '@app/theme/icon';
+import { useS3Upload } from '../hooks/useMediaAPI';
 
 const { height } = Dimensions.get('window');
 
@@ -193,6 +194,10 @@ export const PingFinalPage = () => {
     setDescriptionText(text);
   };
 
+  const { isUploading, uploadFile } = useS3Upload();
+
+  // * Render header right
+  // * Handle submit button
   const headerRight = () => {
     return (
       <IconButton
@@ -222,10 +227,20 @@ export const PingFinalPage = () => {
               urlText,
               picks,
               selectedPoint,
-              assets,
+              // assets,
             );
 
-            Alert.alert('Ping', 'Are you sure you want to ping?');
+            // Alert.alert('Ping', 'Are you sure you want to ping?');
+
+            // * Upload files to S3
+            if (assets && assets.length > 0) {
+              uploadFile({
+                fileName: assets[0].fileName,
+                base64: assets[0].base64,
+                uri: assets[0].uri,
+                type: assets[0].type,
+              });
+            }
           }
         }}
         disabled={isSubmitButtonDisabled}

@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Divider, Text } from 'react-native-paper';
+import { Button, Divider, Text } from 'react-native-paper';
 import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -11,7 +11,6 @@ import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
-import { useNavigation } from '@react-navigation/native';
 
 type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -86,6 +85,9 @@ const ActivityCard = ({
               {username}
             </Text>
             <View style={styles.starTimeAndMenu}>
+              <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
+                Join
+              </Button>
               {showStar && isOriginalPing && (
                 <AntDesign
                   name="star"
