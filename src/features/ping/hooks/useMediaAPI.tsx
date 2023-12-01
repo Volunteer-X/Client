@@ -45,17 +45,18 @@ export const useS3Upload = () => {
         throw new Error('Base64 is required');
       }
 
-      console.log('fileExtension', fileExtension, type);
+      console.log('fileExtension', type);
 
       const { signedUrl, fileKey } = await getSignedUrl(fileName);
 
-      // await axios.put(signedUrl, base64, {
-      //   headers: {
-      //     'Content-Type': 'application/octet-stream; charset=utf-8',
-      //     'Content-Length': base64.length,
-      //     // 'x-amz-acl': 'bucket-owner-full-control',
-      //   },
-      // });
+      await axios.put(signedUrl, base64, {
+        headers: {
+          'Content-Type': 'application/octet-stream; charset=utf-8',
+          'Content-Length': base64.length,
+          'Content-Encoding': 'base64',
+          // 'x-amz-acl': 'bucket-owner-full-control',
+        },
+      });
 
       console.log('File upload success', fileKey);
     } catch (error) {
