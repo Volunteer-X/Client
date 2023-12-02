@@ -29,7 +29,7 @@ const LoadingScreen = (props: Props) => {
   const styles = makeStyles(theme);
 
   // * Redux Hooks
-  const picksState = useAppSelector(state => state.picks);
+  // const picksState = useAppSelector(state => state.picks);
 
   const dispatch = useAppDispatch();
 

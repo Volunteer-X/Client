@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
 
@@ -9,6 +9,8 @@ type URIResponse = {
 
 export const useS3Upload = () => {
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<any | unknown>();
+  const [signingError, setSigningError] = useState<any | unknown>();
 
   const options: AxiosRequestConfig = {
     method: 'GET',
@@ -24,16 +26,12 @@ export const useS3Upload = () => {
 
       return response.data;
     } catch (error) {
+      setSigningError(error);
       throw new Error(`Error getting signed URL: ${error}`);
     }
   };
 
-  const uploadFile = async ({
-    fileName,
-    base64,
-    uri,
-    type,
-  }: Asset): Promise<void> => {
+  const uploadFile = async ({ fileName, base64 }: Asset): Promise<void> => {
     setIsUploading(true);
 
     try {
@@ -43,8 +41,6 @@ export const useS3Upload = () => {
       if (!base64) {
         throw new Error('Base64 is required');
       }
-
-      console.log('fileExtension', type);
 
       const { signedUrl, fileKey } = await getSignedUrl(fileName);
 
@@ -59,6 +55,7 @@ export const useS3Upload = () => {
 
       console.log('File upload success', fileKey);
     } catch (error) {
+      setUploadError(error);
       console.error('Error uploading file to S3:', error);
     } finally {
       setIsUploading(false);
@@ -68,5 +65,6 @@ export const useS3Upload = () => {
   return {
     isUploading,
     uploadFile,
+    error: uploadError || signingError,
   };
 };
