@@ -194,7 +194,7 @@ export const PingFinalPage = () => {
     setDescriptionText(text);
   };
 
-  const { isUploading, uploadFile } = useS3Upload();
+  const { isUploading, uploadFiles } = useS3Upload();
 
   // * Render header right
   // * Handle submit button
@@ -234,12 +234,7 @@ export const PingFinalPage = () => {
 
             // * Upload files to S3
             if (assets && assets.length > 0) {
-              uploadFile({
-                fileName: assets[0].fileName,
-                base64: assets[0].base64,
-                uri: assets[0].uri,
-                type: assets[0].type,
-              });
+              uploadFiles(assets);
             }
           }
         }}

@@ -12,7 +12,7 @@ type Input = {
   point: Point; // required
   description?: string; // optional
   url?: string; // optional
-  media: Array<Asset>; // optional
+  assets: Array<Asset>; // optional
 };
 
 export const usePingMutation = () => {
@@ -21,7 +21,7 @@ export const usePingMutation = () => {
     { loading: mutationLoading, data, error: mutationError },
   ] = useMutation(CREATE_PING);
 
-  const { isUploading: s3Loading, uploadFile, error: s3Error } = useS3Upload();
+  const { isUploading: s3Loading, uploadFiles, error: s3Error } = useS3Upload();
 
   const { id: userID } = useAppSelector(state => state.root.user);
 
@@ -31,7 +31,7 @@ export const usePingMutation = () => {
     picks,
     point,
     url,
-    media,
+    assets,
   }: Input) => {
     try {
       const response = await createPingMutation({
@@ -51,10 +51,10 @@ export const usePingMutation = () => {
       console.log('Ping created successfully', response);
 
       if (response.data?.createPing?.id) {
-        if (media && media.length > 0) {
+        if (assets && assets.length > 0) {
           // * handle media upload
           // ? useS3Upload()
-          uploadFile(media[0]);
+          uploadFiles(assets);
         }
       }
       return response;

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
 
 type URIResponse = {
-  fileKey: string;
+  Key: string;
   signedUrl: string;
 };
 
@@ -20,9 +20,9 @@ export const useS3Upload = () => {
     },
   };
 
-  const getSignedUrl = async (fileName: string) => {
+  const getSignedUrl = async () => {
     try {
-      const response = await axios.get<URIResponse>(fileName, options);
+      const response = await axios.get<URIResponse>('signedUrl', options);
 
       return response.data;
     } catch (error) {
@@ -31,9 +31,7 @@ export const useS3Upload = () => {
     }
   };
 
-  const uploadFile = async ({ fileName, base64 }: Asset): Promise<void> => {
-    setIsUploading(true);
-
+  const uploadFile = async ({ fileName, base64 }: Asset) => {
     try {
       if (!fileName) {
         throw new Error('File name is required');
@@ -42,7 +40,7 @@ export const useS3Upload = () => {
         throw new Error('Base64 is required');
       }
 
-      const { signedUrl, fileKey } = await getSignedUrl(fileName);
+      const { signedUrl, Key } = await getSignedUrl();
 
       await axios.put(signedUrl, base64, {
         headers: {
@@ -53,10 +51,27 @@ export const useS3Upload = () => {
         },
       });
 
-      console.log('File upload success', fileKey);
+      console.log('File upload success', Key);
+
+      return Key;
     } catch (error) {
       setUploadError(error);
       console.error('Error uploading file to S3:', error);
+    }
+  };
+
+  const uploadFiles = async (assets: Array<Asset>) => {
+    setIsUploading(true);
+    try {
+      const uploadPromises = assets.map(asset => uploadFile(asset));
+      const keys = await Promise.all(uploadPromises);
+
+      console.log('All files uploaded successfully', keys);
+
+      return keys;
+    } catch (error) {
+      setUploadError(error);
+      console.error('Error uploading files to S3:', error);
     } finally {
       setIsUploading(false);
     }
@@ -64,7 +79,7 @@ export const useS3Upload = () => {
 
   return {
     isUploading,
-    uploadFile,
+    uploadFiles,
     error: uploadError || signingError,
   };
 };
