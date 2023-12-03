@@ -4,6 +4,6 @@ export { default as SetPicks } from './screens/SetPicks';
 export * from './screens/AppSplashScreen';
 export { default as LoadingScreen } from './screens/LoadingScreen';
 
-export { default as userSlice } from './slices/userSlice';
-export { default as registrationCheckSlice } from './slices/registrationCheckSlice';
-export * from './slices/registrationCheckSlice';
+export { default as authSlice } from './slices/auth.slice';
+export { default as registrationCheckSlice } from './slices/registrationCheck.slice';
+export * from './slices/registrationCheck.slice';

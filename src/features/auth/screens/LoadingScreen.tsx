@@ -15,10 +15,10 @@ import { useMutation } from '@apollo/client';
 import { CREATE_USER } from '../graphql/auth.mutation';
 // import { Role } from '@app/lib/constants/enums';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { setUser, User } from '../slices/userSlice';
+import { setUser, User } from '../slices/auth.slice';
 import { Role } from '@app/__generated__/gql/graphql';
 import { setUserPicks } from '@app/features/picks/slices/picksSlice';
-import { setRegistrationState } from '../slices/registrationCheckSlice';
+import { setRegistrationState } from '../slices/registrationCheck.slice';
 
 type Props = StackScreenProps<AuthStackParamList, 'LoadingScreen'>;
 

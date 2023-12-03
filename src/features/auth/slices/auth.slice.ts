@@ -9,18 +9,25 @@ export interface User {
   firstName?: string;
   lastName?: string;
   role?: Role;
+  picks?: string[];
   picture?: string | null;
 }
 
-const initialState: User = {
-  id: '',
+type Auth = {
+  user: User | null;
+  isAuthenticated: boolean;
 };
 
-export const userSlice = createSlice({
-  name: 'user',
+const initialState: Auth = {
+  user: null,
+  isAuthenticated: false,
+};
+
+export const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
-    setUser: (state, action: PayloadAction<User>) => {
+    login: (state, action: PayloadAction<Auth>) => {
       // state.username = action.payload.username;
       // state.firstName = action.payload.firstName;
       // state.lastName = action.payload.lastName;
@@ -29,11 +36,16 @@ export const userSlice = createSlice({
       // state.role = action.payload.role;
       // state.id = action.payload.id;
 
-      state = cloneDeep(action.payload);
+      state.user = cloneDeep(action.payload.user);
+      state.isAuthenticated = action.payload.isAuthenticated;
+    },
+    logout: state => {
+      state.user = null;
+      state.isAuthenticated = false;
     },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { login, logout } = authSlice.actions;
 
-export default userSlice.reducer;
+export default authSlice.reducer;

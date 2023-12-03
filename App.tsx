@@ -19,10 +19,8 @@ import { store, persistor } from './app/store';
 import { AppThemeProvider } from '@theme/index';
 import useAppTheme from '@hooks/useAppTheme';
 
-// import apolloClient from './src/services/apolloClient';
 import apolloClient from '@services/apolloClient';
 
-// import { MainNavigation } from './src/navigation';
 import { AuthProvider } from '@app/context/auth-context/AuthContext';
 import { RootNavController } from '@app/components';
 import { GeoLocationProvider } from '@app/context/geo-location';

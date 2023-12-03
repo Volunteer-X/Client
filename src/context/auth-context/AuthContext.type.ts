@@ -8,14 +8,14 @@ export enum AUTHSTAGE {
 }
 
 export type AuthState = {
-  isAuthenticated: boolean;
   authStage: AUTHSTAGE;
 };
 
 export type AuthProps = {
-  authState: AuthState;
-  onLogout?: () => Promise<any>;
-  onLogin?: () => Promise<any>;
-  // setLocalAuthState?: () =>
+  isAuthenticated: boolean;
+  logout?: () => void;
+  login?: () => Promise<any>;
+  auth0?: () => Promise<any>;
   loading?: boolean;
+  error?: any;
 };

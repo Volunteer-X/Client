@@ -10,8 +10,8 @@ import HomeDrawer from './drawer/home-drawer';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { useLazyQuery } from '@apollo/client';
 import { GET_USER_BY_EMAIL } from '@app/features/auth/graphql/auth.queries';
-import { setRegistrationState } from '@app/features/auth/slices/registrationCheckSlice';
-import { setUser, User } from '@app/features/auth/slices/userSlice';
+import { setRegistrationState } from '@app/features/auth/slices/registrationCheck.slice';
+import { setUser, User } from '@app/features/auth/slices/auth.slice';
 import { AUTHSTAGE, useAppAuth } from '@app/context/auth-context';
 import { RootNavigation } from './root-navigation';
 

@@ -6,16 +6,15 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useAppSelector } from '@app/hooks';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useAuth0 } from 'react-native-auth0';
 import { AuthProps, AUTHSTAGE, AuthState } from './AuthContext.type';
 import { GET_USER_BY_EMAIL } from '@features/auth/graphql/auth.queries';
+import { login, logout } from '@app/features/auth/slices/auth.slice';
+import { AUTH0_SCOPE } from '@env';
 
 const initialState: AuthProps = {
-  authState: {
-    isAuthenticated: false,
-    authStage: AUTHSTAGE.INIT,
-  },
+  isAuthenticated: false,
   loading: true,
 };
 
@@ -25,30 +24,107 @@ const initialState: AuthProps = {
 const AuthContext = createContext<AuthProps>(initialState);
 
 /*
- * useAuth Hook
+ * Auth Provider (React Context Provider)
  */
-export const useAppAuth = () => {
-  return useContext(AuthContext);
-};
+const AuthProvider = ({ children }: any) => {
+  // Redux
+  const { isAuthenticated, user } = useAppSelector(state => state.root.auth);
 
-/* 
-Todo pending
- */
-export const AuthProvider = ({ children }: any) => {
+  const dispath = useAppDispatch();
+
   // GraphQL Client
-  const [getUserByEmail, query] = useLazyQuery(GET_USER_BY_EMAIL);
+  const [getUserByEmail, checkQuery] = useLazyQuery(GET_USER_BY_EMAIL);
 
   // Auth0
-  const { user, isLoading } = useAuth0();
+  const {
+    user: auth0User,
+    isLoading,
+    authorize,
+    error: auth0Error,
+    clearSession,
+  } = useAuth0();
   const [loading, setLoading] = useState(true);
-  const [authState, setAuthState] = useState<AuthState>({
-    isAuthenticated: false,
-    authStage: AUTHSTAGE.INIT,
-  });
 
   useEffect(() => {}, []);
 
-  const value: AuthProps = { authState, loading };
+  // auth0
+  const auth0 = async () => {
+    try {
+      await authorize({ scope: AUTH0_SCOPE });
+
+      if ((auth0User || auth0User !== null) && auth0User.email) {
+        try {
+          // check if user exists in db
+          await getUserByEmail({
+            variables: {
+              email: auth0User.email,
+            },
+          });
+
+          // if user exists in db
+          if (checkQuery.data?.getUserByEmail) {
+            let _user = checkQuery.data.getUserByEmail;
+
+            // set auth state to authenticated
+            dispath(
+              login({
+                isAuthenticated: true,
+                user: {
+                  id: _user.id,
+                  username: _user.username,
+                  email: _user.email,
+                  firstName: _user.name?.firstName,
+                  lastName: _user.name?.lastName,
+                  picture: _user.picture,
+                  picks: _user?.picks as string[],
+                  role: _user.role,
+                },
+              }),
+            );
+
+            return;
+          }
+          return auth0User;
+        } catch (error) {
+          console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
+        }
+      }
+    } catch (error) {
+      console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
+    }
+  };
+
+  // Login
+  const _login = useCallback(async () => {}, []);
+
+  // Logout
+  const _logout = useCallback(() => {
+    clearSession().then(() => {
+      dispath(logout());
+    });
+  }, [clearSession, dispath]);
+
+  const value: AuthProps = {
+    isAuthenticated,
+    loading: isLoading,
+    logout: _logout,
+    login: _login,
+    auth0,
+    error: auth0Error || checkQuery.error,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+
+/*
+ * useAuth Hook
+ */
+const useAppAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within a AuthProvider');
+  }
+  return context;
+};
+
+export { AuthProvider, useAppAuth };
