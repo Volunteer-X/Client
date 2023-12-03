@@ -12,10 +12,10 @@ type Input = {
   point: Point; // required
   description?: string; // optional
   url?: string; // optional
-  assets: Array<Asset>; // optional
+  assets?: Array<Asset>; // optional
 };
 
-export const usePingMutation = () => {
+export const useCreatePing = () => {
   const [
     createPingMutation,
     { loading: mutationLoading, data, error: mutationError },
@@ -33,6 +33,8 @@ export const usePingMutation = () => {
     url,
     assets,
   }: Input) => {
+    console.log('createPing', userID);
+
     try {
       const response = await createPingMutation({
         variables: {
@@ -50,14 +52,17 @@ export const usePingMutation = () => {
 
       console.log('Ping created successfully', response);
 
-      if (response.data?.createPing?.id) {
+      const pingID = response.data?.createPing;
+
+      if (pingID) {
         if (assets && assets.length > 0) {
           // * handle media upload
           // ? useS3Upload()
           uploadFiles(assets);
         }
       }
-      return response;
+
+      return pingID;
     } catch (error) {
       throw new Error(`Error creating ping: ${error}`);
     }

@@ -39,11 +39,11 @@ export type CreatePingInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   latitude: Scalars['Latitude']['input'];
   longitude: Scalars['Longitude']['input'];
-  mediaIDs?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   picks: Array<Scalars['String']['input']>;
+  radius?: InputMaybe<Scalars['Float']['input']>;
   title: Scalars['String']['input'];
   url?: InputMaybe<Scalars['URL']['input']>;
-  userID: Scalars['ObjectID']['input'];
+  userID: Scalars['ID']['input'];
 };
 
 export type CreateUserInput = {
@@ -57,11 +57,23 @@ export type CreateUserInput = {
   username: Scalars['String']['input'];
 };
 
+export type Media = {
+  __typename?: 'Media';
+  key: Scalars['String']['output'];
+  type: Scalars['String']['output'];
+};
+
+export type MediaInput = {
+  key: Scalars['String']['input'];
+  type: Scalars['String']['input'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  createPing: Ping;
+  createPing: Scalars['ID']['output'];
   createUser: User;
   removeUser?: Maybe<User>;
+  updatePing: Scalars['ID']['output'];
   updateUser: User;
 };
 
@@ -75,6 +87,10 @@ export type MutationCreateUserArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['ObjectID']['input'];
+};
+
+export type MutationUpdatePingArgs = {
+  updatePingInput: UpdatePingInput;
 };
 
 export type MutationUpdateUserArgs = {
@@ -92,14 +108,15 @@ export type Ping = {
   __typename?: 'Ping';
   createdAt?: Maybe<Scalars['DateTime']['output']>;
   description?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ObjectID']['output'];
+  id: Scalars['ID']['output'];
   latitude: Scalars['Latitude']['output'];
   longitude: Scalars['Longitude']['output'];
+  media?: Maybe<Array<Maybe<Media>>>;
   picks: Array<Scalars['String']['output']>;
   radius?: Maybe<Scalars['Float']['output']>;
   title: Scalars['String']['output'];
   url?: Maybe<Scalars['URL']['output']>;
-  userID: Scalars['ObjectID']['output'];
+  userID: Scalars['ID']['output'];
 };
 
 export type Query = {
@@ -128,6 +145,18 @@ export enum Role {
   ForumModerator = 'FORUM_MODERATOR',
   User = 'USER',
 }
+
+export type UpdatePingInput = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  id: Scalars['ID']['input'];
+  latitude?: InputMaybe<Scalars['Latitude']['input']>;
+  longitude?: InputMaybe<Scalars['Longitude']['input']>;
+  media?: InputMaybe<Array<InputMaybe<MediaInput>>>;
+  picks?: InputMaybe<Array<Scalars['String']['input']>>;
+  radius?: InputMaybe<Scalars['Float']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  url?: InputMaybe<Scalars['URL']['input']>;
+};
 
 export type UpdateUserInput = {
   email?: InputMaybe<Scalars['EmailAddress']['input']>;
@@ -206,13 +235,16 @@ export type CreatePingMutationVariables = Exact<{
 
 export type CreatePingMutation = {
   __typename?: 'Mutation';
-  createPing: {
-    __typename?: 'Ping';
-    id: string;
-    title: string;
-    description?: string | null;
-    createdAt?: Date | string | null;
-  };
+  createPing: string;
+};
+
+export type UpdatePingMutationVariables = Exact<{
+  updatePingInput: UpdatePingInput;
+}>;
+
+export type UpdatePingMutation = {
+  __typename?: 'Mutation';
+  updatePing: string;
 };
 
 export const CreateUserDocument = {
@@ -456,18 +488,54 @@ export const CreatePingDocument = {
                 },
               },
             ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'createdAt' } },
-              ],
-            },
           },
         ],
       },
     },
   ],
 } as unknown as DocumentNode<CreatePingMutation, CreatePingMutationVariables>;
+export const UpdatePingDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'updatePing' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'updatePingInput' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'UpdatePingInput' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'updatePing' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'updatePingInput' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'updatePingInput' },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode<UpdatePingMutation, UpdatePingMutationVariables>;

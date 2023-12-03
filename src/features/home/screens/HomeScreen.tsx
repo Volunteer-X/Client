@@ -2,6 +2,7 @@
 import { ActivityCard } from '@app/components';
 import PullToRefreshList from '@app/components/pull-to-refresh-list';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
+import { useAppSelector } from '@app/hooks';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import React from 'react';
@@ -15,6 +16,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   const inset = useSafeAreaInsets();
 
   const styles = makeStyles(theme, inset);
+
+  const user = useAppSelector(state => state.root.user);
+
+  console.log('🚀 ~ file: HomeScreen.tsx ~ line 55 ~ HomeScreen ~ id', user);
 
   return (
     <View style={styles.container}>

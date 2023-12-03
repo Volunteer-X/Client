@@ -10,7 +10,6 @@ import {
   REHYDRATE,
 } from 'redux-persist';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2';
 
 import { currentLocationSlice } from '../src/features/maps';
 import { permissionSlice } from '../src/features/permissions';
