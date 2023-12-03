@@ -20,7 +20,6 @@ import {
   Text,
   withTheme,
   TextInput as RNTextInput,
-  Snackbar,
 } from 'react-native-paper';
 import { StackScreenProps } from '@react-navigation/stack';
 import {
@@ -31,7 +30,7 @@ import {
   useWatch,
 } from 'react-hook-form';
 import { InferType } from 'yup';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client';
 
 import { AuthStackParamList } from '@ts-types/type';
 import { TextInput } from '@components/index';
@@ -40,6 +39,7 @@ import { useYupResolver } from '@hooks/index';
 import { yupScheme } from '../helpers/yupSchema';
 import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.queries';
 import { Query } from '@app/__generated__/gql/graphql';
+import { AppIcons } from '@app/theme/icon';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;
 
@@ -162,7 +162,7 @@ const SetUsername = ({
           label="Username"
           defaultValue={possibleUsername}
           mode="outlined"
-          left={<RNTextInput.Icon icon="account-circle" />}
+          left={<RNTextInput.Icon icon={AppIcons.PERSON} />}
           // right={
           //   queryData && queryData.isUsernameAvailable ? (
           //     <RNTextInput.Icon icon="check-all" />
@@ -176,7 +176,9 @@ const SetUsername = ({
           // }
           right={
             methods.getValues().username !== '' && (
-              <RNTextInput.Icon icon={formState.isValid ? 'check' : 'close'} />
+              <RNTextInput.Icon
+                icon={formState.isValid ? AppIcons.CHECK : AppIcons.CLOSE}
+              />
             )
           }
           rules={{ required: true }}

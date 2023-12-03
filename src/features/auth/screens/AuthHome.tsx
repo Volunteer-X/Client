@@ -8,6 +8,7 @@ import { AUTH0_SCOPE } from '@env';
 import { AuthStackParamList } from '@ts-types/type';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@theme/index';
+import { useAppAuth } from '@app/context/auth-context';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 
@@ -24,13 +25,11 @@ const AuthHome = ({
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const { authorize, user, error } = useAuth0();
-
+  const { auth0, error } = useAppAuth();
   // Handles login with auth0
   const onLogin = useCallback(async () => {
     try {
-      // Auth0 authorize
-      await authorize({ scope: AUTH0_SCOPE });
+      const user = await auth0();
 
       // check auth unsuccessful
       if (user || user !== null) {
@@ -38,13 +37,11 @@ const AuthHome = ({
           possibleUsername:
             user?.nickname || user?.preferred_username || undefined,
         });
-      } else {
-        throw error;
       }
     } catch (err) {
       console.log('🚀 ~ file: AuthHome.tsx:43 ~ onLogin ~ err:', err);
     }
-  }, [authorize, error, navigation, user]);
+  }, [auth0, navigation]);
 
   return (
     <View style={styles.page}>

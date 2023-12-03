@@ -6,6 +6,7 @@ export enum AppIcons {
   ARROW_DOWN_CIRCLE = 'arrow-down-circle',
   FORUM = 'chatbox',
   CLOSE = 'close',
+  CHECK = 'checkmark',
   PENCIL = 'pencil',
   MENU_X = 'ellipsis-horizontal',
   ARROW_BACK = 'arrow-back',

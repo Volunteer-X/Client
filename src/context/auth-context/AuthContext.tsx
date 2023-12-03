@@ -28,7 +28,9 @@ const AuthContext = createContext<AuthProps>(initialState);
  */
 const AuthProvider = ({ children }: any) => {
   // Redux
-  const { isAuthenticated, user } = useAppSelector(state => state.root.auth);
+  const { isAuthenticated: _isAuthenticated, user } = useAppSelector(
+    state => state.root.auth,
+  );
 
   const dispath = useAppDispatch();
 
@@ -45,10 +47,12 @@ const AuthProvider = ({ children }: any) => {
   } = useAuth0();
   const [loading, setLoading] = useState(true);
 
+  const [isAuthenticated, setIsAuthenticated] = useState(_isAuthenticated);
+
   useEffect(() => {}, []);
 
   // auth0
-  const auth0 = async () => {
+  const auth0 = useCallback(async () => {
     try {
       await authorize({ scope: AUTH0_SCOPE });
 
@@ -61,14 +65,26 @@ const AuthProvider = ({ children }: any) => {
             },
           });
 
+          console.log(
+            '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ checkQuery',
+            checkQuery.data,
+          );
+
           // if user exists in db
           if (checkQuery.data?.getUserByEmail) {
             let _user = checkQuery.data.getUserByEmail;
 
+            console.log(
+              '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ auth0User',
+              _user,
+            );
+
+            setIsAuthenticated(true);
+
             // set auth state to authenticated
             dispath(
               login({
-                isAuthenticated: true,
+                isAuthenticated: isAuthenticated,
                 user: {
                   id: _user.id,
                   username: _user.username,
@@ -92,7 +108,14 @@ const AuthProvider = ({ children }: any) => {
     } catch (error) {
       console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
     }
-  };
+  }, [
+    auth0User,
+    authorize,
+    checkQuery?.data?.getUserByEmail,
+    dispath,
+    getUserByEmail,
+    isAuthenticated,
+  ]);
 
   // Login
   const _login = useCallback(async () => {}, []);
