@@ -23,7 +23,7 @@ export const useCreatePing = () => {
 
   const { isUploading: s3Loading, uploadFiles, error: s3Error } = useS3Upload();
 
-  const { id: userID } = useAppSelector(state => state.root.user);
+  const user = useAppSelector(state => state.root.auth.user);
 
   const createPing = async ({
     title,
@@ -33,13 +33,17 @@ export const useCreatePing = () => {
     url,
     assets,
   }: Input) => {
-    console.log('createPing', userID);
+    console.log('createPing', user?.id);
+
+    if (!user?.id) {
+      throw new Error('User not logged in');
+    }
 
     try {
       const response = await createPingMutation({
         variables: {
           createPingInput: {
-            userID,
+            userID: user?.id,
             title,
             description,
             picks,

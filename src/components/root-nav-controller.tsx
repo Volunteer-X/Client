@@ -18,8 +18,10 @@ export const RootNavController = () => {
   const Stack = createStackNavigator<MainNavList>();
 
   useEffect(() => {
-    SplashScreen.hide();
-  }, []);
+    if (!loading) {
+      SplashScreen.hide();
+    }
+  }, [loading]);
 
   console.log(
     '🚀 ~ file: root-nav-controller.tsx:25 ~ RootNavController ~ isAuthenticated',

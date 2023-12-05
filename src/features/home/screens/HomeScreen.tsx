@@ -17,7 +17,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const styles = makeStyles(theme, inset);
 
-  const user = useAppSelector(state => state.root.user);
+  const user = useAppSelector(state => state.root.auth.user);
 
   console.log('🚀 ~ file: HomeScreen.tsx ~ line 55 ~ HomeScreen ~ id', user);
 

@@ -28,7 +28,7 @@ const AuthContext = createContext<AuthProps>(initialState);
  */
 const AuthProvider = ({ children }: any) => {
   // Redux
-  const { isAuthenticated: _isAuthenticated, user } = useAppSelector(
+  const { isAuthenticated: isAuthenticated, user } = useAppSelector(
     state => state.root.auth,
   );
 
@@ -45,9 +45,7 @@ const AuthProvider = ({ children }: any) => {
     error: auth0Error,
     clearSession,
   } = useAuth0();
-  const [loading, setLoading] = useState(true);
-
-  const [isAuthenticated, setIsAuthenticated] = useState(_isAuthenticated);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {}, []);
 
@@ -57,9 +55,10 @@ const AuthProvider = ({ children }: any) => {
       await authorize({ scope: AUTH0_SCOPE });
 
       if ((auth0User || auth0User !== null) && auth0User.email) {
+        setLoading(true);
         try {
           // check if user exists in db
-          await getUserByEmail({
+          let res = await getUserByEmail({
             variables: {
               email: auth0User.email,
             },
@@ -67,24 +66,24 @@ const AuthProvider = ({ children }: any) => {
 
           console.log(
             '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ checkQuery',
-            checkQuery.data,
+            res.data?.getUserByEmail,
           );
 
           // if user exists in db
-          if (checkQuery.data?.getUserByEmail) {
-            let _user = checkQuery.data.getUserByEmail;
+          if (res.data?.getUserByEmail) {
+            let _user = res.data.getUserByEmail;
 
             console.log(
               '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ auth0User',
               _user,
             );
 
-            setIsAuthenticated(true);
+            // setIsAuthenticated(true);
 
             // set auth state to authenticated
             dispath(
               login({
-                isAuthenticated: isAuthenticated,
+                isAuthenticated: true,
                 user: {
                   id: _user.id,
                   username: _user.username,
@@ -103,19 +102,14 @@ const AuthProvider = ({ children }: any) => {
           return auth0User;
         } catch (error) {
           console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
+        } finally {
+          setLoading(false);
         }
       }
     } catch (error) {
       console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
     }
-  }, [
-    auth0User,
-    authorize,
-    checkQuery?.data?.getUserByEmail,
-    dispath,
-    getUserByEmail,
-    isAuthenticated,
-  ]);
+  }, [auth0User, authorize, dispath, getUserByEmail]);
 
   // Login
   const _login = useCallback(async () => {}, []);
@@ -129,7 +123,7 @@ const AuthProvider = ({ children }: any) => {
 
   const value: AuthProps = {
     isAuthenticated,
-    loading: isLoading,
+    loading: isLoading || loading,
     logout: _logout,
     login: _login,
     auth0,
