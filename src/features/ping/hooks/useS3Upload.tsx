@@ -1,6 +1,8 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios';
+import { getTypeFromMIME } from '@app/utils';
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
+import BlobCourier from 'react-native-blob-courier';
 
 type URIResponse = {
   Key: string;
@@ -14,15 +16,20 @@ export const useS3Upload = () => {
 
   const options: AxiosRequestConfig = {
     method: 'GET',
-    baseURL: 'http://192.168.1.222:3550/',
+    baseURL: 'http://192.168.1.222:3550/api/v1/',
     headers: {
       'Content-Type': 'application/json',
     },
   };
 
-  const getSignedUrl = async () => {
+  const getSignedUrl = async (type: string) => {
+    console.log(type);
+
     try {
-      const response = await axios.get<URIResponse>('signedUrl', options);
+      const response: AxiosResponse<URIResponse> = await axios.get(
+        encodeURIComponent(type),
+        options,
+      );
 
       return response.data;
     } catch (error) {
@@ -31,29 +38,45 @@ export const useS3Upload = () => {
     }
   };
 
-  const uploadFile = async ({ fileName, base64 }: Asset) => {
+  const uploadFile = async ({ type, uri, fileSize }: Asset) => {
     try {
-      if (!fileName) {
-        throw new Error('File name is required');
-      }
-      if (!base64) {
-        throw new Error('Base64 is required');
+      if (!type) {
+        throw new Error('File type is required');
       }
 
-      const { signedUrl, Key } = await getSignedUrl();
+      if (!uri) {
+        throw new Error('File uri is required');
+      }
 
-      await axios.put(signedUrl, base64, {
-        headers: {
-          'Content-Type': 'application/octet-stream; charset=utf-8',
-          'Content-Length': base64.length,
-          'Content-Encoding': 'base64',
-          // 'x-amz-acl': 'bucket-owner-full-control',
-        },
-      });
+      const { signedUrl, Key } = await getSignedUrl(type);
+
+      try {
+        const result = await BlobCourier.uploadBlob({
+          url: signedUrl,
+          method: 'PUT',
+          headers: {
+            'Content-Type': type,
+          },
+          filename: Key,
+          mimeType: type,
+          absoluteFilePath: uri,
+        });
+
+        console.log('blobCourier', result);
+      } catch (error) {
+        console.log(error);
+      }
+
+      // await axios.put(signedUrl, uri, {
+      //   headers: {
+      //     'Content-Type': type,
+      //     'Content-Length': fileSize,
+      //   },
+      // });
 
       console.log('File upload success', Key);
 
-      return Key;
+      return { Key: Key, type: type };
     } catch (error) {
       setUploadError(error);
       console.error('Error uploading file to S3:', error);
@@ -64,11 +87,11 @@ export const useS3Upload = () => {
     setIsUploading(true);
     try {
       const uploadPromises = assets.map(asset => uploadFile(asset));
-      const keys = await Promise.all(uploadPromises);
+      const results = await Promise.all(uploadPromises);
 
-      console.log('All files uploaded successfully', keys);
+      console.log('All files uploaded successfully', results);
 
-      return keys;
+      return results;
     } catch (error) {
       setUploadError(error);
       console.error('Error uploading files to S3:', error);

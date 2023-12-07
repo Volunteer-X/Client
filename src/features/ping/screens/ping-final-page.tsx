@@ -224,11 +224,10 @@ export const PingFinalPage = () => {
             console.log(
               'Ping',
               titleText,
-              descriptionText,
+              // descriptionText,
               urlText,
-              picks,
-              selectedPoint,
-              // assets,
+              // picks,
+              // selectedPoint,
             );
             // * Create ping
             createPing({
@@ -357,7 +356,8 @@ export const PingFinalPage = () => {
                     placeholder="Enter the website link"
                     style={[styles.textInput, { flex: 1 }]}
                     textContentType="URL"
-                    // value="www.google.com/"
+                    value={urlText}
+                    onChangeText={setUrlText}
                     dense
                     {...textInputProps}
                   />
@@ -365,6 +365,7 @@ export const PingFinalPage = () => {
                     icon={AppIcons.CLOSE}
                     onPress={() => {
                       setShowUrl(false);
+                      setUrlText(undefined);
                     }}
                   />
                 </View>

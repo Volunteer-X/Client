@@ -33,40 +33,48 @@ export const useCreatePing = () => {
     url,
     assets,
   }: Input) => {
-    console.log('createPing', user?.id);
-
     if (!user?.id) {
       throw new Error('User not logged in');
     }
 
+    // * handle url text https situtation
+
     try {
-      const response = await createPingMutation({
-        variables: {
-          createPingInput: {
-            userID: user?.id,
-            title,
-            description,
-            picks,
-            latitude: point.lat,
-            longitude: point.lng,
-            url,
-          },
-        },
-      });
+      // const response = await createPingMutation({
+      //   variables: {
+      //     createPingInput: {
+      //       userID: user?.id,
+      //       title,
+      //       description,
+      //       picks,
+      //       latitude: point.lat,
+      //       longitude: point.lng,
+      //       url,
+      //     },
+      //   },
+      // });
 
-      console.log('Ping created successfully', response);
+      // console.log('Ping created successfully , ID', response.data?.createPing);
 
-      const pingID = response.data?.createPing;
+      // const pingID = response.data?.createPing;
 
-      if (pingID) {
+      if (true) {
         if (assets && assets.length > 0) {
           // * handle media upload
           // ? useS3Upload()
-          uploadFiles(assets);
+
+          console.log('Uploading files to S3');
+
+          try {
+            const s3Response = await uploadFiles(assets);
+            console.log('s3Response', s3Response);
+          } catch (error) {
+            console.log('s3Response error', error);
+          }
         }
       }
 
-      return pingID;
+      // return pingID;
     } catch (error) {
       throw new Error(`Error creating ping: ${error}`);
     }
