@@ -2,7 +2,7 @@ import { getTypeFromMIME } from '@app/utils';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
-import BlobCourier from 'react-native-blob-courier';
+import RNFetchBlob from 'rn-fetch-blob';
 
 type URIResponse = {
   Key: string;
@@ -50,33 +50,18 @@ export const useS3Upload = () => {
 
       const { signedUrl, Key } = await getSignedUrl(type);
 
-      try {
-        const result = await BlobCourier.uploadBlob({
-          url: signedUrl,
-          method: 'PUT',
-          headers: {
-            'Content-Type': type,
-          },
-          filename: Key,
-          mimeType: type,
-          absoluteFilePath: uri,
-        });
-
-        console.log('blobCourier', result);
-      } catch (error) {
-        console.log(error);
-      }
-
-      // await axios.put(signedUrl, uri, {
-      //   headers: {
-      //     'Content-Type': type,
-      //     'Content-Length': fileSize,
-      //   },
-      // });
+      await RNFetchBlob.fetch(
+        'PUT',
+        signedUrl,
+        {
+          'Content-Type': type,
+        },
+        RNFetchBlob.wrap(uri),
+      );
 
       console.log('File upload success', Key);
 
-      return { Key: Key, type: type };
+      return { key: Key, type: type };
     } catch (error) {
       setUploadError(error);
       console.error('Error uploading file to S3:', error);

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
-import { CREATE_PING } from '../graphQL/ping.mutation';
+import { CREATE_PING, UPDATE_PING } from '../graphQL/ping.mutation';
+import { MediaInput } from '../../../__generated__/gql/graphql';
 import { useAppSelector } from '@app/hooks';
 import { Point } from '@app/types/utility-types';
 import { Asset } from 'react-native-image-picker';
@@ -21,6 +22,11 @@ export const useCreatePing = () => {
     { loading: mutationLoading, data, error: mutationError },
   ] = useMutation(CREATE_PING);
 
+  const [
+    updatePing,
+    { loading: updateLoading, data: updateData, error: updateError },
+  ] = useMutation(UPDATE_PING);
+
   const { isUploading: s3Loading, uploadFiles, error: s3Error } = useS3Upload();
 
   const user = useAppSelector(state => state.root.auth.user);
@@ -40,37 +46,49 @@ export const useCreatePing = () => {
     // * handle url text https situtation
 
     try {
-      // const response = await createPingMutation({
-      //   variables: {
-      //     createPingInput: {
-      //       userID: user?.id,
-      //       title,
-      //       description,
-      //       picks,
-      //       latitude: point.lat,
-      //       longitude: point.lng,
-      //       url,
-      //     },
-      //   },
-      // });
+      const response = await createPingMutation({
+        variables: {
+          createPingInput: {
+            userID: user?.id,
+            title,
+            description,
+            picks,
+            latitude: point.lat,
+            longitude: point.lng,
+            url,
+          },
+        },
+      });
 
       // console.log('Ping created successfully , ID', response.data?.createPing);
 
-      // const pingID = response.data?.createPing;
+      const pingID = response.data?.createPing;
 
-      if (true) {
+      if (pingID) {
         if (assets && assets.length > 0) {
           // * handle media upload
           // ? useS3Upload()
 
           console.log('Uploading files to S3');
 
-          try {
-            const s3Response = await uploadFiles(assets);
-            console.log('s3Response', s3Response);
-          } catch (error) {
-            console.log('s3Response error', error);
-          }
+          await uploadFiles(assets)
+            .then(async results => {
+              // * handle update ping with media
+
+              await updatePing({
+                variables: {
+                  updatePingInput: {
+                    id: pingID,
+                    media: results as Array<MediaInput>,
+                  },
+                },
+              }).catch(error => {
+                console.log('Error updating ping with media', error);
+              });
+            })
+            .catch(error => {
+              console.log('Error uploading files to S3', error);
+            });
         }
       }
 
@@ -82,8 +100,8 @@ export const useCreatePing = () => {
 
   return {
     createPing,
-    loading: mutationLoading || s3Loading,
+    loading: mutationLoading || s3Loading || updateLoading,
     data,
-    error: mutationError || s3Error,
+    error: mutationError || s3Error || updateError,
   };
 };

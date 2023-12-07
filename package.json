@@ -31,6 +31,7 @@
     "@rnmapbox/maps": "^10.0.15",
     "@types/lodash": "^4.14.198",
     "@types/redux-persist": "^4.3.1",
+    "@types/rn-fetch-blob": "^1.2.7",
     "aws-sdk": "^2.1502.0",
     "axios": "^1.6.0",
     "deepmerge": "^4.3.1",
@@ -43,7 +44,6 @@
     "react-hook-form": "^7.45.4",
     "react-native": "^0.72.0",
     "react-native-auth0": "^2.17.4",
-    "react-native-blob-courier": "^4.0.0",
     "react-native-fast-image": "^8.6.3",
     "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "^2.12.0",
@@ -69,6 +69,7 @@
     "react-native-webview": "^13.2.2",
     "react-redux": "^8.1.0",
     "redux-persist": "^6.0.0",
+    "rn-fetch-blob": "^0.12.0",
     "yup": "^1.2.0"
   },
   "devDependencies": {

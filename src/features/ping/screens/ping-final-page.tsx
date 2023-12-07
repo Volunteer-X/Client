@@ -225,7 +225,7 @@ export const PingFinalPage = () => {
               'Ping',
               titleText,
               // descriptionText,
-              urlText,
+              // urlText,
               // picks,
               // selectedPoint,
             );
