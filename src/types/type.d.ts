@@ -16,6 +16,14 @@ export type PingStackParamList = {
   SearchLocation: { point: Point };
 };
 
+export type PingCompositeScreenProps<
+  T extends keyof BottomTabParamList,
+  U extends keyof PingStackParamList,
+> = CompositeScreenProps<
+  BottomTabScreenProps<BottomTabParamList, T>,
+  StackScreenProps<PingStackParamList, U>
+>;
+
 export type PingStackScreenProps<T extends keyof PingStackParamList> =
   StackScreenProps<PingStackParamList, T>;
 
@@ -63,6 +71,16 @@ export type BottomTabParamList = {
 };
 
 // * Home Screen
+export type HomeStackParamList = {
+  HomeScreen: {
+    pingID?: string;
+    loading?: boolean;
+  };
+};
+
+export type HomeStackScreenProps<T extends keyof HomeStackParamList> =
+  StackScreenProps<HomeStackParamList, T>;
+
 export type BottomTabStackScreenProps<T extends keyof BottomTabParamList> =
   CompositeScreenProps<
     CompositeScreenProps<

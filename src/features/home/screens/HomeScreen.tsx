@@ -5,6 +5,8 @@ import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import { useAppSelector } from '@app/hooks';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
+import { HomeStackScreenProps } from '@app/types/type';
+import { useRoute } from '@react-navigation/native';
 import React from 'react';
 
 import { View, StyleSheet, StatusBar } from 'react-native';
@@ -17,9 +19,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const styles = makeStyles(theme, inset);
 
-  const user = useAppSelector(state => state.root.auth.user);
+  const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 
-  console.log('🚀 ~ file: HomeScreen.tsx ~ line 55 ~ HomeScreen ~ id', user);
+  console.log('HomeScreen route', route);
 
   return (
     <View style={styles.container}>

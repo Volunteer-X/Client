@@ -17,6 +17,8 @@ type Input = {
 };
 
 export const useCreatePing = () => {
+  const [pingID, setPingID] = useState<string | undefined>();
+
   const [
     createPingMutation,
     { loading: mutationLoading, data, error: mutationError },
@@ -62,7 +64,7 @@ export const useCreatePing = () => {
 
       // console.log('Ping created successfully , ID', response.data?.createPing);
 
-      const pingID = response.data?.createPing;
+      setPingID(response.data?.createPing);
 
       if (pingID) {
         if (assets && assets.length > 0) {
@@ -91,10 +93,11 @@ export const useCreatePing = () => {
             });
         }
       }
-
-      // return pingID;
     } catch (error) {
       throw new Error(`Error creating ping: ${error}`);
+    } finally {
+      // * reset pingID
+      return pingID;
     }
   };
 

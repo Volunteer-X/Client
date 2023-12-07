@@ -72,7 +72,7 @@ const BottomTabNavigation = () => {
       })}>
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeNavigation}
         options={{
           header: () => HomeHeader(),
         }}

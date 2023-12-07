@@ -27,7 +27,10 @@ import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
-import { PingStackScreenProps } from '@app/types/type';
+import {
+  PingCompositeScreenProps,
+  PingStackScreenProps,
+} from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { SIZES } from '@app/lib';
@@ -51,8 +54,11 @@ export const PingFinalPage = () => {
   const styles = makeStyles(theme);
 
   // Navigation
+
   const navigation =
-    useNavigation<PingStackScreenProps<'FinalPage'>['navigation']>();
+    useNavigation<
+      PingCompositeScreenProps<'Ping', 'FinalPage'>['navigation']
+    >();
   const route = useRoute<PingStackScreenProps<'FinalPage'>['route']>();
 
   // Media handling
@@ -197,6 +203,61 @@ export const PingFinalPage = () => {
   // * useCreatePing
   const { createPing, loading, error } = useCreatePing();
 
+  const handleOnSubmit = useCallback(async () => {
+    if (titleText.length === 0 || picks.length === 0) {
+      Alert.alert('Ping', 'Please enter a title and select at least one pick');
+    } else if (titleText.length === 0) {
+      // * Show error
+      // ! Change to modal
+      Alert.alert('Ping', 'Please enter a title');
+      return;
+    } else if (picks.length === 0) {
+      // * Show error
+      // ! Change to modal
+      Alert.alert('Ping', 'Please select at least one pick');
+      return;
+    } else {
+      // * Create ping
+      const id = await createPing({
+        title: titleText,
+        description: descriptionText,
+        picks,
+        point: selectedPoint,
+        url: urlText,
+        assets,
+      });
+
+      console.log('id::', id);
+
+      // * Navigate to Home screen
+      navigation.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Home',
+            params: {
+              screen: 'HomeScreen',
+              params: {
+                pingID: id,
+                loading: loading,
+              },
+            },
+          },
+        ],
+      });
+    }
+  }, [
+    assets,
+    createPing,
+    descriptionText,
+    loading,
+    navigation,
+    picks,
+    selectedPoint,
+    titleText,
+    urlText,
+  ]);
+
   // * Render header right
   // * Handle submit button
   const headerRight = () => {
@@ -204,42 +265,7 @@ export const PingFinalPage = () => {
       <IconButton
         icon={AppIcons.SEND}
         iconColor="green"
-        onPress={() => {
-          if (titleText.length === 0 || picks.length === 0) {
-            Alert.alert(
-              'Ping',
-              'Please enter a title and select at least one pick',
-            );
-          } else if (titleText.length === 0) {
-            // * Show error
-            // ! Change to modal
-            Alert.alert('Ping', 'Please enter a title');
-            return;
-          } else if (picks.length === 0) {
-            // * Show error
-            // ! Change to modal
-            Alert.alert('Ping', 'Please select at least one pick');
-            return;
-          } else {
-            console.log(
-              'Ping',
-              titleText,
-              // descriptionText,
-              // urlText,
-              // picks,
-              // selectedPoint,
-            );
-            // * Create ping
-            createPing({
-              title: titleText,
-              description: descriptionText,
-              picks,
-              point: selectedPoint,
-              url: urlText,
-              assets,
-            });
-          }
-        }}
+        onPress={handleOnSubmit}
         disabled={isSubmitButtonDisabled}
       />
     );
