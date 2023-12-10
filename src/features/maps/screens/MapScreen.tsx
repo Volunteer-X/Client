@@ -1,26 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, StatusBar } from 'react-native';
-import { SearchBar } from '@rneui/base';
-import CarouselMapCard from '@components/carousels/Carousel';
-import { Camera, MapView } from '@rnmapbox/maps';
-import { MAPBOX_STYLE_DARK } from '@env';
-import useAppTheme from '@app/hooks/useAppTheme';
-import { makeStyles } from './Map.styles';
-import { useGeoLocation } from '@app/context/geo-location';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, StatusBar } from 'react-native';
+import {
+  Camera,
+  CircleLayer,
+  MapView,
+  MarkerView,
+  ShapeSource,
+  SymbolLayer,
+} from '@rnmapbox/maps';
+import { IconButton, Searchbar } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { MAPBOX_STYLE_DARK } from '@env';
+import { useGeoLocation } from '@app/context/geo-location';
+import useAppTheme from '@app/hooks/useAppTheme';
+import { AppIcons } from '@app/theme/icon';
+import { PicksSelectView } from '@app/components';
+import CarouselMapCard from '@components/carousels/Carousel';
+import { circleStyle, makeStyles } from './Map.styles';
+import { useAppSelector } from '@app/hooks';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
   const inset = useSafeAreaInsets();
   const styles = makeStyles(theme, inset);
 
+  const user = useAppSelector(state => state.root.auth.user);
+
   const { coords, geoLoading } = useGeoLocation();
 
   if (!geoLoading && !coords) {
     throw new Error('No coords');
-  }
-  if (coords === null) {
   }
 
   const [currentLocation, setCurrentLocation] = useState<number[]>();
@@ -30,8 +40,14 @@ const MapScreen = () => {
       return;
     }
 
+    // console.log(coords);
+
     setCurrentLocation([coords?.longitude, coords?.latitude]);
   }, [coords]);
+
+  const [picks, setPicks] = useState<string[]>(user?.picks || []);
+
+  const point = [-0.2699972245788475, 51.41351130241327];
 
   return (
     <View style={styles.page}>
@@ -41,7 +57,7 @@ const MapScreen = () => {
         barStyle={theme.dark ? 'light-content' : 'dark-content'}
       />
       <View style={styles.container}>
-        {geoLoading && (
+        {geoLoading && coords && (
           <View style={styles.overlay}>
             <LottieView
               source={require('@assets/anims/pull-to-refresh.json')}
@@ -59,25 +75,63 @@ const MapScreen = () => {
           scaleBarEnabled={false}
           attributionEnabled={false}
           logoEnabled={false}
-          compassEnabled
-          compassViewPosition={3}
-          compassPosition={{ bottom: 75, right: 15 }}>
+          compassEnabled={false}>
           <Camera
-            defaultSettings={{
-              centerCoordinate: [-122.420679, 37.772537],
-            }}
             zoomLevel={13}
             maxZoomLevel={15}
             animationMode="flyTo"
             centerCoordinate={currentLocation}
           />
+
+          <MarkerView coordinate={point} key={`MarkerView-${point}`} />
+
+          <ShapeSource
+            id="ShapeSource"
+            shape={{
+              type: 'Feature',
+              id: 'Feature-123',
+              geometry: {
+                type: 'Point',
+                coordinates: point,
+              },
+              properties: {},
+            }}>
+            <CircleLayer id="circle-id" style={circleStyle} />
+
+            {/* <CircleLayer id="circle-blur-id" style={circleBlurStyle} />
+
+            <SymbolLayer id="symbol-id" style={iconStyle} existing /> */}
+          </ShapeSource>
         </MapView>
-        <View style={styles.searchBarView}>
-          <SearchBar
+        <IconButton
+          icon={AppIcons.GPS}
+          style={styles.myLocation}
+          size={24}
+          disabled={!coords}
+          onPress={() => {
+            if (coords) {
+              setCurrentLocation([coords?.longitude, coords?.latitude]);
+            }
+          }}
+        />
+        <View style={styles.headerView}>
+          <Searchbar
+            mode="bar"
             value=""
             placeholder="Search"
-            round={true}
-            containerStyle={styles.searchBarContainer}
+            style={styles.searchBar}
+            editable={false}
+          />
+          <PicksSelectView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            chipStyle={styles.picksChip}
+            chipTextStyle={styles.picksChipText}
+            selectedPicks={picks}
+            style={styles.picksSelectView}
+            onPickSelect={selectedPicks => {
+              setPicks(selectedPicks);
+            }}
           />
         </View>
 

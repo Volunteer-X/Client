@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 import Carousel from 'react-native-reanimated-carousel';
 import NearbyActivityCardView from '../NearbyActivityCardView';
@@ -14,14 +14,15 @@ const CarouselMapCard = () => {
     <View style={styles.container}>
       <Carousel
         width={DIMENSIONS.fullWidth}
-        height={DIMENSIONS.fullHeight}
+        height={DIMENSIONS.fullHeight * 0.3}
         style={styles.carousel}
+        vertical={false}
         snapEnabled
         mode="parallax"
         loop={false}
         modeConfig={{
-          parallaxScrollingScale: 0.85,
-          parallaxScrollingOffset: 175,
+          parallaxScrollingScale: 0.9,
+          parallaxScrollingOffset: 100,
         }}
         data={mapViewCardData}
         renderItem={({ item }) => (

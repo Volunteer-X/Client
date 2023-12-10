@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Camera,
   CircleLayer,
@@ -21,13 +21,26 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useGeoLocation } from '@app/context/geo-location';
 import { PingStackScreenProps } from '@ts-types/type';
 import { AppIcons } from '@app/theme/icon';
+import LottieView from 'lottie-react-native';
 
 export const SearchLocationScreen = () => {
   const navigation =
     useNavigation<PingStackScreenProps<'SearchLocation'>['navigation']>();
   const route = useRoute<PingStackScreenProps<'SearchLocation'>['route']>();
 
-  const { coords: currentLocation, geoLoading } = useGeoLocation();
+  const { coords, geoLoading } = useGeoLocation();
+
+  const [currentLocation, setCurrentLocation] = useState<number[]>([]);
+
+  console.log('loading', geoLoading);
+
+  useEffect(() => {
+    if (!coords) {
+      return;
+    }
+
+    setCurrentLocation([coords?.longitude, coords?.latitude]);
+  }, [coords]);
 
   const [coordinate, setCoordinate] = useState<Array<number>>([
     route.params.point?.lng,
@@ -80,6 +93,16 @@ export const SearchLocationScreen = () => {
 
   return (
     <View style={styles.container}>
+      {geoLoading && (
+        <View style={styles.overlay}>
+          <LottieView
+            source={require('@assets/anims/pull-to-refresh.json')}
+            autoPlay
+            loop
+            style={styles.lottie}
+          />
+        </View>
+      )}
       <MapView
         styleURL={MAPBOX_STYLE_DARK}
         style={styles.map}
@@ -96,10 +119,7 @@ export const SearchLocationScreen = () => {
         }}>
         <Camera
           defaultSettings={{
-            centerCoordinate: [
-              currentLocation?.latitude,
-              currentLocation?.longitude,
-            ],
+            centerCoordinate: [currentLocation[1], currentLocation[0]],
           }}
           zoomLevel={13}
           maxZoomLevel={14}
@@ -138,8 +158,8 @@ export const SearchLocationScreen = () => {
         ref={searchBarRef}
         containerStyle={styles.searchbar}
         defaultLocation={{
-          lat: currentLocation.latitude,
-          lng: currentLocation.longitude,
+          lat: currentLocation[1],
+          lng: currentLocation[0],
         }}
         getNewPoint={newPoint => setCoordinate([newPoint.lng, newPoint.lat])}
       />
@@ -148,9 +168,7 @@ export const SearchLocationScreen = () => {
         icon={AppIcons.GPS}
         style={styles.myLocation}
         size={24}
-        onPress={() =>
-          setCoordinate([currentLocation.longitude, currentLocation.latitude])
-        }
+        onPress={() => setCoordinate([currentLocation[0], currentLocation[1]])}
       />
 
       <Button mode="contained" style={styles.button} onPress={handleSubmition}>
@@ -205,5 +223,19 @@ const styles = StyleSheet.create({
     borderColor: '#c9c9c9',
     padding: 5,
     borderRadius: 10,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#000',
+    opacity: 0.5,
+
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 1000,
+  },
+  lottie: {
+    width: 100,
+    height: 100,
   },
 });

@@ -1,12 +1,14 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
-import { Button, Image } from '@rneui/themed';
-import { ActivityIndicator, Avatar } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
+import Image from 'react-native-fast-image';
+import { DIMENSIONS, PADDING } from '@app/lib';
+import useAppTheme from '@app/hooks/useAppTheme';
+import { AppTheme } from '@app/theme';
+import { Avatar } from './avatar/Avatar';
 
-const source =
-  'https://images.unsplash.com/photo-1682686581484-a220483e6291?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxOTcyMTN8MXwxfGFsbHwxfHx8fHx8Mnx8MTY4NjUyOTY3N3w&ixlib=rb-4.0.3&q=80&w=400';
-
-const { height, width } = Dimensions.get('window');
+// const source =
+//   'https://images.unsplash.com/photo-1682686581484-a220483e6291?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxOTcyMTN8MXwxfGFsbHwxfHx8fHx8Mnx8MTY4NjUyOTY3N3w&ixlib=rb-4.0.3&q=80&w=400';
 
 type Props = {
   mapSnapshotSource: string;
@@ -23,46 +25,31 @@ const NearbyActivityCardView = ({
   activityName,
   activityCreatedOn,
 }: Props) => {
+  const { theme } = useAppTheme();
+
+  const styles = makeStyles(theme);
+
   return (
     <View style={styles.container}>
       <View style={styles.mapSnapshotContainer}>
-        <Image
-          style={styles.mapSnapshot}
-          source={{ uri: mapSnapshotSource, height: 64, width: 64 }}
-          transition
-          PlaceholderContent={<ActivityIndicator />}
-        />
+        <Image style={styles.mapSnapshot} source={{ uri: mapSnapshotSource }} />
         <View style={styles.nameContainer}>
           {/* change to image type after API */}
-          <Avatar.Text label="A" size={24} />
-          <Text style={{ fontWeight: '500', fontSize: 11 }}>{userName}</Text>
+          <Avatar name="A" size={24} />
+          <Text variant="labelMedium">{userName}</Text>
         </View>
         <View style={styles.followersContainer}>
-          <Text style={{ fontSize: 11, color: '#FFF', fontWeight: 'bold' }}>
-            {`${activityFollowers}K Followers`}
-          </Text>
+          <Text variant="labelMedium">{`${activityFollowers}K Followers`}</Text>
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-          paddingTop: 0,
-        }}>
+      <View style={styles.bodyContainer}>
         <View style={{ gap: 2 }}>
-          <Text style={{ fontSize: 14, fontWeight: 'bold' }}>
+          <Text variant="labelLarge" style={{}}>
             {activityName}
           </Text>
-          <Text
-            style={{ fontSize: 11 }}>{`Create on ${activityCreatedOn}`}</Text>
+          <Text variant="labelSmall">{`Create on ${activityCreatedOn}`}</Text>
         </View>
-        <Button
-          title={'Join Activity'}
-          titleStyle={{ fontSize: 12 }}
-          style={{ borderRadius: 5 }}
-        />
+        <Button mode="text">Join</Button>
       </View>
     </View>
   );
@@ -70,50 +57,50 @@ const NearbyActivityCardView = ({
 
 export default NearbyActivityCardView;
 
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFF',
-    borderRadius: 10,
-    width: width * 0.6,
-    height: '100%',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    gap: 10,
-    elevation: 2,
-  },
-  mapSnapshotContainer: {
-    paddingHorizontal: 10,
-    paddingTop: 5,
-    height: height * 0.2,
-    width: '100%',
-  },
-  mapSnapshot: {
-    width: '100%',
-    height: '100%',
-    aspectRatio: 1,
-    borderRadius: 10,
-  },
-  nameContainer: {
-    position: 'absolute',
-    top: 15,
-    left: 15,
-    backgroundColor: '#FFF',
-    padding: 2,
-    paddingRight: 10,
-    borderRadius: 100,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  followersContainer: {
-    position: 'absolute',
-    bottom: 15,
-    right: 15,
-    backgroundColor: '#000',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 5,
-    elevation: 1,
-  },
-});
+const makeStyles = (theme: AppTheme) =>
+  StyleSheet.create({
+    container: {
+      backgroundColor: '#000',
+      borderRadius: 10,
+      flexDirection: 'column',
+      justifyContent: 'space-evenly',
+      gap: 10,
+      padding: PADDING.sm,
+      flex: 1,
+    },
+    mapSnapshotContainer: {
+      flex: 1,
+    },
+    mapSnapshot: {
+      width: '100%',
+      height: '100%',
+      resizeMode: 'cover',
+      borderRadius: 10,
+    },
+    bodyContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    nameContainer: {
+      position: 'absolute',
+      top: 10,
+      left: 10,
+      backgroundColor: theme.colors.surface,
+      padding: 2,
+      paddingRight: 10,
+      borderRadius: 100,
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 4,
+    },
+    followersContainer: {
+      position: 'absolute',
+      bottom: 15,
+      right: 15,
+      backgroundColor: '#000',
+      paddingHorizontal: 10,
+      paddingVertical: 5,
+      borderRadius: 5,
+      elevation: 1,
+    },
+  });

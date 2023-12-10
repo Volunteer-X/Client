@@ -2,6 +2,7 @@ import { PADDING } from '@app/lib';
 import { AppTheme } from '@app/theme';
 import { StyleSheet } from 'react-native';
 import { EdgeInsets } from 'react-native-safe-area-context';
+import { CircleLayerStyle } from '@rnmapbox/maps';
 
 export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
   StyleSheet.create({
@@ -9,7 +10,6 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       flex: 1,
     },
     container: {
-      ...StyleSheet.absoluteFillObject,
       flex: 1,
       justifyContent: 'flex-end',
       alignItems: 'center',
@@ -20,18 +20,6 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
     map: {
       ...StyleSheet.absoluteFillObject,
-    },
-    searchBarView: {
-      position: 'absolute',
-      top: inset.top + PADDING.sm,
-      right: 5,
-      left: 5,
-    },
-    searchBarContainer: {
-      backgroundColor: 'rgba(0,0,0,0)',
-      borderTopWidth: 0,
-      borderBottomWidth: 0,
-      padding: 0,
     },
     cardContainer: {
       position: 'absolute',
@@ -54,4 +42,42 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       width: 100,
       height: 100,
     },
+    myLocation: {
+      position: 'absolute',
+      top: 150,
+      right: 10,
+      backgroundColor: 'black',
+      borderWidth: 1,
+      borderColor: '#c9c9c9',
+      padding: 5,
+      borderRadius: 10,
+    },
+    headerView: {
+      position: 'absolute',
+      top: inset.top + PADDING.sm,
+    },
+    searchBar: {
+      backgroundColor: theme.colors.background,
+      marginHorizontal: PADDING.sm,
+    },
+    picksChip: {
+      marginHorizontal: 1,
+      borderRadius: 100,
+      paddingHorizontal: 7.5,
+      paddingVertical: 3.5,
+    },
+    picksChipText: {},
+    picksSelectView: {
+      paddingVertical: 10,
+      paddingHorizontal: 10,
+    },
   });
+
+export const circleStyle = {
+  circleRadius: 10,
+  circleOpacity: 1,
+  circleColor: 'red',
+  circleStrokeWidth: 1.5,
+  circleStrokeOpacity: 0.25,
+  circleSortKey: 1,
+};

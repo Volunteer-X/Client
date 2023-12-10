@@ -5,13 +5,12 @@ import { check, PERMISSIONS } from 'react-native-permissions';
 import { Platform } from 'react-native';
 
 type ContextType = {
-  coords: GeoCoordinates | null;
+  coords?: GeoCoordinates;
   geoLoading: boolean;
   geoError?: any;
 };
 
 const initialLocation: ContextType = {
-  coords: null,
   geoLoading: true,
 };
 
@@ -44,32 +43,48 @@ export const GeoLocationProvider = ({ children }: any) => {
 
   useEffect(() => {
     getLocationPermission()
-      .then(status => {
-        if (status === 'granted') {
+      .then(res => {
+        if (res === 'granted') {
           GeoLocation.getCurrentPosition(
             position => {
               setCoords(position.coords);
-              setLoading(false);
             },
-            error => {
-              console.log(error.message);
-              setGeoError(error);
-              setLoading(false);
+            err => {
+              setGeoError(err);
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
           );
         }
       })
-      .catch(e => {
-        console.error(e);
-        setGeoError(e);
-        setLoading(false);
-      });
-  }, [getLocationPermission]);
+      .catch(err => {
+        console.error(err);
+        setGeoError(err);
+      })
+      .finally(() => setLoading(false));
+
+    const watchID = GeoLocation.watchPosition(
+      position => {
+        setCoords(position.coords);
+      },
+      err => {
+        setGeoError(err);
+      },
+      { enableHighAccuracy: true },
+    );
+
+    return () => {
+      GeoLocation.clearWatch(watchID);
+    };
+  }, [getLocationPermission, loading]);
+
+  const value = {
+    coords: coords as GeoCoordinates,
+    geoLoading: loading,
+    geoError,
+  };
 
   return (
-    <GeoLocationContext.Provider
-      value={{ coords, geoLoading: loading, geoError }}>
+    <GeoLocationContext.Provider value={value}>
       {children}
     </GeoLocationContext.Provider>
   );
