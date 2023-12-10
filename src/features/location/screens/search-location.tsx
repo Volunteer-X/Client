@@ -27,7 +27,7 @@ export const SearchLocationScreen = () => {
     useNavigation<PingStackScreenProps<'SearchLocation'>['navigation']>();
   const route = useRoute<PingStackScreenProps<'SearchLocation'>['route']>();
 
-  const currentLocation = useGeoLocation();
+  const { coords: currentLocation, geoLoading } = useGeoLocation();
 
   const [coordinate, setCoordinate] = useState<Array<number>>([
     route.params.point?.lng,
@@ -97,7 +97,7 @@ export const SearchLocationScreen = () => {
         <Camera
           defaultSettings={{
             centerCoordinate: [
-              currentLocation?.longitude,
+              currentLocation?.latitude,
               currentLocation?.longitude,
             ],
           }}

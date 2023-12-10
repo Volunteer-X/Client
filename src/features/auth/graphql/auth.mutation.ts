@@ -12,9 +12,11 @@ const CREATE_USER = gql(`
       name {
         firstName
         lastName
+        middleName
       }
       picture
       picks
+      createdAt
     }
   }
 `);

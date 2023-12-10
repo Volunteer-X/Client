@@ -1,4 +1,3 @@
-import { Role } from '@app/__generated__/gql/graphql';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { cloneDeep } from 'lodash';
 
@@ -8,7 +7,7 @@ export interface User {
   email?: string;
   firstName?: string;
   lastName?: string;
-  role?: Role;
+  middleName?: string | null;
   picks?: string[];
   picture?: string | null;
 }

@@ -1,5 +1,5 @@
-import { Dimensions, StyleSheet, View } from 'react-native';
-import React, { useEffect, useMemo } from 'react';
+import { Dimensions, StatusBar, StyleSheet, View } from 'react-native';
+import React, { useEffect } from 'react';
 import LottieView from 'lottie-react-native';
 import { Text } from 'react-native-paper';
 
@@ -10,15 +10,9 @@ import { AppTheme } from '@app/theme';
 
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList } from '@app/types/type';
-import { useAuth0 } from 'react-native-auth0';
-import { useMutation } from '@apollo/client';
-import { CREATE_USER } from '../graphql/auth.mutation';
-// import { Role } from '@app/lib/constants/enums';
-import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { setUser, User } from '../slices/auth.slice';
-import { Role } from '@app/__generated__/gql/graphql';
-import { setUserPicks } from '@app/features/picks/slices/picksSlice';
-import { setRegistrationState } from '../slices/registrationCheck.slice';
+import { useAppAuth } from '@app/context/auth-context';
+import { APP_NAME } from '@app/lib';
+import { useGeoLocation } from '@app/context/geo-location';
 
 type Props = StackScreenProps<AuthStackParamList, 'LoadingScreen'>;
 
@@ -28,85 +22,29 @@ const LoadingScreen = (props: Props) => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  // * Redux Hooks
-  // const picksState = useAppSelector(state => state.picks);
-
-  const dispatch = useAppDispatch();
-
-  const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
-
-  // * Auth0 hook
-  const auth0 = useAuth0();
+  // const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
 
   // * Params from the router
   const { username, picks } = props.route.params;
 
-  // * userProfile from auth0
-  const auth0UserData = useMemo(() => {
-    return auth0.user;
-  }, [auth0]);
+  const { coords, geoLoading } = useGeoLocation();
+
+  const { loading, error, login } = useAppAuth();
 
   useEffect(() => {
-    console.log(
-      '🚀 ~ file: LoadingScreen.tsx:26 ~ LoadingScreen ~ username, picks:',
-      username,
-      picks,
-    );
-
-    // Todo gotta find a better way to handle this bug
-    createUser({
-      variables: {
-        createUserInput: {
-          username,
-          email: auth0UserData?.email ? auth0UserData.email : '',
-          firstName: auth0UserData?.given_name ? auth0UserData.given_name : '',
-          lastName: auth0UserData?.family_name ? auth0UserData.family_name : '',
-          middleName: auth0UserData?.middle_name,
-          role: Role.User,
-          picture: auth0UserData?.picture,
-          picks: picks,
-        },
-      },
-    });
-
-    // console.log(user);
-  }, [createUser, picks, auth0UserData, username]);
-
-  // ! dev only
-  if (error) {
-    console.log(error);
-  }
-
-  if (!loading && data) {
-    const user: User = {
-      id: data.createUser.id,
-      username: data.createUser.username,
-      email: data.createUser.email,
-      firstName: data.createUser.name?.firstName,
-      lastName: data.createUser.name?.lastName,
-      role: data.createUser.role,
-      picture: data.createUser.picture,
-    };
-
-    console.log(
-      '🚀 ~ file: LoadingScreen.tsx:89 ~ LoadingScreen ~ isRegistered:',
-      data.createUser.isRegistered,
-    );
-
-    dispatch(
-      setRegistrationState({ isRegistered: data.createUser.isRegistered }),
-    );
-
-    dispatch(setUserPicks(picks));
-
-    dispatch(setUser(user));
-    //
-  }
+    if (!geoLoading && login && coords) {
+      login(username, picks, coords);
+    }
+  }, [coords, geoLoading, login, picks, username]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logo} variant="headlineSmall">
-        VolunteerX
+      <StatusBar
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        backgroundColor={theme.colors.background}
+      />
+      <Text style={styles.logo} variant="headlineMedium">
+        {APP_NAME}
       </Text>
       <View style={styles.subContainer}>
         <LottieView
@@ -127,6 +65,11 @@ const LoadingScreen = (props: Props) => {
             { keypath: 'Layer 7', color: theme.colors.tertiaryContainer },
           ]}
         />
+        {geoLoading && (
+          <Text variant="titleMedium" style={styles.message}>
+            Getting your location...
+          </Text>
+        )}
         {loading ? (
           <Text variant="titleMedium" style={styles.message}>
             Getting your profile ready...
@@ -152,15 +95,15 @@ const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: theme.colors.onSecondary,
+      backgroundColor: theme.colors.background,
     },
     logo: {
       position: 'absolute',
-      top: 25,
+      top: 100,
       right: 0,
       left: 0,
       textAlign: 'center',
-      color: theme.colors.primaryContainer,
+      color: theme.colors.onBackground,
     },
     subContainer: {
       flex: 1,

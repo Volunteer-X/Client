@@ -1,22 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import MapView from 'react-native-maps';
 import { SearchBar } from '@rneui/base';
 import CarouselMapCard from '../../../components/carousels/Carousel';
+import { MapView } from '@rnmapbox/maps';
+import { MAPBOX_STYLE_DARK } from '@env';
+import useAppTheme from '@app/hooks/useAppTheme';
 
-const MapScreen = (): React.JSX.Element => {
+const MapScreen = () => {
+  const { theme } = useAppTheme();
+
   return (
     <>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: 37.78825,
-          longitude: -122.4324,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-        loadingEnabled
-      />
+      <MapView style={styles.map} styleURL={MAPBOX_STYLE_DARK} />
       <View style={styles.searchBarView}>
         <SearchBar
           value=""

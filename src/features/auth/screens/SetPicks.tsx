@@ -30,7 +30,7 @@ const SetPicks = ({
   const styles = makeStyles(theme);
 
   const handlePickSelect = useCallback((_selectedPicks: Array<string>) => {
-    console.log(_selectedPicks);
+    // console.log(_selectedPicks);
 
     if (_selectedPicks.length >= Defaults.MIN_NUM_PICKS) {
       setCanContinue(true);
@@ -41,7 +41,7 @@ const SetPicks = ({
   }, []);
 
   const handleOnSubmition = useCallback(() => {
-    console.log(selectedPicks);
+    // console.log(selectedPicks);
     navigation.navigate('LoadingScreen', {
       username,
       picks: selectedPicks,

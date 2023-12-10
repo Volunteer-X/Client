@@ -98,11 +98,11 @@ const SetUsername = ({
   useEffect(() => {
     triggerRevalidation().then(result => {
       if (result) {
-        console.log(
-          '🚀 ~ file: SetUsername.tsx:99 ~ triggerRevalidation ~ result:',
-          result,
-          _username,
-        );
+        // console.log(
+        //   '🚀 ~ file: SetUsername.tsx:99 ~ triggerRevalidation ~ result:',
+        //   result,
+        //   _username,
+        // );
         GetUsernameAvailability({ variables: { username: _username } });
       }
     });

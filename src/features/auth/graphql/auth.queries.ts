@@ -15,9 +15,11 @@ query GetUserByEmail($email: EmailAddress!) {
     name {
       firstName
       lastName
+      middleName
     }
     picture
     picks
+    createdAt
   }
 }
 `);

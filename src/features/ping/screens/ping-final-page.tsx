@@ -70,7 +70,7 @@ export const PingFinalPage = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
 
   // * Get current location
-  const currentLocation = useGeoLocation();
+  const { coords: currentLocation, geoLoading } = useGeoLocation();
 
   // * Get selected point
   const [selectedPoint, setSelectedPoint] = useState<Point>(() => ({

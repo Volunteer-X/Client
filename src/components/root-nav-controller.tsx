@@ -1,4 +1,5 @@
 import { useAppAuth } from '@app/context/auth-context/AuthContext';
+import { useGeoLocation } from '@app/context/geo-location';
 import AppSplashScreen from '@app/features/auth/screens/AppSplashScreen';
 import { MainNavList } from '@app/types/type';
 import { createStackNavigator } from '@react-navigation/stack';

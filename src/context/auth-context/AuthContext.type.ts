@@ -1,4 +1,5 @@
 import { User } from 'react-native-auth0';
+import { GeoCoordinates } from 'react-native-geolocation-service';
 
 /*
  * AUTHSTAGES
@@ -16,7 +17,11 @@ export type AuthState = {
 export type AuthProps = {
   isAuthenticated: boolean;
   logout?: () => void;
-  login?: () => Promise<any>;
+  login?: (
+    username: string,
+    picks: string[],
+    coords?: GeoCoordinates,
+  ) => Promise<any>;
   auth0?: () => Promise<User | undefined>;
   loading?: boolean;
   error?: any;

@@ -12,7 +12,11 @@ export const auth0Function = async (
   try {
     await authorize({ scope: AUTH0_SCOPE });
 
-    if ((auth0User || auth0User !== null) && auth0User.email) {
+    if (!auth0User) {
+      throw new Error('auth0User is null');
+    }
+
+    if (auth0User.email) {
       setLoading(true);
       try {
         // check if user exists in db
@@ -23,7 +27,7 @@ export const auth0Function = async (
         });
 
         console.log(
-          '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ checkQuery',
+          '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ getUserByEmail',
           res.data?.getUserByEmail,
         );
 
@@ -48,9 +52,9 @@ export const auth0Function = async (
                 email: _user.email,
                 firstName: _user.name?.firstName,
                 lastName: _user.name?.lastName,
+                middleName: _user.name?.middleName,
                 picture: _user.picture,
                 picks: _user?.picks as string[],
-                role: _user.role,
               },
             }),
           );

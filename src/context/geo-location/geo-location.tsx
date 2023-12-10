@@ -4,16 +4,17 @@ import GeoLocation, { GeoCoordinates } from 'react-native-geolocation-service';
 import { check, PERMISSIONS } from 'react-native-permissions';
 import { Platform } from 'react-native';
 
-const initialLocation: GeoCoordinates = {
-  latitude: 0,
-  longitude: 0,
-  accuracy: 5,
-  altitude: 0,
-  heading: 0,
-  speed: 0,
+type ContextType = {
+  coords: GeoCoordinates | null;
+  geoLoading: boolean;
 };
 
-const GeoLocationContext = createContext<GeoCoordinates>(initialLocation);
+const initialLocation: ContextType = {
+  coords: null,
+  geoLoading: true,
+};
+
+const GeoLocationContext = createContext<ContextType>(initialLocation);
 
 export const useGeoLocation = () => {
   const contextValue = useContext(GeoLocationContext);
@@ -26,7 +27,8 @@ export const useGeoLocation = () => {
 };
 
 export const GeoLocationProvider = ({ children }: any) => {
-  const [coords, setCoords] = useState<GeoCoordinates>(initialLocation);
+  const [coords, setCoords] = useState<GeoCoordinates | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const getLocationPermission = useCallback(async () => {
     const status = await check(
@@ -45,19 +47,24 @@ export const GeoLocationProvider = ({ children }: any) => {
           GeoLocation.getCurrentPosition(
             position => {
               setCoords(position.coords);
+              setLoading(false);
             },
             error => {
               console.log(error.message);
+              setLoading(false);
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
           );
         }
       })
-      .catch(e => console.error(e));
-  }, [coords.latitude, coords.longitude, getLocationPermission]);
+      .catch(e => {
+        console.error(e);
+        setLoading(false);
+      });
+  }, [getLocationPermission]);
 
   return (
-    <GeoLocationContext.Provider value={coords}>
+    <GeoLocationContext.Provider value={{ coords, geoLoading: loading }}>
       {children}
     </GeoLocationContext.Provider>
   );
