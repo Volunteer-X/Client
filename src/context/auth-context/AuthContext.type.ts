@@ -17,7 +17,7 @@ export type AuthProps = {
   isAuthenticated: boolean;
   logout?: () => void;
   login?: () => Promise<any>;
-  auth0: () => Promise<User | undefined>;
+  auth0?: () => Promise<User | undefined>;
   loading?: boolean;
   error?: any;
 };

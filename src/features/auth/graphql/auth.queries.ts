@@ -12,13 +12,11 @@ query GetUserByEmail($email: EmailAddress!) {
     id
     email
     username
-    role
     name {
       firstName
       lastName
     }
     picture
-    isRegistered
     picks
   }
 }
