@@ -73,7 +73,22 @@ export type BottomTabParamList = {
 // * Home Screen
 export type HomeStackParamList = {
   HomeScreen: {
-    pingID?: string;
+    ping?: {
+      id: string;
+      createdAt?: string | Date | null;
+      title: string;
+      description?: string | null;
+      picks: Array<string>;
+      latitude: number;
+      longitude: number;
+      media?: ({ key: string; type: string } | null)[] | null;
+      user: {
+        id: string;
+        username: string;
+        name?: { firstName: string; lastName: string } | null;
+        picture?: string | null;
+      };
+    };
     loading?: boolean;
   };
 };

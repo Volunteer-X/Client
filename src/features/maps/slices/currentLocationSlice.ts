@@ -1,9 +1,10 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { GeoCoordinates } from 'react-native-geolocation-service';
+import GeoLocation, { GeoCoordinates } from 'react-native-geolocation-service';
 
 export interface CurrentLocationState {
   latitude: number;
   longitude: number;
+  error?: any;
 }
 
 const initialState: CurrentLocationState = {
@@ -21,10 +22,22 @@ export const currentLocationSlice = createSlice({
     },
   },
 });
-export const setCurrentLocationAsync =
-  (coords: Promise<GeoCoordinates | null>) => async (dispatch: any) => {
-    dispatch(await setCurrentLocation(coords));
-  };
+export const fetchCurrentLocation = () => async (dispatch: any) => {
+  try {
+    const coords = await new Promise<GeoCoordinates>((resolve, reject) => {
+      GeoLocation.getCurrentPosition(
+        position => {
+          resolve(position.coords);
+          dispatch(setCurrentLocation(coords));
+        },
+        error => {
+          reject(error);
+        },
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+      );
+    });
+  } catch (error) {}
+};
 
 export const { setCurrentLocation } = currentLocationSlice.actions;
 

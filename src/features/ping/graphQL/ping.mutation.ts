@@ -4,34 +4,29 @@ const CREATE_PING = gql(`
 mutation createPing($createPingInput: CreatePingInput!) {
     createPing(payload: $createPingInput){
         id
-        title
-        description
-        createdAt
-        user {
-            id
-            name {
-                firstName
-                lastName
-            }
-            username
-            picture
         }
-    }
     }
     `);
 
 const UPDATE_PING = gql(`
-mutation updatePing($updatePingInput: UPingInput!) {
-    updatePing(id: string, payload: $updatePingInput) {
+mutation updatePing($id: ObjectID! $UPingInput: UPingInput!) {
+    updatePing(id: $id, payload: $UPingInput) {
         id
+        createdAt
         title
         description
-        createdAt
+        picks
+        latitude
+        longitude
+        media {
+            key
+            type
+        }
         user {
             id
             name {
-                firstName
                 lastName
+                firstName
             }
             username
             picture

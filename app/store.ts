@@ -13,8 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { currentLocationSlice } from '../src/features/maps';
 import { permissionSlice } from '../src/features/permissions';
-import { picksSlice } from '../src/features/picks';
-import { registrationCheckSlice, authSlice } from '@features/auth';
+import { authSlice } from '@features/auth';
 
 const persistConfig = {
   key: 'root',
@@ -25,8 +24,6 @@ const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     auth: authSlice,
-    picks: picksSlice,
-    registrationState: registrationCheckSlice,
   }),
 );
 

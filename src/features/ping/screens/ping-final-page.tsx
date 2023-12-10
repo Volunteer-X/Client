@@ -74,13 +74,16 @@ export const PingFinalPage = () => {
 
   // * Get selected point
   const [selectedPoint, setSelectedPoint] = useState<Point>(() => ({
-    lat: currentLocation.latitude,
-    lng: currentLocation.longitude,
+    lat: 0,
+    lng: 0,
   }));
 
   // * Update selected point if current location changes
   // ! possible bug when user location changes
   useEffect(() => {
+    if (!currentLocation) {
+      return;
+    }
     if (
       selectedPoint.lat !== currentLocation.latitude ||
       selectedPoint.lng !== currentLocation.longitude
@@ -218,7 +221,7 @@ export const PingFinalPage = () => {
       return;
     } else {
       // * Create ping
-      const id = await createPing({
+      const ping = await createPing({
         title: titleText,
         description: descriptionText,
         picks,
@@ -227,7 +230,7 @@ export const PingFinalPage = () => {
         assets,
       });
 
-      console.log('id::', id);
+      console.log('id::', ping);
 
       // * Navigate to Home screen
       navigation.reset({
@@ -238,7 +241,7 @@ export const PingFinalPage = () => {
             params: {
               screen: 'HomeScreen',
               params: {
-                pingID: id,
+                ping: ping,
                 loading: loading,
               },
             },
