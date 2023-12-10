@@ -19,9 +19,13 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const styles = makeStyles(theme, inset);
 
+  const { user } = useAppSelector(state => state.root.auth);
+
+  // console.log('HomeScreen user', user);
+
   const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 
-  console.log('HomeScreen route', route);
+  // console.log('HomeScreen route', route);
 
   return (
     <View style={styles.container}>

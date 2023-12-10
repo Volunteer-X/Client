@@ -24,10 +24,10 @@ export const RootNavController = () => {
     }
   }, [loading]);
 
-  console.log(
-    '🚀 ~ file: root-nav-controller.tsx:25 ~ RootNavController ~ isAuthenticated',
-    isAuthenticated,
-  );
+  // console.log(
+  //   '🚀 ~ file: root-nav-controller.tsx:25 ~ RootNavController ~ isAuthenticated',
+  //   isAuthenticated,
+  // );
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
