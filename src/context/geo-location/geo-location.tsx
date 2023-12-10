@@ -7,6 +7,7 @@ import { Platform } from 'react-native';
 type ContextType = {
   coords: GeoCoordinates | null;
   geoLoading: boolean;
+  geoError?: any;
 };
 
 const initialLocation: ContextType = {
@@ -29,6 +30,7 @@ export const useGeoLocation = () => {
 export const GeoLocationProvider = ({ children }: any) => {
   const [coords, setCoords] = useState<GeoCoordinates | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [geoError, setGeoError] = useState<any>(null);
 
   const getLocationPermission = useCallback(async () => {
     const status = await check(
@@ -51,6 +53,7 @@ export const GeoLocationProvider = ({ children }: any) => {
             },
             error => {
               console.log(error.message);
+              setGeoError(error);
               setLoading(false);
             },
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
@@ -59,12 +62,14 @@ export const GeoLocationProvider = ({ children }: any) => {
       })
       .catch(e => {
         console.error(e);
+        setGeoError(e);
         setLoading(false);
       });
   }, [getLocationPermission]);
 
   return (
-    <GeoLocationContext.Provider value={{ coords, geoLoading: loading }}>
+    <GeoLocationContext.Provider
+      value={{ coords, geoLoading: loading, geoError }}>
       {children}
     </GeoLocationContext.Provider>
   );

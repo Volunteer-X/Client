@@ -4,13 +4,17 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-reanimated-carousel';
 import NearbyActivityCardView from '../NearbyActivityCardView';
 import { mapViewCardData } from '../../lib/constants/mock-data';
+import { makeStyles } from './Carousel.styles';
+import { DIMENSIONS } from '@app/lib';
 
 const CarouselMapCard = () => {
+  const styles = makeStyles();
+
   return (
     <View style={styles.container}>
       <Carousel
-        width={Dimensions.get('window').width}
-        height={Dimensions.get('window').height * 0.3}
+        width={DIMENSIONS.fullWidth}
+        height={DIMENSIONS.fullHeight}
         style={styles.carousel}
         snapEnabled
         mode="parallax"
@@ -33,12 +37,5 @@ const CarouselMapCard = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-  },
-  carousel: { width: Dimensions.get('window').width * 1 },
-});
 
 export default CarouselMapCard;
