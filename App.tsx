@@ -44,10 +44,10 @@ const App = () => {
   };
 
   return (
-    <ApolloProvider client={apolloClient}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+    <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+      <ApolloProvider client={apolloClient}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
             <AuthProvider>
               <GeoLocationProvider>
                 <GestureHandlerRootView style={styles.gestureHandlerRootView}>
@@ -70,10 +70,10 @@ const App = () => {
                 </GestureHandlerRootView>
               </GeoLocationProvider>
             </AuthProvider>
-          </Auth0Provider>
-        </PersistGate>
-      </Provider>
-    </ApolloProvider>
+          </PersistGate>
+        </Provider>
+      </ApolloProvider>
+    </Auth0Provider>
   );
 };
 

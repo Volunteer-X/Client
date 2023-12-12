@@ -11,11 +11,12 @@ import useAppTheme from '@app/hooks/useAppTheme';
 import { PicksLabel } from '@app/lib';
 import { ActivityStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
 import { Portal, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { makeStyles } from './activity.style';
+import { useActivityList } from '../hooks/useActivityList';
 
 export const ActivityListScreen = () => {
   // Navigation
@@ -26,6 +27,15 @@ export const ActivityListScreen = () => {
   const { theme } = useAppTheme();
   const inset = useSafeAreaInsets();
   const styles = makeStyles(theme, inset);
+
+  // * Get Activity List
+  const { data, loading, error } = useActivityList();
+
+  useEffect(() => {
+    if (data) {
+      console.log(data);
+    }
+  }, [data, loading, error]);
 
   // Setting Modal
   const settingModalRef = useRef<BottomSheetRefProps>(null);

@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { CREATE_PING, UPDATE_PING } from '../graphQL/ping.mutation';
-import {
-  MediaInput,
-  UpdatePingMutation,
-} from '../../../__generated__/gql/graphql';
+import { MediaInput } from '../../../__generated__/gql/graphql';
 import { useAppSelector } from '@app/hooks';
 import { Point } from '@app/types/utility-types';
 import { Asset } from 'react-native-image-picker';

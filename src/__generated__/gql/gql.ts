@@ -13,11 +13,14 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\n  query GetAllPing($first: Int!, $after: String) {\n    getAllPing(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      edges {\n        cursor\n        node {\n          ...PingFragment\n        }\n      }\n      owner {\n        ...UserFragment\n      }\n    }\n  }\n": types.GetAllPingDocument,
     "\n  mutation createUser($createUserInput: CreateUserInput!) {\n    createUser(payload: $createUserInput) {\n      id\n      email\n      username\n      name {\n        firstName\n        lastName\n        middleName\n      }\n      picture\n      picks\n      createdAt\n    }\n  }\n": types.CreateUserDocument,
     "\n  query isUsernameAvailable($username: String!) {\n    isUsernameAvailable(username: $username)\n  }\n": types.IsUsernameAvailableDocument,
     "\nquery GetUserByEmail($email: EmailAddress!) {\n  getUserByEmail(email: $email) {\n    id\n    email\n    username\n    name {\n      firstName\n      lastName\n      middleName\n    }\n    picture\n    picks\n    createdAt\n  }\n}\n": types.GetUserByEmailDocument,
     "\nmutation createPing($createPingInput: CreatePingInput!) {\n    createPing(payload: $createPingInput){\n        id\n        }\n    }\n    ": types.CreatePingDocument,
     "\nmutation updatePing($id: ObjectID! $UPingInput: UPingInput!) {\n    updatePing(id: $id, payload: $UPingInput) {\n        id\n        createdAt\n        title\n        description\n        picks\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        user {\n            id\n            name {\n                lastName\n                firstName\n            }\n            username\n            picture\n        }\n    }\n    }": types.UpdatePingDocument,
+    "\n    fragment PingFragment on Ping {\n        id\n        title\n        description\n        createdAt\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        picks\n        radius\n        url\n    }\n": types.PingFragmentFragmentDoc,
+    "\n    fragment UserFragment on User {\n        id\n        createdAt\n        username\n        email\n        name {\n            firstName\n            lastName\n            middleName\n        }\n        picture\n        picks\n    }\n": types.UserFragmentFragmentDoc,
 };
 
 /**
@@ -34,6 +37,10 @@ const documents = {
  */
 export function gql(source: string): unknown;
 
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetAllPing($first: Int!, $after: String) {\n    getAllPing(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      edges {\n        cursor\n        node {\n          ...PingFragment\n        }\n      }\n      owner {\n        ...UserFragment\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllPing($first: Int!, $after: String) {\n    getAllPing(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      edges {\n        cursor\n        node {\n          ...PingFragment\n        }\n      }\n      owner {\n        ...UserFragment\n      }\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -54,6 +61,14 @@ export function gql(source: "\nmutation createPing($createPingInput: CreatePingI
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\nmutation updatePing($id: ObjectID! $UPingInput: UPingInput!) {\n    updatePing(id: $id, payload: $UPingInput) {\n        id\n        createdAt\n        title\n        description\n        picks\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        user {\n            id\n            name {\n                lastName\n                firstName\n            }\n            username\n            picture\n        }\n    }\n    }"): (typeof documents)["\nmutation updatePing($id: ObjectID! $UPingInput: UPingInput!) {\n    updatePing(id: $id, payload: $UPingInput) {\n        id\n        createdAt\n        title\n        description\n        picks\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        user {\n            id\n            name {\n                lastName\n                firstName\n            }\n            username\n            picture\n        }\n    }\n    }"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    fragment PingFragment on Ping {\n        id\n        title\n        description\n        createdAt\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        picks\n        radius\n        url\n    }\n"): (typeof documents)["\n    fragment PingFragment on Ping {\n        id\n        title\n        description\n        createdAt\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        picks\n        radius\n        url\n    }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n    fragment UserFragment on User {\n        id\n        createdAt\n        username\n        email\n        name {\n            firstName\n            lastName\n            middleName\n        }\n        picture\n        picks\n    }\n"): (typeof documents)["\n    fragment UserFragment on User {\n        id\n        createdAt\n        username\n        email\n        name {\n            firstName\n            lastName\n            middleName\n        }\n        picture\n        picks\n    }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};
