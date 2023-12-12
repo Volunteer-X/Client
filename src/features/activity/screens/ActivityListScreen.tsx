@@ -20,6 +20,7 @@ import { useActivityList } from '../hooks/useActivityList';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_PING } from '../graphQL/activity.query';
 import { ActivityCardProps } from '@app/components/activity-card';
+import LottieView from 'lottie-react-native';
 
 export const ActivityListScreen = () => {
   // Navigation
@@ -34,12 +35,12 @@ export const ActivityListScreen = () => {
   // * Get Activity List
   // const { data, loading, error } = useActivityList();
 
-  // const { data, loading, error, fetchMore } = useQuery(GET_ALL_PING, {
-  //   variables: {
-  //     first: 5,
-  //     after: null,
-  //   },
-  // });
+  const {} = useQuery(GET_ALL_PING, {
+    variables: {
+      first: 5,
+      after: null,
+    },
+  });
 
   const data: ActivityCardProps[] = [];
   const loading = false;
@@ -75,10 +76,18 @@ export const ActivityListScreen = () => {
   const renderEmptyComponent = useCallback(() => {
     return (
       <View style={styles.emptyContainer}>
-        <Text variant="bodyMedium">No activities yet.</Text>
+        <LottieView
+          source={require('@assets/anims/empty-screen.json')}
+          style={styles.emptyScreenLottie}
+          loop
+        />
+        <Text variant="headlineSmall">Opps! No activities yet.</Text>
+        <Text variant="bodySmall">
+          Make a ping to create your own activity.
+        </Text>
       </View>
     );
-  }, [styles.emptyContainer]);
+  }, [styles.emptyContainer, styles.emptyScreenLottie]);
 
   const renderListHeader = useCallback(() => {
     return (
@@ -106,7 +115,7 @@ export const ActivityListScreen = () => {
         />
         <ActivityListFab />
         <ActivitySettingModal ref={settingModalRef} />
-        <View style={{}}>
+        <View style={{ flex: 1 }}>
           {loading ? (
             <>
               <Text>Loading...</Text>
@@ -114,7 +123,8 @@ export const ActivityListScreen = () => {
             </>
           ) : (
             <FlatList
-              style={{ flex: 0 }}
+              // style={{ height: '100%' }}
+              contentContainerStyle={{ flexGrow: 1 }}
               overScrollMode="never"
               nestedScrollEnabled
               showsVerticalScrollIndicator={false}
@@ -123,14 +133,12 @@ export const ActivityListScreen = () => {
               stickyHeaderHiddenOnScroll
               ListEmptyComponent={renderEmptyComponent}
               data={data}
-              renderItem={item => (
+              renderItem={({ item }) => (
                 <View style={styles.cardView}>
                   <ActivityCard
-                    title="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula."
-                    text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim quis cum
-        libero ducimus porro? Eos dicta at ea asperiores amet nemo labore
-        voluptas illo! In assumenda quisquam voluptates tempora officiis."
-                    username="docren155"
+                    title={item.title}
+                    text={item.text}
+                    username={item.username}
                     timestamp="2h"
                     picks={[
                       PicksLabel.Civil,

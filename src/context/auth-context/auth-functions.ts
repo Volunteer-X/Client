@@ -11,7 +11,10 @@ export const auth0Function = async (
   dispatch: any,
 ) => {
   try {
-    await authorize({ scope: AUTH0_SCOPE });
+    await authorize({
+      scope: AUTH0_SCOPE,
+      audience: 'https://api.volunteerX.module',
+    });
 
     if (!auth0User) {
       throw new Error('auth0User is null');

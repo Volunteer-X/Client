@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { useAuth0 } from 'react-native-auth0';
+import { Credentials, useAuth0, User } from 'react-native-auth0';
 import { AuthProps } from './AuthContext.type';
 import { GET_USER_BY_EMAIL } from '@features/auth/graphql/auth.queries';
 import { CREATE_USER } from '@features/auth/graphql/auth.mutation';
@@ -18,6 +18,17 @@ import { GeoCoordinates } from 'react-native-geolocation-service';
 const initialState: AuthProps = {
   isAuthenticated: false,
   loading: true,
+  logout: () => {},
+  login: function (
+    username: string,
+    picks: string[],
+    coords: GeoCoordinates,
+  ): Promise<any> {
+    throw new Error('Function not implemented.');
+  },
+  auth0: function (): Promise<User | undefined> {
+    throw new Error('Function not implemented.');
+  },
 };
 
 /*
@@ -49,9 +60,21 @@ const AuthProvider = ({ children }: any) => {
 
   // auth0
   const auth0 = useCallback(
-    () =>
-      auth0Function(authorize, auth0User, setLoading, getUserByEmail, dispatch),
-    [auth0User, authorize, dispatch, getUserByEmail],
+    () => {
+      authorize({
+        // scope: 'openid profile email',
+        // audience: 'https://api.volunteerX.module',
+      }).then(
+        (credentials: Credentials | undefined) => {
+          console.log('credentials', credentials?.accessToken);
+        },
+        (err: any) => {
+          console.log('err', err);
+        },
+      );
+    },
+    // auth0Function(authorize, auth0User, setLoading, getUserByEmail, dispatch),
+    [authorize],
   );
 
   // Login

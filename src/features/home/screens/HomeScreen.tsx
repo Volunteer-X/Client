@@ -22,7 +22,15 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const { user } = useAppSelector(state => state.root.auth);
 
-  const { user: auth0User } = useAuth0();
+  const { user: auth0User, getCredentials } = useAuth0();
+
+  useEffect(() => {
+    if (auth0User) {
+      getCredentials().then(credentials => {
+        console.log('HomeScreen credentials', credentials?.accessToken);
+      });
+    }
+  }, [getCredentials, auth0User]);
 
   // console.log('HomeScreen user', auth0User);
 

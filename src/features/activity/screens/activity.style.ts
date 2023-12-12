@@ -10,9 +10,15 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       backgroundColor: theme.colors.background,
     },
     emptyContainer: {
-      flex: 1,
+      flex: 0.5,
       justifyContent: 'center',
       alignItems: 'center',
+      gap: 10,
+      // backgroundColor: 'red',
+    },
+    emptyScreenLottie: {
+      width: 200,
+      height: 200,
     },
     listHeaderContainer: {},
     header: {
