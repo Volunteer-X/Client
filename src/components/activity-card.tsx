@@ -1,57 +1,53 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Button, Divider, Text } from 'react-native-paper';
-import { PADDING, Picks } from '@app/lib';
+import { PADDING, Picks, PING_FRAGMENT, USER_FRAGMENT } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import { Image } from 'react-native';
-import { MediaFlatlist } from './swiper-flatlist';
+import { MediaFlatlist, MediaView } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
+import { FragmentType, useFragment } from '@app/__generated__/gql';
+import { GraphQLURL } from 'graphql-scalars';
 
 export type ActivityCardProps = {
   isOriginalPing?: boolean;
   url?: string;
   media?: Asset[];
-  title: string;
-  text: string;
-  username: string;
+  title?: string;
+  text?: string;
+  username?: string;
   picks?: string[];
   timestamp: string;
   showPicks?: boolean;
   showStar?: boolean;
+  ping: FragmentType<typeof PING_FRAGMENT>;
+  creator: FragmentType<typeof USER_FRAGMENT>;
   onMenuClick?: () => void;
   onPress?: () => void;
 };
 
 const ActivityCard = ({
   isOriginalPing = false,
-  title,
-  text,
-  username,
   timestamp,
-  url,
-  media,
-  picks,
   showPicks = false,
   showStar = false,
   onMenuClick,
   onPress,
+  ping: _ping,
+  creator: owner,
 }: ActivityCardProps) => {
-  // ('https://www.youtube.com/watch?v=QwievZ1Tx-8');
-  // [
-  //   {
-  //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-  //     type: 'image/jpeg',
-  //   },
-  //   {
-  //     uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-  //     type: 'image/jpeg',
-  //   },
-  // ];
+  const ping = useFragment(PING_FRAGMENT, _ping);
+  const creator = useFragment(USER_FRAGMENT, owner);
+
+  const { id, title, description, picks, url, media } = ping;
+  const { username, picture, name } = creator;
+
+  // console.log(media[0]);
 
   return (
     <View style={{ width: '100%' }}>
@@ -69,10 +65,9 @@ const ActivityCard = ({
         {/* Left side */}
         <View style={styles.leftContainer}>
           <Avatar
-            name="John Doe"
-            // source={require('@assets/images/placeholder.jpg')}
+            name={name?.firstName}
+            uri={picture}
             size={32}
-
             // style={styles.avatar}
           />
           <Divider bold style={styles.verticalDivider} />
@@ -163,11 +158,11 @@ const ActivityCard = ({
                   }
                 }}
                 enableAnimation
-                text={url}
+                text={url.toString()}
               />
             )}
             {/* Media */}
-            {media && (
+            {media && media !== null && (
               <View
                 hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
                 style={{
@@ -175,12 +170,12 @@ const ActivityCard = ({
                   overflow: 'hidden',
                   borderRadius: 15,
                 }}>
-                <MediaFlatlist assets={media} />
+                <MediaView media={media} />
               </View>
             )}
             {/* Description */}
             <ViewMoreText numberOfLines={3}>
-              <Text variant="bodyMedium">{text}</Text>
+              <Text variant="bodyMedium">{description}</Text>
             </ViewMoreText>
             {/* Actions */}
             {/* <View style={{ flexDirection: 'row', display: 'flex' }}>

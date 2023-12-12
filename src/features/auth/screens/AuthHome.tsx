@@ -9,6 +9,7 @@ import { AuthStackParamList } from '@ts-types/type';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@theme/index';
 import { useAppAuth } from '@app/context/auth-context';
+import { useGeoLocation } from '@app/context/geo-location';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 
@@ -29,13 +30,13 @@ const AuthHome = ({
   // Handles login with auth0
   const onLogin = useCallback(async () => {
     try {
-      const user = await auth0();
+      const user = auth0 && (await auth0());
 
       // check auth unsuccessful
-      if (user || user !== null) {
+      if (user && user !== null) {
         navigation.navigate('SetUsername', {
           possibleUsername:
-            user?.nickname || user?.preferred_username || undefined,
+            user.nickname || user.preferred_username || undefined,
         });
       }
     } catch (err) {

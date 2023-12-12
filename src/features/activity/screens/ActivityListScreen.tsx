@@ -8,7 +8,7 @@ import {
   BottomSheetRefProps,
 } from '@app/components/bottom-sheets';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { PicksLabel } from '@app/lib';
+import { PicksLabel, PING_FRAGMENT } from '@app/lib';
 import { ActivityStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
@@ -21,6 +21,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_PING } from '../graphQL/activity.query';
 import { ActivityCardProps } from '@app/components/activity-card';
 import LottieView from 'lottie-react-native';
+import { FragmentType, useFragment } from '@app/__generated__/gql';
 
 export const ActivityListScreen = () => {
   // Navigation
@@ -35,15 +36,24 @@ export const ActivityListScreen = () => {
   // * Get Activity List
   // const { data, loading, error } = useActivityList();
 
-  const {} = useQuery(GET_ALL_PING, {
+  const { data, loading, fetchMore } = useQuery(GET_ALL_PING, {
     variables: {
-      first: 5,
+      first: 3,
       after: null,
     },
   });
 
-  const data: ActivityCardProps[] = [];
-  const loading = false;
+  // useEffect(() => {
+
+  const fetchMoreData = useCallback(() => {
+    // if()
+
+    fetchMore({
+      variables: {
+        after: data?.getAllPing.pageInfo.endCursor,
+      },
+    });
+  }, [data?.getAllPing.pageInfo.endCursor, fetchMore]);
 
   // useEffect(() => {
   //   if (data && data.getAllPing.edges.length > 0) {
@@ -132,34 +142,22 @@ export const ActivityListScreen = () => {
               stickyHeaderIndices={[0]}
               stickyHeaderHiddenOnScroll
               ListEmptyComponent={renderEmptyComponent}
-              data={data}
+              onEndReachedThreshold={0.3}
+              onEndReached={fetchMoreData}
+              data={data?.getAllPing.edges}
               renderItem={({ item }) => (
                 <View style={styles.cardView}>
                   <ActivityCard
-                    title={item.title}
-                    text={item.text}
-                    username={item.username}
+                    ping={item.node}
+                    creator={data?.getAllPing.owner}
+                    title={''}
+                    text={''}
+                    username={''}
                     timestamp="2h"
-                    picks={[
-                      PicksLabel.Civil,
-                      PicksLabel.Disaster,
-                      PicksLabel.Economic,
-                    ]}
                     // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
                     onMenuClick={() => {
                       settingModalRef.current?.openModal();
                     }}
-                    media={[
-                      {
-                        uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                        type: 'image/jpeg',
-                      },
-                      {
-                        uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                        type: 'image/jpeg',
-                      },
-                    ]}
-                    showPicks
                     onPress={() => {
                       navigation.navigate('ActivityScreen');
                     }}
@@ -168,28 +166,6 @@ export const ActivityListScreen = () => {
               )}
             />
           )}
-
-          {/* <ActivityCard
-            title="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula."
-            text="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim quis cum
-        libero ducimus porro? Eos dicta at ea asperiores amet nemo labore
-        voluptas illo! In assumenda quisquam voluptates tempora officiis."
-            username="docren155"
-            timestamp="1 day"
-            picks={[PicksLabel.Animal, PicksLabel.Art, PicksLabel.Disaster]}
-            // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
-            media={[
-              {
-                uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                type: 'image/jpeg',
-              },
-              {
-                uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                type: 'image/jpeg',
-              },
-            ]}
-            showPicks
-          /> */}
         </View>
       </View>
     </Portal.Host>

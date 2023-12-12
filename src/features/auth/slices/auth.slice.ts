@@ -15,11 +15,13 @@ export interface User {
 type Auth = {
   user: User | null;
   isAuthenticated: boolean;
+  accessToken?: string;
 };
 
 const initialState: Auth = {
   user: null,
   isAuthenticated: false,
+  // accessToken: '',
 };
 
 export const authSlice = createSlice({
@@ -37,10 +39,12 @@ export const authSlice = createSlice({
 
       state.user = cloneDeep(action.payload.user);
       state.isAuthenticated = action.payload.isAuthenticated;
+      state.accessToken = action.payload.accessToken;
     },
     logout: state => {
       state.user = null;
       state.isAuthenticated = false;
+      state.accessToken = undefined;
     },
   },
 });

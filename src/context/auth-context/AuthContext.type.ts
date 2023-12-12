@@ -16,13 +16,13 @@ export type AuthState = {
 
 export type AuthProps = {
   isAuthenticated: boolean;
-  logout: () => void;
-  login: (
+  logout?: () => void;
+  login?: (
     username: string,
     picks: string[],
     coords: GeoCoordinates,
   ) => Promise<any>;
-  auth0: () => Promise<User | undefined>;
+  auth0?: () => Promise<User | undefined>;
   loading: boolean;
   error?: any;
 };

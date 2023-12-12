@@ -1,6 +1,7 @@
 import { getTypeFromMIME } from '@app/utils';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth0 } from 'react-native-auth0';
 import { Asset } from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -9,16 +10,29 @@ type URIResponse = {
   signedUrl: string;
 };
 
-export const useS3Upload = () => {
+export const useS3Upload = async () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<any | unknown>();
   const [signingError, setSigningError] = useState<any | unknown>();
+
+  const { getCredentials, hasValidCredentials } = useAuth0();
+
+  const loggedIn = await hasValidCredentials();
+
+  let token: string | undefined = '';
+
+  if (loggedIn) {
+    const credentials = await getCredentials();
+
+    token = credentials?.accessToken;
+  }
 
   const options: AxiosRequestConfig = {
     method: 'GET',
     baseURL: 'http://192.168.1.222:3550/api/v1/',
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
   };
 
@@ -27,7 +41,7 @@ export const useS3Upload = () => {
 
     try {
       const response: AxiosResponse<URIResponse> = await axios.get(
-        encodeURIComponent(type),
+        `upload?type=${encodeURIComponent(type)}`,
         options,
       );
 

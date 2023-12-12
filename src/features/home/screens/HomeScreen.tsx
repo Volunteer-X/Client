@@ -20,17 +20,16 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const styles = makeStyles(theme, inset);
 
-  const { user } = useAppSelector(state => state.root.auth);
+  const { user, accessToken } = useAppSelector(state => state.root.auth);
+  // const { user: auth0User, getCredentials } = useAuth0();
 
-  const { user: auth0User, getCredentials } = useAuth0();
-
-  useEffect(() => {
-    if (auth0User) {
-      getCredentials().then(credentials => {
-        console.log('HomeScreen credentials', credentials?.accessToken);
-      });
-    }
-  }, [getCredentials, auth0User]);
+  // useEffect(() => {
+  //   if (auth0User) {
+  //     getCredentials().then(credentials => {
+  //       console.log('HomeScreen credentials', credentials?.accessToken);
+  //     });
+  //   }
+  // }, [getCredentials, auth0User]);
 
   // console.log('HomeScreen user', auth0User);
 
@@ -60,36 +59,6 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
               type: 'image/jpeg',
             },
           ]}
-        />
-        <ActivityCard
-          title="Lorem ipsum"
-          text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu"
-          timestamp="2h"
-          // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
-          username="docren155"
-          media={[
-            {
-              uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-              type: 'image/jpeg',
-            },
-            {
-              uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-              type: 'image/jpeg',
-            },
-          ]}
-        />
-        <ActivityCard
-          title="Lorem ipsum"
-          text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,"
-          timestamp="2h"
-          url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
-          username="docren155"
-        />
-        <ActivityCard
-          title="Lorem ipsum"
-          text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
-          timestamp="2h"
-          username="docren155"
         />
       </ScrollView>
       {/* <PullToRefreshList /> */}

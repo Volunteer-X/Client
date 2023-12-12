@@ -44,7 +44,7 @@ const authLink = setContext(async (_, { headers }) => {
   let token;
 
   if (hasValidCredentials) {
-    token = credentials.idToken;
+    token = credentials.accessToken;
 
     // console.log('token', token);
 

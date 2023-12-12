@@ -1,7 +1,23 @@
 import { login } from '@app/features/auth/slices/auth.slice';
 import { AUTH0_SCOPE } from '@env';
-import { User } from 'react-native-auth0';
+import { Credentials, User } from 'react-native-auth0';
 import { GeoCoordinates } from 'react-native-geolocation-service';
+
+function waitForNonNullValue(value: User | null): Promise<User> {
+  return new Promise(resolve => {
+    function checkValue() {
+      if (value !== null && value !== undefined) {
+        console.log('value is not null', value);
+
+        resolve(value);
+      } else {
+        setTimeout(checkValue, 10); // Adjust the delay as needed
+      }
+    }
+
+    checkValue();
+  });
+}
 
 export const auth0Function = async (
   authorize: any,
@@ -11,22 +27,34 @@ export const auth0Function = async (
   dispatch: any,
 ) => {
   try {
-    await authorize({
+    const credentials = await authorize({
       scope: AUTH0_SCOPE,
       audience: 'https://api.volunteerX.module',
     });
 
-    if (!auth0User) {
-      throw new Error('auth0User is null');
+    if (!credentials) {
+      throw new Error('credentials is null');
+    }
+    const accessToken = credentials.accessToken;
+
+    console.log(
+      '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ accessToken',
+      accessToken,
+    );
+
+    const user = await waitForNonNullValue(auth0User);
+
+    if (!user) {
+      throw new Error('Autherization failed, auth0User is null');
     }
 
-    if (auth0User.email) {
+    if (user.email) {
       setLoading(true);
       try {
         // check if user exists in db
         let res = await getUserByEmail({
           variables: {
-            email: auth0User.email,
+            email: user.email,
           },
         });
 
@@ -39,6 +67,7 @@ export const auth0Function = async (
           dispatch(
             login({
               isAuthenticated: true,
+              accessToken,
               user: {
                 id: _user.id,
                 username: _user.username,
@@ -54,7 +83,7 @@ export const auth0Function = async (
 
           return;
         }
-        return auth0User;
+        return user;
       } catch (error) {
         console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
       } finally {
@@ -69,6 +98,8 @@ export const auth0Function = async (
 export const loginFunction = async (
   setLoading: (arg0: boolean) => void,
   auth0User: User | null,
+  hasValidCredentials: () => Promise<boolean>,
+  getCredentials: () => Promise<Credentials | undefined>,
   createUser: any,
   dispatch: any,
   username: string,
@@ -79,7 +110,21 @@ export const loginFunction = async (
   setLoading(true);
 
   if (auth0User === undefined || auth0User === null) {
-    throw new Error('auth0User is undefined');
+    throw new Error('Autherization failed, auth0User is undefined or null');
+  }
+
+  const loggedIn = await hasValidCredentials();
+
+  let accessToken: string | undefined;
+
+  if (loggedIn) {
+    const credentials = await getCredentials();
+
+    if (!credentials) {
+      throw new Error('credentials is null');
+    }
+
+    accessToken = credentials.accessToken;
   }
 
   const {
@@ -128,6 +173,7 @@ export const loginFunction = async (
 
     dispatch(
       login({
+        accessToken,
         isAuthenticated: true,
         user: {
           id,

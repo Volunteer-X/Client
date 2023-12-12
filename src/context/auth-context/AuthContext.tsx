@@ -1,13 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { Credentials, useAuth0, User } from 'react-native-auth0';
+import { useAuth0 } from 'react-native-auth0';
 import { AuthProps } from './AuthContext.type';
 import { GET_USER_BY_EMAIL } from '@features/auth/graphql/auth.queries';
 import { CREATE_USER } from '@features/auth/graphql/auth.mutation';
@@ -18,17 +12,6 @@ import { GeoCoordinates } from 'react-native-geolocation-service';
 const initialState: AuthProps = {
   isAuthenticated: false,
   loading: true,
-  logout: () => {},
-  login: function (
-    username: string,
-    picks: string[],
-    coords: GeoCoordinates,
-  ): Promise<any> {
-    throw new Error('Function not implemented.');
-  },
-  auth0: function (): Promise<User | undefined> {
-    throw new Error('Function not implemented.');
-  },
 };
 
 /*
@@ -53,28 +36,28 @@ const AuthProvider = ({ children }: any) => {
     user: auth0User,
     isLoading,
     authorize,
+    hasValidCredentials,
+    getCredentials,
     error: auth0Error,
     clearSession,
   } = useAuth0();
   const [loading, setLoading] = useState(false);
 
+  // ! Bug fix for auth0
+  // Initial login not working
   // auth0
   const auth0 = useCallback(
-    () => {
-      authorize({
-        // scope: 'openid profile email',
-        // audience: 'https://api.volunteerX.module',
-      }).then(
-        (credentials: Credentials | undefined) => {
-          console.log('credentials', credentials?.accessToken);
-        },
-        (err: any) => {
-          console.log('err', err);
-        },
-      );
-    },
-    // auth0Function(authorize, auth0User, setLoading, getUserByEmail, dispatch),
-    [authorize],
+    // () => {
+    //   const cred = await authorize({
+    //     scope: 'openid profile email',
+    //     audience: 'https://api.volunteerX.module',
+    //   });
+
+    //   return undefined;
+    // },
+    () =>
+      auth0Function(authorize, auth0User, setLoading, getUserByEmail, dispatch),
+    [auth0User, authorize, dispatch, getUserByEmail],
   );
 
   // Login
@@ -83,13 +66,15 @@ const AuthProvider = ({ children }: any) => {
       loginFunction(
         setLoading,
         auth0User,
+        hasValidCredentials,
+        getCredentials,
         createUser,
         dispatch,
         username,
         picks,
         coords,
       ),
-    [auth0User, createUser, dispatch],
+    [auth0User, createUser, dispatch, getCredentials, hasValidCredentials],
   );
 
   // Logout

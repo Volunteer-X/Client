@@ -13,7 +13,7 @@ import { makeStyle } from './Avatar.style';
 
 type AvatarProps = {
   name?: string;
-  uri?: string;
+  uri?: string | null;
   size?: number;
   avatarContainerStyle?: StyleProp<ViewStyle>;
   avatarStyle?: StyleProp<ViewStyle>;
@@ -87,10 +87,12 @@ export const Avatar = ({
     avatarColor = colors[sumChars % colors.length];
   };
 
-  const renderAvatar = () => {
+  const renderAvatar = (newURI?: string) => {
     return (
       <PaperAvatar.Image
-        source={{ uri }}
+        source={{
+          uri: newURI,
+        }}
         size={size}
         style={[styles.avatarStyle, avatarStyle]}
       />
@@ -115,8 +117,8 @@ export const Avatar = ({
   };
 
   const render = () => {
-    if (uri) {
-      return renderAvatar();
+    if (uri && uri !== null && uri !== '') {
+      return renderAvatar(uri);
     } else if (name) {
       return renderInitials();
     } else {
