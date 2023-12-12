@@ -14,6 +14,7 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       justifyContent: 'center',
       alignItems: 'center',
     },
+    listHeaderContainer: {},
     header: {
       height: 80,
       elevation: 0,

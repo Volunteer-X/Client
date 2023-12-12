@@ -82,18 +82,20 @@ export const ActivityListScreen = () => {
 
   const renderListHeader = useCallback(() => {
     return (
-      <PicksSelectView
-        showsHorizontalScrollIndicator={false}
-        nestedScrollEnabled
-        horizontal
-        contentContainerStyle={styles.filterPinsContainer}
-        chipStyle={styles.chipStyle}
-        chipTextStyle={styles.chipTextStyle}
-        selectedPicks={[]}
-        onPickSelect={picks => {}}
-      />
+      <View style={styles.listHeaderContainer}>
+        <PicksSelectView
+          showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled
+          horizontal
+          contentContainerStyle={styles.filterPinsContainer}
+          chipStyle={styles.chipStyle}
+          chipTextStyle={styles.chipTextStyle}
+          selectedPicks={[]}
+          onPickSelect={picks => {}}
+        />
+      </View>
     );
-  }, [styles.listHeaderContainer]);
+  }, [styles]);
 
   return (
     <Portal.Host>
@@ -120,7 +122,7 @@ export const ActivityListScreen = () => {
               stickyHeaderIndices={[0]}
               stickyHeaderHiddenOnScroll
               ListEmptyComponent={renderEmptyComponent}
-              data={Array(3).fill(0)}
+              data={data}
               renderItem={item => (
                 <View style={styles.cardView}>
                   <ActivityCard
