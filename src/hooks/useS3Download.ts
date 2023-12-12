@@ -61,7 +61,7 @@ export const useS3Download = (medias: Media[]) => {
 
       const results = await Promise.all(download);
 
-      return results.filter(Boolean);
+      setUrls(results.filter(Boolean));
     } catch (error) {
       console.error(error);
     } finally {
@@ -70,9 +70,7 @@ export const useS3Download = (medias: Media[]) => {
   }, [getS3DownloadUrl, medias]);
 
   useEffect(() => {
-    handleDownload().then(results => {
-      setUrls(results);
-    });
+    handleDownload();
   }, [handleDownload, isDownloading]);
 
   return { isDownloading, urls };

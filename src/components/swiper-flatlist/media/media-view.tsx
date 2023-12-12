@@ -22,7 +22,7 @@ export const MediaView = ({ media, ...props }: MediaViewProps) => {
 
   const styles = makeStyles(calculatedWidth);
 
-  const { urls, isDownloading } = useS3Download(media);
+  //   const { urls, isDownloading } = useS3Download(media);
 
   // console.log('MediaView urls', urls);
 
@@ -63,7 +63,7 @@ export const MediaView = ({ media, ...props }: MediaViewProps) => {
 
   return (
     <>
-      {isDownloading ? (
+      {false ? (
         <ActivityIndicator />
       ) : (
         <View
