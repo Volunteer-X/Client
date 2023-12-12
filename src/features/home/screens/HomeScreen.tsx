@@ -7,9 +7,10 @@ import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { HomeStackScreenProps } from '@app/types/type';
 import { useRoute } from '@react-navigation/native';
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 
 import { View, StyleSheet, StatusBar } from 'react-native';
+import { useAuth0 } from 'react-native-auth0';
 import { ScrollView } from 'react-native-gesture-handler';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -21,7 +22,9 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const { user } = useAppSelector(state => state.root.auth);
 
-  // console.log('HomeScreen user', user);
+  const { user: auth0User } = useAuth0();
+
+  // console.log('HomeScreen user', auth0User);
 
   const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 

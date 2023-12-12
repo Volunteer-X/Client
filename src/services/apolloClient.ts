@@ -1,7 +1,10 @@
 import { ApolloClient, InMemoryCache, from, split } from '@apollo/client';
 import { authMiddleware } from './authMiddleware';
 import { errorLink, httpLink } from './apolloHttp';
-import { getMainDefinition } from '@apollo/client/utilities';
+import {
+  getMainDefinition,
+  relayStylePagination,
+} from '@apollo/client/utilities';
 
 import { webSocketLink as apolloWSLink } from './apolloWebSocket';
 import { Kind, OperationTypeNode } from 'graphql';
@@ -26,7 +29,15 @@ const link = split(
 
 const apolloClient = new ApolloClient({
   link,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          pings: relayStylePagination(),
+        },
+      },
+    },
+  }),
 });
 
 export default apolloClient;

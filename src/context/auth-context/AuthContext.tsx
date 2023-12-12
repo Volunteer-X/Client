@@ -1,5 +1,11 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useAuth0 } from 'react-native-auth0';
 import { AuthProps } from './AuthContext.type';
