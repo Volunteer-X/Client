@@ -29,6 +29,7 @@ export const errorLink = onError(
   },
 );
 
+// ! Possible bug
 const authLink = setContext(async (_, { headers }) => {
   const auth0 = new Auth0({
     domain: AUTH0_DOMAIN,

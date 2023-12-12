@@ -33,7 +33,6 @@ export const ActivityListScreen = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
     }
   }, [data, loading, error]);
 
