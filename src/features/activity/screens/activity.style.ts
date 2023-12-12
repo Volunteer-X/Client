@@ -9,6 +9,11 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       flex: 1,
       backgroundColor: theme.colors.background,
     },
+    emptyContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
     header: {
       height: 80,
       elevation: 0,

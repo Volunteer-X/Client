@@ -12,7 +12,7 @@ import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
 
-type ActivityCardProps = {
+export type ActivityCardProps = {
   isOriginalPing?: boolean;
   url?: string;
   media?: Asset[];

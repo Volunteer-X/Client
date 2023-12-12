@@ -10,5 +10,11 @@ export const useActivityList = () => {
     },
   });
 
+  // useEffect(() => {
+  //   if (data) {
+  //     console.log('data', data);
+  //   }
+  // }, [data, loading, error]);
+
   return { data, loading, error };
 };
