@@ -10,7 +10,7 @@ import {
 import useAppTheme from '@app/hooks/useAppTheme';
 import { ActivityStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
 import { Portal, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -40,7 +40,10 @@ export const ActivityListScreen = () => {
     },
   });
 
-  // useEffect(() => {
+  useEffect(() => {
+    console.log('data', data?.getAllPing.edges.length);
+    console.log('loading', loading);
+  }, [data, loading]);
 
   const fetchMoreData = useCallback(() => {
     // if()
@@ -136,15 +139,10 @@ export const ActivityListScreen = () => {
         <ActivitySettingModal ref={settingModalRef} />
         <View style={{ flex: 1 }}>
           {loading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+            <View style={styles.loadingContainer}>
               <LottieView
                 source={require('@assets/anims/pull-to-refresh.json')}
-                style={{ width: 150, height: 150 }}
+                style={styles.loadingLottie}
                 autoPlay
                 loop
               />
@@ -160,24 +158,19 @@ export const ActivityListScreen = () => {
               stickyHeaderIndices={[0]}
               stickyHeaderHiddenOnScroll
               ListEmptyComponent={renderEmptyComponent}
-              onEndReachedThreshold={0.3}
-              onEndReached={fetchMoreData}
+              // onEndReachedThreshold={0.8}
+              // onEndReached={fetchMoreData}
               data={data?.getAllPing.edges}
-              keyExtractor={item =>
-                `${item.node[' $fragmentRefs']?.PingFragmentFragment.createdAt}-activity}`
-              }
+              // keyExtractor={item =>
+              //   `${item.node[' $fragmentRefs']?.PingFragmentFragment.createdAt}-activity}`
+              // }
               renderItem={({ item }) => (
                 <View style={styles.cardView}>
                   <ActivityCard
                     ping={item.node}
-                    creator={data?.getAllPing.owner[' $fragmentRefs']}
-                    title={''}
-                    text={''}
-                    username={''}
-                    timestamp="2h"
+                    creator={data?.getAllPing.owner}
                     showPicks
                     showStar
-                    // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
                     onMenuClick={() => {
                       settingModalRef.current?.openModal();
                     }}

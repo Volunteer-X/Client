@@ -16,6 +16,15 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       gap: 10,
       // backgroundColor: 'red',
     },
+    loadingContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    loadingLottie: {
+      width: 150,
+      height: 150,
+    },
     emptyScreenLottie: {
       width: 200,
       height: 200,

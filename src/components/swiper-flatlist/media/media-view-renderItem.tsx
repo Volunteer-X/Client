@@ -13,7 +13,7 @@ type Props = {
 
 export const MediaViewRenderItem = ({ media, calculatedWidth }: Props) => {
   const styles = makeStyles(calculatedWidth);
-  const { type: mime, key } = media;
+  const { type: mime } = media;
 
   const type = mime.split('/')[0];
 
@@ -25,7 +25,7 @@ export const MediaViewRenderItem = ({ media, calculatedWidth }: Props) => {
     downloadFile(media).then(res => {
       setUri(res);
     });
-  }, [downloadFile, media]);
+  }, [downloadFile, media, uri]);
 
   switch (type) {
     case AppMediaTypes.IMAGE.toLowerCase():
@@ -33,7 +33,7 @@ export const MediaViewRenderItem = ({ media, calculatedWidth }: Props) => {
         <View style={styles.renderItemContainer}>
           <FastImage
             source={{ uri }}
-            fallback
+            onProgress={e => console.log('e', e.nativeEvent)}
             resizeMode={FastImage.resizeMode.cover}
             style={styles.renderItemMedia}
           />
