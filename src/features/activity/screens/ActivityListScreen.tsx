@@ -8,20 +8,17 @@ import {
   BottomSheetRefProps,
 } from '@app/components/bottom-sheets';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { PicksLabel, PING_FRAGMENT } from '@app/lib';
 import { ActivityStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useCallback, useLayoutEffect, useRef } from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
-import { ActivityIndicator, Portal, Text } from 'react-native-paper';
+import { Portal, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { makeStyles } from './activity.style';
-import { useActivityList } from '../hooks/useActivityList';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_PING } from '../graphQL/activity.query';
-import { ActivityCardProps } from '@app/components/activity-card';
 import LottieView from 'lottie-react-native';
-import { FragmentType, useFragment } from '@app/__generated__/gql';
+import { Media, PingFragmentFragment } from '@app/__generated__/gql/graphql';
 
 export const ActivityListScreen = () => {
   // Navigation
@@ -63,6 +60,17 @@ export const ActivityListScreen = () => {
   // Setting Modal
   const settingModalRef = useRef<BottomSheetRefProps>(null);
 
+  const handleOnCardPress = useCallback(
+    (item?: PingFragmentFragment) => {
+      navigation.navigate('ActivityScreen', {
+        activityID: item?.id,
+        activity: item,
+        owner: data?.getAllPing.owner[' $fragmentRefs']?.UserFragmentFragment,
+      });
+    },
+    [data?.getAllPing.owner, navigation],
+  );
+
   // Header
   const header = useCallback(() => {
     return (
@@ -89,6 +97,7 @@ export const ActivityListScreen = () => {
         <LottieView
           source={require('@assets/anims/empty-screen.json')}
           style={styles.emptyScreenLottie}
+          autoPlay
           loop
         />
         <Text variant="headlineSmall">Opps! No activities yet.</Text>
@@ -127,10 +136,19 @@ export const ActivityListScreen = () => {
         <ActivitySettingModal ref={settingModalRef} />
         <View style={{ flex: 1 }}>
           {loading ? (
-            <>
-              <Text>Loading...</Text>
-              <ActivityIndicator animating={loading} />
-            </>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <LottieView
+                source={require('@assets/anims/pull-to-refresh.json')}
+                style={{ width: 150, height: 150 }}
+                autoPlay
+                loop
+              />
+            </View>
           ) : (
             <FlatList
               // style={{ height: '100%' }}
@@ -145,11 +163,14 @@ export const ActivityListScreen = () => {
               onEndReachedThreshold={0.3}
               onEndReached={fetchMoreData}
               data={data?.getAllPing.edges}
+              keyExtractor={item =>
+                `${item.node[' $fragmentRefs']?.PingFragmentFragment.createdAt}-activity}`
+              }
               renderItem={({ item }) => (
                 <View style={styles.cardView}>
                   <ActivityCard
                     ping={item.node}
-                    creator={data?.getAllPing.owner}
+                    creator={data?.getAllPing.owner[' $fragmentRefs']}
                     title={''}
                     text={''}
                     username={''}
@@ -160,9 +181,11 @@ export const ActivityListScreen = () => {
                     onMenuClick={() => {
                       settingModalRef.current?.openModal();
                     }}
-                    onPress={() => {
-                      navigation.navigate('ActivityScreen');
-                    }}
+                    onPress={() =>
+                      handleOnCardPress(
+                        item.node[' $fragmentRefs']?.PingFragmentFragment,
+                      )
+                    }
                   />
                 </View>
               )}

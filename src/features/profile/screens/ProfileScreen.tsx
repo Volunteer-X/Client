@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Pressable, Dimensions } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Avatar, Button, Icon } from '@rneui/themed';
-import { Text } from 'react-native-paper';
+import { Button, IconButton, Text } from 'react-native-paper';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import { PageNames } from '../../../lib';
 import UserFeeds from './UserFeeds';
+import { useAppSelector } from '@app/hooks';
+import { Avatar } from '@app/components';
+import { AppIcons } from '@app/theme/icon';
 
 const StatView = ({
   statCount,
@@ -34,26 +37,36 @@ const TabIcon = (
   },
   routeName: string,
 ): React.JSX.Element => {
-  let iconName: string, iconType: string;
+  let iconName: string;
   switch (routeName) {
     case PageNames.UserFeeds:
-      iconName = 'home';
-      iconType = 'feather';
+      iconName = 'pulse';
       break;
     case 'ActivityTab':
       iconName = 'activity';
-      iconType = 'feather';
       break;
     default:
       iconName = '';
-      iconType = '';
       break;
   }
-  return <Icon name={iconName} type={iconType} color={color} />;
+  return <Icon name={iconName} size={20} color={color} />;
 };
 
-const ProfileScreen = () => {
-  let isOwner: boolean = true; //state which controlls if the user viewing is the owner or not
+type Props = {
+  userID: string;
+};
+
+const ProfileScreen = ({ userID }: Props) => {
+  const [isOwner, setIsOwner] = useState<boolean>(false); //state which controlls if the user viewing is the owner or not
+
+  // If the userID is same as the logged in user's ID, then the user is the owner
+  const { user } = useAppSelector(state => state.root.auth);
+
+  useEffect(() => {
+    if (user?.id === userID) {
+      setIsOwner(true);
+    }
+  }, [user?.id, userID]);
 
   const Tab = createMaterialTopTabNavigator();
 
@@ -62,69 +75,22 @@ const ProfileScreen = () => {
       {/* Profile Header */}
       <View style={styles.profileHeaderContainer}>
         {/* If the account is accessed by the account-owner */}
-        {isOwner ? (
-          <Button
-            icon={{
-              name: 'square-edit-outline',
-              type: 'material-community',
-              size: 24,
-              color: '#FFF',
-            }}
-            radius="md"
-            containerStyle={{
-              position: 'absolute',
-              right: 0,
-              top: 0,
-              padding: 10,
-            }}
-            type="clear"
-          />
-        ) : (
-          ''
+        {isOwner && (
+          // Edit Profile Button
+          <IconButton icon={AppIcons.EDIT} size={128} />
         )}
-        <Avatar
-          rounded
-          size={'large'}
-          source={require('@assets/images/placeholder.jpg')}
-        />
-        <Text variant="titleLarge">Amil Muhammed Hamza</Text>
-        <Text variant="bodySmall">@docren155</Text>
+        <Avatar size={108} uri={user?.picture} />
+        <Text variant="titleLarge">{`${user?.firstName} ${user?.lastName}`}</Text>
+        <Text variant="bodySmall">{`@${user?.username}`}</Text>
         <View style={styles.statsContainer}>
-          <StatView statCount={234} statLabel="Followers" />
-          <StatView statCount={123} statLabel="Following" />
+          {/* <StatView statCount={234} statLabel="Followers" />
+          <StatView statCount={123} statLabel="Following" /> */}
           <StatView statCount={2} statLabel="Activities" />
         </View>
         <View style={styles.headerActionContainer}>
-          <Button
-            title={'Follow'}
-            icon={{
-              name: 'user-plus',
-              type: 'feather',
-              size: 15,
-              color: 'white',
-            }}
-            radius="md"
-            iconContainerStyle={actionStyle.iconContainerStyle}
-            titleStyle={actionStyle.titleStyle}
-            buttonStyle={actionStyle.buttonStyle}
-            containerStyle={actionStyle.containerStyle}
-          />
+          <Button>Follow</Button>
 
-          <Button
-            title={'Characters'}
-            icon={{
-              name: 'infinite',
-              type: 'ionicon',
-              size: 15,
-              color: '#FFF',
-            }}
-            radius="md"
-            iconContainerStyle={actionStyle.iconContainerStyle}
-            titleStyle={actionStyle.titleStyle}
-            buttonStyle={actionStyle.buttonStyle}
-            containerStyle={actionStyle.containerStyle}
-            type="outline"
-          />
+          <Button mode="outlined">Picks</Button>
         </View>
       </View>
       {/* Profile tabs */}

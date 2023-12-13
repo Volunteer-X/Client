@@ -1,3 +1,7 @@
+import {
+  PingFragmentFragment,
+  UserFragmentFragment,
+} from '@app/__generated__/gql/graphql';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import type {
@@ -108,7 +112,11 @@ export type BottomTabStackScreenProps<T extends keyof BottomTabParamList> =
 // * Activity
 export type ActivityStackParamList = {
   Activities: undefined;
-  ActivityScreen: undefined;
+  ActivityScreen: {
+    activityID?: string;
+    activity?: PingFragmentFragment;
+    owner?: UserFragmentFragment;
+  };
   ActivityMembers: undefined;
   ActivitySetting: undefined;
   Profile: undefined;

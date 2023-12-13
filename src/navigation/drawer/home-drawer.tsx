@@ -19,16 +19,19 @@ import BottomTabNavigation from '../bottom-tab';
 
 import { SIZES } from '@app/lib/index';
 import { ProfileScreen, SettingScreen } from '@features/index';
-import UserAvatar from '@app/components/user-avatar';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
 import { AppIcons } from '@app/theme/icon';
 import { DrawerParamList } from '@ts-types/type';
+import { useAppSelector } from '@app/hooks';
+import { Avatar } from '@app/components';
 
 function HomeDrawerContent(props: DrawerContentComponentProps) {
   const { clearSession } = useAuth0();
 
   const { theme } = useAppTheme();
+
+  const { user } = useAppSelector(state => state.root.auth);
 
   const styles = makeStyles(theme);
   const onLogout = useCallback(async () => {
@@ -45,10 +48,9 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
     <View style={{ flex: 1 }}>
       <DrawerContentScrollView {...props} contentContainerStyle={{}}>
         <View style={styles.container}>
-          <UserAvatar
-            source={{
-              uri: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png',
-            }}
+          <Avatar
+            uri={user?.picture}
+            name={user?.firstName}
             onPress={() => {}}
             size={SIZES.xxLarge * 1.5}
           />
@@ -61,9 +63,9 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
             onPress={() => {}}
           /> */}
           <View style={styles.nameContainer}>
-            <Text variant="bodyLarge">Amil Muhammed Hamza</Text>
+            <Text variant="bodyLarge">{`${user?.firstName} ${user?.lastName}`}</Text>
             <Text style={styles.username} variant="bodySmall">
-              @docren155
+              {`@${user?.username}`}
             </Text>
           </View>
           <View style={styles.statContainer}>

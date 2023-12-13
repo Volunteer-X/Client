@@ -1,5 +1,5 @@
 import { ImageBackground, StatusBar, StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, IconButton, Text, TextInput } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
@@ -12,18 +12,38 @@ import {
 } from '@app/components/bottom-sheets';
 import { AppIcons } from '@app/theme/icon';
 import { ScrollView } from 'react-native-gesture-handler';
+import useAppTheme from '@app/hooks/useAppTheme';
+import { makeActivityStyles } from './activity.style';
+import { useRoute } from '@react-navigation/native';
+import { ActivityStackScreenProps } from '@ts-types/type';
+import { useAppSelector } from '@app/hooks';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
+  const { theme } = useAppTheme();
 
-  const styles = makeStyles(inset);
-
-  // Refs
-  const settingModalRef = React.useRef<BottomSheetRefProps>(null);
+  const styles = makeActivityStyles(theme, inset);
 
   // States
   const [isOwner, setIsOwner] = React.useState(false);
   const [isMember, setIsMember] = React.useState(false);
+
+  const { user: authUser } = useAppSelector(state => state.root.auth);
+
+  const route = useRoute<ActivityStackScreenProps<'ActivityScreen'>['route']>();
+  const id = route.params?.activityID;
+  const activity = route.params?.activity;
+  const owner = route.params?.owner;
+
+  // handle owner and member
+  useEffect(() => {
+    if (owner?.id === authUser?.id) {
+      setIsOwner(true);
+    }
+  }, [authUser?.id, owner?.id]);
+
+  // Refs
+  const settingModalRef = React.useRef<BottomSheetRefProps>(null);
 
   // Bottom sheet Handlers
   // Activity Setting Modal
@@ -241,7 +261,7 @@ const ActivityScreen = () => {
                 </View>
               )}
               {/* Activity Body */}
-              <ActivityCard
+              {/* <ActivityCard
                 title="Lorem ipsum"
                 text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu"
                 timestamp="2h"
@@ -258,7 +278,7 @@ const ActivityScreen = () => {
                   },
                 ]}
                 onMenuClick={handleOnMenuClick}
-              />
+              /> */}
             </View>
           </View>
         </ScrollView>
@@ -268,79 +288,3 @@ const ActivityScreen = () => {
 };
 
 export default ActivityScreen;
-
-const makeStyles = (inset: EdgeInsets) =>
-  StyleSheet.create({
-    page: {
-      // flex: 0,
-      // backgroundColor: 'blue',
-    },
-    imageBackground: {
-      width: '100%',
-      height: '100%',
-      // flex: 1,
-      zIndex: -100,
-    },
-    scrollView: {
-      paddingTop: inset.top,
-      paddingBottom: inset.bottom,
-      paddingRight: inset.right,
-      paddingLeft: inset.left,
-      // backgroundColor: 'red',
-    },
-    bodyContainer: {
-      flex: 1,
-      height: '100%',
-      // !Change to match the overall theme
-      backgroundColor: '#000',
-      // height: DIMENSIONS.fullHeight - DIMENSIONS.fullHeight / 5,
-      borderTopStartRadius: 25,
-      borderTopEndRadius: 25,
-      elevation: 2,
-      padding: 15,
-    },
-    header: {
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 1.5,
-      // backgroundColor: 'red',
-      paddingTop: PADDING.md,
-      paddingBottom: PADDING.sm,
-    },
-    activityTitle: {
-      fontWeight: 'bold',
-      color: '#000',
-    },
-    editBadge: {
-      position: 'absolute',
-      bottom: 0,
-      right: 0,
-      margin: 0,
-      backgroundColor: '#2a2a2a',
-      borderWidth: 2,
-      borderColor: 'transparent',
-      zIndex: 100,
-    },
-    avatarContainer: {},
-    avatarBorder: {
-      borderColor: '#000',
-      borderWidth: 2,
-      height: 90,
-      width: 90,
-      borderRadius: 90 / 2,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    avatar: {
-      padding: 0,
-      margin: 0,
-      elevation: 1,
-    },
-    memberContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 20,
-      paddingBottom: PADDING.sm,
-    },
-  });

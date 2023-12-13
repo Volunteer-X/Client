@@ -6,11 +6,10 @@ import { AppIcons } from '@app/theme/icon';
 import { BottomTabStackScreenProps } from '@ts-types/type';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
-import UserAvatar from '../user-avatar';
-
-const { height } = Dimensions.get('window');
+import { useAppSelector } from '@app/hooks';
+import { Avatar } from '../avatar/Avatar';
 
 // ! Typing Error
 export const HomeHeader = () => {
@@ -19,14 +18,16 @@ export const HomeHeader = () => {
   const navigation =
     useNavigation<BottomTabStackScreenProps<'Home'>['navigation']>();
 
+  const user = useAppSelector(state => state.root.auth.user);
+
   const styles = makeStyles(theme);
 
   return (
     <View style={styles.container}>
-      <UserAvatar
-        source={{
-          uri: 'https://upload.wikimedia.org/wikipedia/commons/b/b6/Image_created_with_a_mobile_phone.png',
-        }}
+      <Avatar
+        size={SIZES.xxLarge}
+        uri={user?.picture}
+        name={user?.firstName}
         onPress={() => navigation.toggleDrawer()}
       />
       <Text variant="bodyLarge" style={styles.appName}>

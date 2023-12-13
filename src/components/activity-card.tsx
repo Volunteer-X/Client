@@ -43,7 +43,7 @@ const ActivityCard = ({
   const ping = useFragment(PING_FRAGMENT, _ping);
   const creator = useFragment(USER_FRAGMENT, owner);
 
-  const { id, title, description, picks, url, media, createdAt } = ping;
+  const { title, description, picks, url, media, createdAt } = ping;
   const { username, picture, name } = creator;
 
   return (
