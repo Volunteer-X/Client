@@ -13,6 +13,7 @@ import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
 import { FragmentType, useFragment } from '@app/__generated__/gql';
 import { GraphQLURL } from 'graphql-scalars';
+import { getRelativeTime } from '@app/utils';
 
 export type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -22,7 +23,6 @@ export type ActivityCardProps = {
   text?: string;
   username?: string;
   picks?: string[];
-  timestamp: string;
   showPicks?: boolean;
   showStar?: boolean;
   ping: FragmentType<typeof PING_FRAGMENT>;
@@ -33,7 +33,6 @@ export type ActivityCardProps = {
 
 const ActivityCard = ({
   isOriginalPing = false,
-  timestamp,
   showPicks = false,
   showStar = false,
   onMenuClick,
@@ -44,10 +43,8 @@ const ActivityCard = ({
   const ping = useFragment(PING_FRAGMENT, _ping);
   const creator = useFragment(USER_FRAGMENT, owner);
 
-  const { id, title, description, picks, url, media } = ping;
+  const { id, title, description, picks, url, media, createdAt } = ping;
   const { username, picture, name } = creator;
-
-  // console.log(media[0]);
 
   return (
     <View style={{ width: '100%' }}>
@@ -64,20 +61,15 @@ const ActivityCard = ({
       <View style={styles.container}>
         {/* Left side */}
         <View style={styles.leftContainer}>
-          <Avatar
-            name={name?.firstName}
-            uri={picture}
-            size={32}
-            // style={styles.avatar}
-          />
+          <Avatar name={name?.firstName} uri={picture} size={32} />
           <Divider bold style={styles.verticalDivider} />
         </View>
         {/* Right side */}
         <View style={styles.rightContainer}>
           {/* Username, timeline, options */}
           <View style={styles.header}>
-            <Text variant="bodyLarge" style={styles.bold}>
-              {username}
+            <Text variant="bodyMedium" style={{}}>
+              {name && `${name.firstName} ${name.lastName}`}
             </Text>
             <View style={styles.starTimeAndMenu}>
               <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
@@ -91,7 +83,7 @@ const ActivityCard = ({
                 />
               )}
               <Text variant="bodySmall" style={{}}>
-                {`${timestamp} ago`}
+                {createdAt && getRelativeTime(createdAt as Date)}
               </Text>
               <Ionicons
                 name="ellipsis-horizontal"
@@ -162,7 +154,7 @@ const ActivityCard = ({
               />
             )}
             {/* Media */}
-            {media && media !== null && (
+            {media && media !== null && media.length > 0 && (
               <View
                 hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
                 style={{
@@ -209,7 +201,7 @@ const styles = StyleSheet.create({
     gap: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginVertical: 2,
   },
 
   leftContainer: {
@@ -236,7 +228,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    // backgroundColor: 'green',
   },
   bold: {
     fontWeight: 'bold',

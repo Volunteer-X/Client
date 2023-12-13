@@ -154,6 +154,8 @@ export const ActivityListScreen = () => {
                     text={''}
                     username={''}
                     timestamp="2h"
+                    showPicks
+                    showStar
                     // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
                     onMenuClick={() => {
                       settingModalRef.current?.openModal();

@@ -9,10 +9,10 @@ type Media = {
   type: string;
 } | null;
 
-export const useS3Download = (medias: Media[]) => {
+export const useS3Download = () => {
   const [isDownloading, setIsDownloading] = useState(true);
   const [urls, setUrls] = useState<
-    { uri: string; key: string }[] | undefined
+    { uri: string; type: string }[] | undefined
   >();
 
   const accessToken = useAppSelector(state => state.root.auth.accessToken);
@@ -36,7 +36,7 @@ export const useS3Download = (medias: Media[]) => {
           },
         );
 
-        return { uri: response.data.uri, key };
+        return response.data.uri;
       } catch (error) {
         throw new Error(`Error getting download url: ${error}`);
       }
@@ -44,34 +44,49 @@ export const useS3Download = (medias: Media[]) => {
     [accessToken],
   );
 
-  const handleDownload = useCallback(async () => {
-    setIsDownloading(true);
+  const downloadFile = async (media: Media) => {
     try {
-      const download: Promise<{ uri: string; key: string }>[] = medias.map(
-        media => {
-          console.log('media', media);
-          if (media !== undefined && media !== null) {
-            return getS3DownloadUrl(media.type, media.key);
-          }
-          return new Promise<{ uri: string; key: string }>(resolve =>
-            resolve({ uri: '', key: '' }),
-          );
-        },
-      );
+      if (media) {
+        const download = await getS3DownloadUrl(
+          media?.type ?? '',
+          media?.key ?? '',
+        );
 
-      const results = await Promise.all(download);
+        // console.log('download', download);
 
-      setUrls(results.filter(Boolean));
+        return download;
+      }
     } catch (error) {
       console.error(error);
     } finally {
       setIsDownloading(false);
     }
-  }, [getS3DownloadUrl, medias]);
+  };
 
-  useEffect(() => {
-    handleDownload();
-  }, [handleDownload, isDownloading]);
+  const downloadFiles = async (medias: Media[]) => {
+    setIsDownloading(true);
+    try {
+      const download = medias.map(media =>
+        getS3DownloadUrl(media?.type ?? '', media?.key ?? ''),
+      );
 
-  return { isDownloading, urls };
+      const results = await Promise.all(download);
+
+      console.log('results', results);
+
+      // setUrls(results);
+
+      return results;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   handleDownload();
+  // }, [handleDownload, isDownloading]);
+
+  return { isDownloading, urls, downloadFiles, downloadFile };
 };

@@ -3,7 +3,7 @@ import Video, { VideoProperties } from 'react-native-video';
 
 interface VideoPlayerProps extends Omit<VideoProperties, 'source'> {
   timeStampMilliSec?: number;
-  source: { uri: string; headers?: { [key: string]: string } };
+  source: { uri?: string; headers?: { [key: string]: string } };
 }
 
 export const VideoPlayer = ({

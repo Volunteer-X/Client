@@ -8,6 +8,8 @@ import FastImage from 'react-native-fast-image';
 import { ActivityIndicator } from 'react-native-paper';
 import SwiperFlatlist from '../swiper-flatlist';
 import { SwiperFlatlistProps } from '../swiper-flatlist.props';
+import { MediaViewRenderItem } from './media-view-renderItem';
+import { makeStyles } from './media-view.style';
 
 interface MediaViewProps extends SwiperFlatlistProps<Media> {
   media: ({
@@ -20,46 +22,14 @@ interface MediaViewProps extends SwiperFlatlistProps<Media> {
 export const MediaView = ({ media, ...props }: MediaViewProps) => {
   const [calculatedWidth, setCalculatedWidth] = useState(0);
 
-  const styles = makeStyles(calculatedWidth);
+  // const styles = makeStyles(calculatedWidth);
 
-  //   const { urls, isDownloading } = useS3Download(media);
-
-  // console.log('MediaView urls', urls);
-
-  const _renderItem: ListRenderItem<{ uri: string; type: string }> =
-    useCallback(
-      ({ item }) => {
-        // Convert item to apporpriate type
-        const type = item.type.split('/')[0];
-
-        switch (type) {
-          case AppMediaTypes.IMAGE.toLowerCase():
-            return (
-              <View style={styles.renderItemContainer}>
-                <FastImage
-                  source={{ uri: item.uri }}
-                  resizeMode={FastImage.resizeMode.cover}
-                  style={styles.renderItemMedia}
-                />
-              </View>
-            );
-          case AppMediaTypes.VIDEO.toLowerCase():
-            return (
-              <View style={styles.renderItemContainer}>
-                <VideoPlayer
-                  source={{ uri: item.uri }}
-                  style={styles.renderItemMedia}
-                  muted
-                  resizeMode="cover"
-                />
-              </View>
-            );
-          default:
-            return <></>;
-        }
-      },
-      [styles.renderItemContainer, styles.renderItemMedia],
-    );
+  const _renderItem: ListRenderItem<Media> = useCallback(
+    ({ item }) => (
+      <MediaViewRenderItem media={item} calculatedWidth={calculatedWidth} />
+    ),
+    [calculatedWidth],
+  );
 
   return (
     <>
@@ -73,6 +43,7 @@ export const MediaView = ({ media, ...props }: MediaViewProps) => {
           <SwiperFlatlist
             data={media}
             showPagination
+            keyExtractor={item => item?.key}
             {...props}
             renderItem={_renderItem}
           />
@@ -81,16 +52,3 @@ export const MediaView = ({ media, ...props }: MediaViewProps) => {
     </>
   );
 };
-
-const makeStyles = (calculatedWidth: number) =>
-  StyleSheet.create({
-    renderItemContainer: {
-      flexDirection: 'column',
-      width: calculatedWidth,
-      justifyContent: 'flex-start',
-    },
-    renderItemMedia: {
-      height: HEIGHTS.postMedia,
-      width: '100%',
-    },
-  });
