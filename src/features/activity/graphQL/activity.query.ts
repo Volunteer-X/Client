@@ -10,11 +10,33 @@ export const GET_ALL_PING = gql(`
       edges {
         cursor
         node {
-          ...PingFragment
+          id
+        title
+        description
+        createdAt
+        latitude
+        longitude
+        media {
+            key
+            type
+        }
+        picks
+        radius
+        url
         }
       }
       owner {
-        ...UserFragment
+        id
+        createdAt
+        username
+        email
+        name {
+            firstName
+            lastName
+            middleName
+        }
+        picture
+        picks
       }
     }
   }

@@ -14,7 +14,7 @@ import { AppIcons } from '@app/theme/icon';
 import { ScrollView } from 'react-native-gesture-handler';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { makeActivityStyles } from './activity.style';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { ActivityStackScreenProps } from '@ts-types/type';
 import { useAppSelector } from '@app/hooks';
 
@@ -30,7 +30,10 @@ const ActivityScreen = () => {
 
   const { user: authUser } = useAppSelector(state => state.root.auth);
 
+  const navigation =
+    useNavigation<ActivityStackScreenProps<'ActivityScreen'>['navigation']>();
   const route = useRoute<ActivityStackScreenProps<'ActivityScreen'>['route']>();
+  // route params
   const id = route.params?.activityID;
   const activity = route.params?.activity;
   const owner = route.params?.owner;
@@ -39,6 +42,7 @@ const ActivityScreen = () => {
   useEffect(() => {
     if (owner?.id === authUser?.id) {
       setIsOwner(true);
+      setIsMember(true);
     }
   }, [authUser?.id, owner?.id]);
 
@@ -60,7 +64,7 @@ const ActivityScreen = () => {
       <StatusBar translucent backgroundColor="transparent" />
 
       <ImageBackground
-        source={require('@assets/images/activity-bg.png')}
+        source={require('@assets/images/gradient.png')}
         resizeMode="cover"
         style={styles.imageBackground}>
         <ScrollView
@@ -84,53 +88,32 @@ const ActivityScreen = () => {
                   right: 10,
                   gap: 5,
                 }}>
-                {/* Show add only if you are member */}
+                {/* Show add only if you are not a member or not the owner */}
                 {!isOwner && !isMember && (
                   <Ionicon
                     name={AppIcons.PERSON_ADD}
                     size={24}
-                    style={{
-                      color: '#FFF',
-                      backgroundColor: '#000',
-                      borderRadius: 50,
-                      padding: 10,
-                    }}
+                    style={styles.actions}
                   />
                 )}
-                {/* show  */}
+                {/* show setting, only if owner  */}
                 {isOwner && (
                   <Ionicon
                     name={AppIcons.SETTINGS}
                     size={24}
-                    style={{
-                      color: '#FFF',
-                      backgroundColor: '#000',
-                      borderRadius: 50,
-                      padding: 10,
-                    }}
+                    style={styles.actions}
                   />
                 )}
                 <Ionicon
                   name={AppIcons.FORUM}
                   size={24}
-                  style={{
-                    color: '#FFF',
-                    backgroundColor: '#000',
-                    borderRadius: 50,
-                    padding: 10,
-                  }}
+                  style={styles.actions}
                 />
               </View>
               <View style={[styles.avatarContainer]}>
                 <View style={styles.avatarBorder}>
                   <Avatar size={75} showBorder borderColor="#000" />
                 </View>
-                {/* <IconButton
-                  icon={AppIcons.PENCIL}
-                  size={16}
-                  iconColor="#b2b2b2"
-                  style={styles.editBadge}
-                /> */}
               </View>
               <Text variant="bodyLarge" style={styles.activityTitle}>
                 Activity Name
@@ -156,7 +139,7 @@ const ActivityScreen = () => {
                   gap: 2.5,
                   marginTop: 5,
                 }}>
-                {Picks.slice(9, 14).map(pick => (
+                {picks.map(pick => (
                   <PicksIcon key={pick.label} icon={pick.icon} size={20} />
                 ))}
               </View>
@@ -216,10 +199,10 @@ const ActivityScreen = () => {
                     marginBottom: 10,
                     gap: 10,
                   }}>
-                  <Avatar.Image
-                    source={require('@assets/images/placeholder.jpg')}
+                  <Avatar
+                    uri={owner?.picture}
                     size={32}
-                    style={styles.avatar}
+                    // style={styles.avatar}
                   />
                   <TextInput
                     mode="flat"

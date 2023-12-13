@@ -1,3 +1,5 @@
+import { PING_FRAGMENT, USER_FRAGMENT } from '@app/lib';
+import { FragmentType } from '@app/__generated__/gql';
 import {
   PingFragmentFragment,
   UserFragmentFragment,
@@ -9,6 +11,7 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
+import { Activity, User } from './entities';
 import { Point } from './utility-types';
 
 /*
@@ -114,8 +117,8 @@ export type ActivityStackParamList = {
   Activities: undefined;
   ActivityScreen: {
     activityID?: string;
-    activity?: PingFragmentFragment;
-    owner?: UserFragmentFragment;
+    activity?: Activity;
+    owner?: User;
   };
   ActivityMembers: undefined;
   ActivitySetting: undefined;

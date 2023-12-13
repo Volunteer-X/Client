@@ -19,6 +19,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_PING } from '../graphQL/activity.query';
 import LottieView from 'lottie-react-native';
 import { Media, PingFragmentFragment } from '@app/__generated__/gql/graphql';
+import { Activity } from '@app/types/entities';
 
 export const ActivityListScreen = () => {
   // Navigation
@@ -41,7 +42,9 @@ export const ActivityListScreen = () => {
   });
 
   useEffect(() => {
-    console.log('data', data?.getAllPing.edges.length);
+    // console.log('data', data?.getAllPing.edges.length);
+    // console.log('type', data?.getAllPing.owner);
+
     console.log('loading', loading);
   }, [data, loading]);
 
@@ -64,11 +67,11 @@ export const ActivityListScreen = () => {
   const settingModalRef = useRef<BottomSheetRefProps>(null);
 
   const handleOnCardPress = useCallback(
-    (item?: PingFragmentFragment) => {
+    (item: Activity) => {
       navigation.navigate('ActivityScreen', {
         activityID: item?.id,
         activity: item,
-        owner: data?.getAllPing.owner[' $fragmentRefs']?.UserFragmentFragment,
+        owner: data?.getAllPing.owner,
       });
     },
     [data?.getAllPing.owner, navigation],
@@ -167,18 +170,14 @@ export const ActivityListScreen = () => {
               renderItem={({ item }) => (
                 <View style={styles.cardView}>
                   <ActivityCard
-                    ping={item.node}
+                    activity={item.node}
                     creator={data?.getAllPing.owner}
                     showPicks
                     showStar
                     onMenuClick={() => {
                       settingModalRef.current?.openModal();
                     }}
-                    onPress={() =>
-                      handleOnCardPress(
-                        item.node[' $fragmentRefs']?.PingFragmentFragment,
-                      )
-                    }
+                    onPress={() => handleOnCardPress(item.node)}
                   />
                 </View>
               )}

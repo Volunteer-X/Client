@@ -14,6 +14,11 @@ import { Avatar } from './avatar/Avatar';
 import { FragmentType, useFragment } from '@app/__generated__/gql';
 import { GraphQLURL } from 'graphql-scalars';
 import { getRelativeTime } from '@app/utils';
+import {
+  PingFragmentFragment,
+  UserFragmentFragment,
+} from '@app/__generated__/gql/graphql';
+import { Activity, User } from '@app/types/entities';
 
 export type ActivityCardProps = {
   isOriginalPing?: boolean;
@@ -25,8 +30,8 @@ export type ActivityCardProps = {
   picks?: string[];
   showPicks?: boolean;
   showStar?: boolean;
-  ping: FragmentType<typeof PING_FRAGMENT>;
-  creator: FragmentType<typeof USER_FRAGMENT>;
+  activity: Activity;
+  creator: User;
   onMenuClick?: () => void;
   onPress?: () => void;
 };
@@ -37,13 +42,10 @@ const ActivityCard = ({
   showStar = false,
   onMenuClick,
   onPress,
-  ping: _ping,
-  creator: owner,
+  activity,
+  creator,
 }: ActivityCardProps) => {
-  const ping = useFragment(PING_FRAGMENT, _ping);
-  const creator = useFragment(USER_FRAGMENT, owner);
-
-  const { title, description, picks, url, media, createdAt } = ping;
+  const { title, description, picks, url, media, createdAt } = activity;
   const { username, picture, name } = creator;
 
   return (

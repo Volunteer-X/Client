@@ -129,4 +129,10 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
       gap: 20,
       paddingBottom: PADDING.sm,
     },
+    actions: {
+      color: '#FFF',
+      backgroundColor: '#000',
+      borderRadius: 50,
+      padding: 10,
+    },
   });
