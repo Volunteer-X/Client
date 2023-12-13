@@ -17,6 +17,8 @@ import { makeActivityStyles } from './activity.style';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { ActivityStackScreenProps } from '@ts-types/type';
 import { useAppSelector } from '@app/hooks';
+import DefualtErrorScreen from '@app/components/defualt-error';
+import { findPickFromLabel } from '@app/utils/pick-finder';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -58,6 +60,10 @@ const ActivityScreen = () => {
       settingModalRef.current.openModal();
     }
   };
+
+  if (!activity || !owner) {
+    return <DefualtErrorScreen />;
+  }
 
   return (
     <View style={[styles.page]}>
@@ -116,7 +122,7 @@ const ActivityScreen = () => {
                 </View>
               </View>
               <Text variant="bodyLarge" style={styles.activityTitle}>
-                Activity Name
+                {activity.title}
               </Text>
               <View style={{ flexDirection: 'row' }}>
                 <Text variant="bodySmall" style={{ color: '#000' }}>
@@ -125,7 +131,9 @@ const ActivityScreen = () => {
                     style={{
                       fontWeight: '800',
                       color: '#000',
-                    }}>{`username`}</Text>
+                    }}>
+                    {owner.username}
+                  </Text>
                   {'  |  '}
                   <Text
                     variant="bodySmall"
@@ -139,9 +147,14 @@ const ActivityScreen = () => {
                   gap: 2.5,
                   marginTop: 5,
                 }}>
-                {picks.map(pick => (
-                  <PicksIcon key={pick.label} icon={pick.icon} size={20} />
-                ))}
+                {activity.picks &&
+                  activity.picks.map(pick => (
+                    <PicksIcon
+                      key={pick}
+                      icon={findPickFromLabel(pick).icon}
+                      size={20}
+                    />
+                  ))}
               </View>
             </View>
             {/* Member container */}
