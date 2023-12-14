@@ -20,6 +20,7 @@ import { GET_ALL_PING } from '../graphQL/activity.query';
 import LottieView from 'lottie-react-native';
 import { Media, PingFragmentFragment } from '@app/__generated__/gql/graphql';
 import { Activity } from '@app/types/entities';
+import { debounce, throttle } from 'lodash';
 
 export const ActivityListScreen = () => {
   // Navigation
@@ -44,8 +45,7 @@ export const ActivityListScreen = () => {
   useEffect(() => {
     // console.log('data', data?.getAllPing.edges.length);
     // console.log('type', data?.getAllPing.owner);
-
-    console.log('loading', loading);
+    // console.log('loading', loading);
   }, [data, loading]);
 
   const fetchMoreData = useCallback(() => {
@@ -161,8 +161,8 @@ export const ActivityListScreen = () => {
               stickyHeaderIndices={[0]}
               stickyHeaderHiddenOnScroll
               ListEmptyComponent={renderEmptyComponent}
-              // onEndReachedThreshold={0.8}
-              // onEndReached={fetchMoreData}
+              onEndReachedThreshold={0.8}
+              onEndReached={fetchMoreData}
               data={data?.getAllPing.edges}
               // keyExtractor={item =>
               //   `${item.node[' $fragmentRefs']?.PingFragmentFragment.createdAt}-activity}`

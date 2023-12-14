@@ -69,9 +69,10 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
     scrollView: {
       paddingTop: inset.top,
-      paddingBottom: inset.bottom,
+      marginBottom: inset.bottom,
       paddingRight: inset.right,
       paddingLeft: inset.left,
+      // paddingBottom: 1000,
       // backgroundColor: 'red',
     },
     bodyContainer: {
@@ -84,6 +85,7 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
       borderTopEndRadius: 25,
       elevation: 2,
       padding: 15,
+      paddingBottom: 50,
     },
     header: {
       justifyContent: 'center',
@@ -96,6 +98,11 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
     activityTitle: {
       fontWeight: 'bold',
       color: '#000',
+      alignItems: 'center',
+      textAlign: 'center',
+      marginHorizontal: 70,
+      flexWrap: 'wrap',
+      // backgroundColor: '#FFF',
     },
     editBadge: {
       position: 'absolute',
@@ -128,6 +135,21 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
       alignItems: 'center',
       gap: 20,
       paddingBottom: PADDING.sm,
+    },
+    headerFloat: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'flex-start',
+      padding: 15,
+      marginTop: inset.top,
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      gap: 5,
+      width: '100%',
+      zIndex: 100,
+      // backgroundColor: 'red',
     },
     actions: {
       color: '#FFF',

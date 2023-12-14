@@ -17,23 +17,17 @@ export const MediaViewRenderItem = ({ media, calculatedWidth }: Props) => {
 
   const type = mime.split('/')[0];
 
-  const { downloadFile } = useS3Download();
+  const { url } = useS3Download(media);
 
-  const [uri, setUri] = React.useState<string | undefined>();
-
-  useEffect(() => {
-    downloadFile(media).then(res => {
-      setUri(res);
-    });
-  }, [downloadFile, media, uri]);
+  // const [uri, setUri] = React.useState<string | undefined>();
 
   switch (type) {
     case AppMediaTypes.IMAGE.toLowerCase():
       return (
         <View style={styles.renderItemContainer}>
           <FastImage
-            source={{ uri }}
-            onProgress={e => console.log('e', e.nativeEvent)}
+            source={{ uri: url }}
+            // onProgress={e => console.log('e', e.nativeEvent)}
             resizeMode={FastImage.resizeMode.cover}
             style={styles.renderItemMedia}
           />
@@ -43,7 +37,7 @@ export const MediaViewRenderItem = ({ media, calculatedWidth }: Props) => {
       return (
         <View style={styles.renderItemContainer}>
           <VideoPlayer
-            source={{ uri }}
+            source={{ uri: url }}
             style={styles.renderItemMedia}
             muted
             resizeMode="cover"

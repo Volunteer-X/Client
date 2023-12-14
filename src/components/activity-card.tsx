@@ -1,23 +1,17 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import React from 'react';
 import { Button, Divider, Text } from 'react-native-paper';
-import { PADDING, Picks, PING_FRAGMENT, USER_FRAGMENT } from '@app/lib';
+import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { LinkPreview } from '@flyerhq/react-native-link-preview';
 import { Image } from 'react-native';
-import { MediaFlatlist, MediaView } from './swiper-flatlist';
+import { MediaView } from './swiper-flatlist';
 import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
-import { FragmentType, useFragment } from '@app/__generated__/gql';
-import { GraphQLURL } from 'graphql-scalars';
 import { getRelativeTime } from '@app/utils';
-import {
-  PingFragmentFragment,
-  UserFragmentFragment,
-} from '@app/__generated__/gql/graphql';
 import { Activity, User } from '@app/types/entities';
 
 export type ActivityCardProps = {
@@ -30,6 +24,7 @@ export type ActivityCardProps = {
   picks?: string[];
   showPicks?: boolean;
   showStar?: boolean;
+  isMember?: boolean;
   activity: Activity;
   creator: User;
   onMenuClick?: () => void;
@@ -44,9 +39,9 @@ const ActivityCard = ({
   onPress,
   activity,
   creator,
+  isMember,
 }: ActivityCardProps) => {
   const { title, description, picks, url, media, createdAt } = activity;
-  const { username, picture, name } = creator;
 
   return (
     <View style={{ width: '100%' }}>
@@ -63,7 +58,11 @@ const ActivityCard = ({
       <View style={styles.container}>
         {/* Left side */}
         <View style={styles.leftContainer}>
-          <Avatar name={name?.firstName} uri={picture} size={32} />
+          <Avatar
+            name={creator?.name?.firstName}
+            uri={creator?.picture}
+            size={32}
+          />
           <Divider bold style={styles.verticalDivider} />
         </View>
         {/* Right side */}
@@ -71,12 +70,19 @@ const ActivityCard = ({
           {/* Username, timeline, options */}
           <View style={styles.header}>
             <Text variant="bodyMedium" style={{}}>
-              {name && `${name.firstName} ${name.lastName}`}
+              {creator?.name &&
+                `${creator.name.firstName} ${creator.name.lastName}`}
             </Text>
             <View style={styles.starTimeAndMenu}>
-              <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
-                Join
-              </Button>
+              {isMember ? (
+                <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
+                  Join
+                </Button>
+              ) : (
+                <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
+                  Forum
+                </Button>
+              )}
               {showStar && isOriginalPing && (
                 <AntDesign
                   name="star"

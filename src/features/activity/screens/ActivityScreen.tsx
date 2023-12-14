@@ -73,6 +73,34 @@ const ActivityScreen = () => {
         source={require('@assets/images/gradient.png')}
         resizeMode="cover"
         style={styles.imageBackground}>
+        {/* Actions */}
+        <View style={styles.headerFloat}>
+          <Ionicon
+            name={AppIcons.ARROW_BACK}
+            size={24}
+            style={[styles.actions]}
+            onPress={() => navigation.goBack()}
+          />
+          {/* Show add only if you are not a member or not the owner */}
+          <View style={{ flexDirection: 'column', gap: 10 }}>
+            {!isOwner && !isMember && (
+              <Ionicon
+                name={AppIcons.PERSON_ADD}
+                size={24}
+                style={styles.actions}
+              />
+            )}
+            {/* show setting, only if owner  */}
+            {isOwner && (
+              <Ionicon
+                name={AppIcons.SETTINGS}
+                size={24}
+                style={styles.actions}
+              />
+            )}
+            <Ionicon name={AppIcons.FORUM} size={24} style={styles.actions} />
+          </View>
+        </View>
         <ScrollView
           showsVerticalScrollIndicator={false}
           overScrollMode="never"
@@ -84,44 +112,16 @@ const ActivityScreen = () => {
 
             {/* Avatar and Activity Title  */}
             <View style={styles.header}>
-              <View
-                style={{
-                  alignItems: 'center',
-                  padding: 0,
-                  margin: 15,
-                  position: 'absolute',
-                  top: 10,
-                  right: 10,
-                  gap: 5,
-                }}>
-                {/* Show add only if you are not a member or not the owner */}
-                {!isOwner && !isMember && (
-                  <Ionicon
-                    name={AppIcons.PERSON_ADD}
-                    size={24}
-                    style={styles.actions}
-                  />
-                )}
-                {/* show setting, only if owner  */}
-                {isOwner && (
-                  <Ionicon
-                    name={AppIcons.SETTINGS}
-                    size={24}
-                    style={styles.actions}
-                  />
-                )}
-                <Ionicon
-                  name={AppIcons.FORUM}
-                  size={24}
-                  style={styles.actions}
-                />
-              </View>
               <View style={[styles.avatarContainer]}>
                 <View style={styles.avatarBorder}>
                   <Avatar size={75} showBorder borderColor="#000" />
                 </View>
               </View>
-              <Text variant="bodyLarge" style={styles.activityTitle}>
+              <Text
+                variant="bodyLarge"
+                numberOfLines={2}
+                ellipsizeMode="tail"
+                style={styles.activityTitle}>
                 {activity.title}
               </Text>
               <View style={{ flexDirection: 'row' }}>
@@ -200,7 +200,7 @@ const ActivityScreen = () => {
             {/* Body container */}
             <View style={styles.bodyContainer}>
               {/* Update option, only for owner */}
-              {isOwner && (
+              {/* {isOwner && (
                 <View
                   style={{
                     flexDirection: 'row',
@@ -228,7 +228,7 @@ const ActivityScreen = () => {
                   />
                   <Button>Post</Button>
                 </View>
-              )}
+              )} */}
               {!isOwner && (
                 <View
                   style={{
@@ -257,24 +257,13 @@ const ActivityScreen = () => {
                 </View>
               )}
               {/* Activity Body */}
-              {/* <ActivityCard
-                title="Lorem ipsum"
-                text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibu"
-                timestamp="2h"
-                // url="https://www.youtube.com/watch?v=QwievZ1Tx-8"
-                username="docren155"
-                media={[
-                  {
-                    uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                    type: 'image/jpeg',
-                  },
-                  {
-                    uri: 'https://i.ytimg.com/vi/QwievZ1Tx-8/maxresdefault.jpg',
-                    type: 'image/jpeg',
-                  },
-                ]}
+              <ActivityCard
+                activity={activity}
+                creator={owner}
+                isOriginalPing
+                showStar
                 onMenuClick={handleOnMenuClick}
-              /> */}
+              />
             </View>
           </View>
         </ScrollView>
