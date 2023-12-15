@@ -51,8 +51,6 @@ function tabBarIcon({
 const BottomTabNavigation = () => {
   const { theme } = useAppTheme();
 
-  const styles = makeStyles(theme);
-
   const Tab = createBottomTabNavigator<BottomTabParamList>();
 
   return (
@@ -101,5 +99,3 @@ const BottomTabNavigation = () => {
 };
 
 export default BottomTabNavigation;
-
-const makeStyles = (theme: AppTheme) => StyleSheet.create({});

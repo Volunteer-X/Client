@@ -38,6 +38,8 @@ export const GeoLocationProvider = ({ children }: any) => {
         : PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
     );
 
+    console.log('status', status);
+
     return status;
   }, []);
 
