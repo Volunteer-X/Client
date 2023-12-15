@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
+import { usePermissions } from '@app/context';
 import { useAppSelector } from '@app/hooks';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
@@ -18,6 +19,10 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   const styles = makeStyles(theme, inset);
 
   const { user, accessToken } = useAppSelector(state => state.root.auth);
+
+  const permissions = usePermissions();
+
+  console.log('permissions', permissions);
 
   const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 

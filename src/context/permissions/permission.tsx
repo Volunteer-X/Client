@@ -26,8 +26,13 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
 
   const checkPermissions = useCallback(async () => {
     checkMultiple(PERMISSION_LIST).then(statuses => {
+      // if (statuses['android.permission.ACCESS_FINE_LOCATION'] === 'granted') {
+      //   setPermissions({
+      //     'android.permission.ACCESS_FINE_LOCATION': 'granted',
+      //   });
+      // }
       if (
-        Object.keys(statuses).every(
+        Object.keys(statuses).some(
           (key: string) => statuses[key as Permission] !== 'granted',
         )
       ) {
@@ -45,6 +50,7 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
           (key: string) => statuses[key as Permission] !== 'granted',
         )
       ) {
+        setPermissions(statuses);
       } else {
         setPermissions(statuses);
       }
