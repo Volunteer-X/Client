@@ -12,7 +12,6 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { currentLocationSlice } from '../src/features/maps';
-import { permissionSlice } from '../src/features/permissions';
 import { authSlice } from '@features/auth';
 
 const persistConfig = {
@@ -30,7 +29,6 @@ const persistedReducer = persistReducer(
 export const store = configureStore({
   reducer: {
     currentLocation: currentLocationSlice,
-    permissions: permissionSlice,
     root: persistedReducer,
   },
   middleware: getDefaultMiddleware =>

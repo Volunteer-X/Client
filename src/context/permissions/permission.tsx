@@ -14,6 +14,7 @@ import React, {
 import {
   checkMultiple,
   Permission,
+  request,
   requestMultiple,
 } from 'react-native-permissions';
 
@@ -45,15 +46,16 @@ export const PermissionProvider = ({ children }: { children: ReactNode }) => {
 
   const requestPermissions = async () => {
     requestMultiple(PERMISSION_LIST).then(statuses => {
-      if (
-        Object.keys(statuses).every(
-          (key: string) => statuses[key as Permission] !== 'granted',
-        )
-      ) {
-        setPermissions(statuses);
-      } else {
-        setPermissions(statuses);
-      }
+      // if (
+      //   Object.keys(statuses).every(
+      //     (key: string) => statuses[key as Permission] !== 'granted',
+      //   )
+      // ) {
+      //   setPermissions(statuses);
+      // } else {
+      //   setPermissions(statuses);
+      // }
+      setPermissions(statuses);
     });
   };
 
