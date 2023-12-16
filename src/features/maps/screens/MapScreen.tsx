@@ -33,8 +33,6 @@ const MapScreen = () => {
   //   throw new Error('No coords');
   // }
 
-  console.log('coords', coords);
-
   const [currentLocation, setCurrentLocation] = useState<number[]>();
 
   useEffect(() => {

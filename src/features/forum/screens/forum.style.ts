@@ -1,6 +1,6 @@
 import { PADDING, SIZES } from '@app/lib';
 import { AppTheme } from '@app/theme';
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 export const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
@@ -83,5 +83,56 @@ export const makeStyles = (theme: AppTheme) =>
     timestamp: {
       color: '#FFF',
       opacity: 0.5,
+    },
+  });
+
+export const makeBubbleStyles = (theme: AppTheme) =>
+  StyleSheet.create({
+    standardFont: { fontSize: theme.fonts.bodyMedium.fontSize },
+    container: {
+      flex: 1,
+      alignItems: 'flex-start',
+    },
+    wrapper: {
+      marginRight: 60,
+      minHeight: 20,
+      justifyContent: 'flex-end',
+    },
+    name: {
+      fontWeight: 'bold',
+    },
+    time: {
+      fontSize: SIZES.xSmall,
+      opacity: 0.5,
+      textAlign: 'left',
+    },
+    timeContainer: {
+      marginLeft: 0,
+      marginRight: 0,
+      marginBottom: 0,
+    },
+    headerItem: {
+      marginRight: 10,
+    },
+    headerView: {
+      marginTop: Platform.OS === 'android' ? -2 : 0,
+      flexDirection: 'row',
+      alignItems: 'baseline',
+    },
+  });
+
+export const makeMessageStyles = (theme: AppTheme) =>
+  StyleSheet.create({
+    container: {
+      flexDirection: 'row',
+      alignItems: 'flex-end',
+      justifyContent: 'flex-start',
+      marginLeft: 8,
+      marginRight: 0,
+    },
+    avatar: {
+      height: 40,
+      width: 40,
+      borderRadius: 3,
     },
   });
