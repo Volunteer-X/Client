@@ -9,6 +9,7 @@ import React, {
 import { View } from 'react-native';
 import { GiftedChat, IMessage, MessageProps } from 'react-native-gifted-chat';
 import { Text } from 'react-native-paper';
+import { Message } from './message';
 
 export const ForumScreen = () => {
   const navigation =
@@ -24,8 +25,29 @@ export const ForumScreen = () => {
         createdAt: new Date(),
         user: {
           _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
+          name: 'John Doe',
+          avatar: 'https://picsum.photos/id/237/200',
+        },
+      },
+      {
+        _id: 2,
+        text: 'Hello world',
+        createdAt: new Date(),
+        user: {
+          _id: 3,
+          name: 'Random name',
+          avatar: 'https://picsum.photos/id/10/200',
+        },
+      },
+
+      {
+        _id: 3,
+        text: 'Hi, Users',
+        createdAt: new Date(),
+        user: {
+          _id: 4,
+          name: 'Alice',
+          avatar: 'https://picsum.photos/id/15/200',
         },
       },
     ]);
@@ -37,16 +59,14 @@ export const ForumScreen = () => {
     );
   }, []);
 
-  const renderMessage = useCallback(
-    (_messages: Readonly<MessageProps<IMessage>>) => {
-      return (
-        <View>
-          <Text>{_messages.currentMessage?.text}</Text>
-        </View>
-      );
-    },
-    [],
-  );
+  const renderMessage = (props: Readonly<MessageProps<IMessage>>) => {
+    return (
+      <>
+        <Message {...props} />
+        {/* <Text>{props.currentMessage?.text}</Text> */}
+      </>
+    );
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -60,6 +80,8 @@ export const ForumScreen = () => {
       onSend={_messages => onSend(_messages)}
       user={{
         _id: 1,
+
+        name: 'Jane Doe',
       }}
       renderMessage={renderMessage}
     />

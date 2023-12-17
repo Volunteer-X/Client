@@ -8,40 +8,48 @@ import {
   IMessage,
   isSameDay,
   isSameUser,
+  MessageProps,
 } from 'react-native-gifted-chat';
+import { Text } from 'react-native-paper';
 import { Bubble } from './bubble';
 import { makeMessageStyles } from './forum.style';
 
-type MessageProps = {
-  currentMessage: IMessage;
-  nextMessage: IMessage;
-  previousMessage: IMessage;
-  user: IMessage['user'];
-};
-
-export const Message = (props: MessageProps) => {
+export const Message = (props: MessageProps<IMessage>) => {
   const { previousMessage, currentMessage, nextMessage, user } = props;
+
+  if (!currentMessage) {
+    throw new Error('currentMessage is undefined');
+  }
 
   const { theme } = useAppTheme();
 
   const styles = makeMessageStyles(theme);
 
   const renderDay = useCallback(() => {
-    if (currentMessage.createdAt) {
-      return <Day {...props} />;
+    if (currentMessage && currentMessage.createdAt) {
+      return (
+        <Day
+          currentMessage={currentMessage}
+          nextMessage={nextMessage}
+          previousMessage={previousMessage}
+        />
+      );
     }
 
     return null;
-  }, [currentMessage.createdAt, props]);
+  }, [currentMessage, nextMessage, previousMessage]);
 
   const renderAvatar = useCallback(() => {
     let extraStyle;
     if (
+      currentMessage &&
       isSameUser(currentMessage, previousMessage) &&
       isSameDay(currentMessage, previousMessage)
     ) {
       extraStyle = { height: 0 };
     }
+
+    console.log('pic', currentMessage?.user.avatar);
 
     return (
       <Avatar {...props} imageStyle={{ left: [styles.avatar, extraStyle] }} />
@@ -56,11 +64,11 @@ export const Message = (props: MessageProps) => {
 
   return (
     <>
-      {renderDay}
+      {renderDay()}
       <View style={[styles.container, { marginBottom: marginBotton }]}>
         <>
-          {renderAvatar}
-          {renderBubble}
+          {renderAvatar()}
+          {renderBubble()}
         </>
       </View>
     </>

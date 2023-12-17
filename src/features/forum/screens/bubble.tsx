@@ -1,31 +1,31 @@
 import useAppTheme from '@app/hooks/useAppTheme';
 import React, { useCallback } from 'react';
 import { Pressable, View } from 'react-native';
-import { IMessage, MessageText, Time, utils } from 'react-native-gifted-chat';
+import {
+  IMessage,
+  MessageProps,
+  MessageText,
+  Time,
+  utils,
+} from 'react-native-gifted-chat';
 import { Text } from 'react-native-paper';
 import { makeBubbleStyles } from './forum.style';
 
 const { isSameDay, isSameUser } = utils;
 
-type BubbleProps = {
-  currentMessage: IMessage;
-  nextMessage: IMessage;
-  previousMessage: IMessage;
-  user: IMessage['user'];
-};
+export const Bubble = (props: MessageProps<IMessage>) => {
+  const { previousMessage, currentMessage, user } = props;
 
-export const Bubble = ({
-  currentMessage,
-  nextMessage,
-  previousMessage,
-  user,
-}: BubbleProps) => {
+  if (!currentMessage) {
+    throw new Error('currentMessage is undefined');
+  }
+
   const { theme } = useAppTheme();
 
   const styles = makeBubbleStyles(theme);
 
   const renderMessageText = useCallback(() => {
-    if (currentMessage.text) {
+    if (currentMessage && currentMessage.text) {
       return (
         <MessageText
           position="left"
@@ -40,17 +40,17 @@ export const Bubble = ({
   }, [currentMessage]);
 
   const renderName = useCallback(() => {
-    const name = currentMessage.user.name;
+    const name = currentMessage && currentMessage.user.name;
 
     if (user) {
       return <Text style={styles.name}>{name}</Text>;
     }
 
     return null;
-  }, [currentMessage.user.name, styles.name, user]);
+  }, [currentMessage, styles.name, user]);
 
   const renderTime = useCallback(() => {
-    if (currentMessage.createdAt) {
+    if (currentMessage && currentMessage.createdAt) {
       return (
         <Time
           containerStyle={{ left: [styles.timeContainer] }}
@@ -80,7 +80,7 @@ export const Bubble = ({
         <View style={styles.wrapper}>
           <>
             {renderMessageHeader}
-            {renderMessageText}
+            {renderMessageText()}
           </>
         </View>
       </Pressable>
