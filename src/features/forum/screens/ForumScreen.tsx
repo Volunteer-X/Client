@@ -80,7 +80,6 @@ export const ForumScreen = () => {
       onSend={_messages => onSend(_messages)}
       user={{
         _id: 1,
-
         name: 'Jane Doe',
       }}
       renderMessage={renderMessage}

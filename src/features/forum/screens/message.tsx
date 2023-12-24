@@ -49,8 +49,6 @@ export const Message = (props: MessageProps<IMessage>) => {
       extraStyle = { height: 0 };
     }
 
-    console.log('pic', currentMessage?.user.avatar);
-
     return (
       <Avatar {...props} imageStyle={{ left: [styles.avatar, extraStyle] }} />
     );
