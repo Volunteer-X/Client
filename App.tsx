@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
 import { ThemeProvider } from '@rneui/themed';
@@ -12,6 +12,7 @@ import { AUTH0_DOMAIN, AUTH0_CLIENT, MAPBOX_API } from '@env';
 import { ApolloProvider } from '@apollo/client';
 import { PersistGate } from 'redux-persist/integration/react';
 import Mapbox from '@rnmapbox/maps';
+import messaging from '@react-native-firebase/messaging';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import { store, persistor } from './app/store';
@@ -43,6 +44,18 @@ const App = () => {
   ) => {
     return <Ionicons {...props} />;
   };
+
+  useEffect(() => {
+    async function onAppBootstrap() {
+      await messaging().registerDeviceForRemoteMessages();
+
+      const token = await messaging().getToken();
+
+      console.log('token', token);
+    }
+
+    onAppBootstrap();
+  }, []);
 
   return (
     <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
