@@ -1,6 +1,4 @@
 /* eslint-disable react-native/no-inline-styles */
-import { MediaFlatlist } from '@app/components/swiper-flatlist';
-import { usePermissions } from '@app/context';
 import { useAppSelector } from '@app/hooks';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
@@ -9,8 +7,9 @@ import { useRoute } from '@react-navigation/native';
 import React from 'react';
 
 import { View, StyleSheet, StatusBar } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Button } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
+import notifee from '@notifee/react-native';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { theme } = useAppTheme();
@@ -19,6 +18,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
   const styles = makeStyles(theme, inset);
 
   const { user, accessToken } = useAppSelector(state => state.root.auth);
+
+  console.log('HomeScreen accessToken', accessToken);
 
   const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 
@@ -30,11 +31,28 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         barStyle="light-content"
         backgroundColor={theme.colors.background}
       />
+
+      <Button
+        onPress={async () => {
+          await notifee.displayNotification({
+            title: 'Title',
+            body: 'Body',
+            // android: {
+            //   channelId: await notifee.createChannel({
+            //     id: 'default',
+            //     name: 'Default Channel',
+            //   }),
+            // },
+          });
+        }}>
+        Click me
+      </Button>
+
       {/* Flatlist Header Component */}
-      <ScrollView
+      {/* <ScrollView
         overScrollMode="never"
         showsVerticalScrollIndicator={false}
-        style={{ flexGrow: 1, padding: 10 }}></ScrollView>
+        style={{ flexGrow: 1, padding: 10 }}></ScrollView> */}
       {/* <PullToRefreshList /> */}
     </View>
   );

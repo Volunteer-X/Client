@@ -9,14 +9,14 @@ import {
   REGISTER,
   REHYDRATE,
 } from 'redux-persist';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { currentLocationSlice } from '../src/features/maps';
 import { authSlice } from '@features/auth';
+import { reduxStorage } from './storage';
 
 const persistConfig = {
   key: 'root',
-  storage: AsyncStorage,
+  storage: reduxStorage,
 };
 
 const persistedReducer = persistReducer(

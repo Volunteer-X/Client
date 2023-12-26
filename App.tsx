@@ -29,9 +29,8 @@ import { IconProps } from 'react-native-vector-icons/Icon';
 import { PermissionProvider } from '@app/context/permissions/permission';
 import { Notification } from '@app/notification/Notification';
 
-/* 
-TODO develop authProvider for persist store and authentication check
-*/
+/*
+ */
 const App = () => {
   const { themePreference, theme } = useAppTheme();
 
