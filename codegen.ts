@@ -19,10 +19,10 @@ const config: CodegenConfig = {
     './src/__generated__/gql/': {
       schema: 'http://localhost:3500/graphql/',
       documents: [
-        './src/lib/fragments/*.ts',
+        // './src/lib/fragments/*.ts',
         './src/features/auth/graphql/auth.*.ts',
         './src/features/ping/graphql/ping.*.ts',
-        './src/features/activity/graphql/activity.*.ts',
+        './src/graphql/common.*.ts',
       ],
       preset: 'client',
       config: {
