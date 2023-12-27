@@ -19,7 +19,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const { user, accessToken } = useAppSelector(state => state.root.auth);
 
-  console.log('HomeScreen accessToken', accessToken);
+  // console.log('HomeScreen accessToken', accessToken);
 
   const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 

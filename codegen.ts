@@ -22,6 +22,7 @@ const config: CodegenConfig = {
         // './src/lib/fragments/*.ts',
         './src/features/auth/graphql/auth.*.ts',
         './src/features/ping/graphql/ping.*.ts',
+        './src/features/activity/graphql/activity.*.ts',
         './src/graphql/common.*.ts',
       ],
       preset: 'client',

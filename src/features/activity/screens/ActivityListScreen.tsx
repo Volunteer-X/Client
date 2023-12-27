@@ -18,9 +18,7 @@ import { makeStyles } from './activity.style';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_PING } from '../graphQL/activity.query';
 import LottieView from 'lottie-react-native';
-import { Media, PingFragmentFragment } from '@app/__generated__/gql/graphql';
 import { Activity } from '@app/types/entities';
-import { debounce, throttle } from 'lodash';
 
 export const ActivityListScreen = () => {
   // Navigation

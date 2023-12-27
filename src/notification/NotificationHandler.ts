@@ -1,6 +1,7 @@
 import { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
 import notifee, { AndroidImportance } from '@notifee/react-native';
 import { storage } from '../../app/storage';
+import { DEV_HOST, DEV_HTTP_PATH, DEV_PORT, DEV_SCHEME } from '@env';
 
 type MessageData =
   | {
@@ -17,7 +18,12 @@ async function fetchPing(id: string) {
     JSON.parse(storage.getString('persist:root') as string).auth,
   ).accessToken;
 
-  const ping = await fetch('http://localhost:3500/graphql', {
+  const ping: {
+    id: string;
+    title: string;
+    description: string;
+    picks: string[];
+  } = await fetch(`${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +37,7 @@ async function fetchPing(id: string) {
     .then(data => {
       return data.data.getPing;
     })
-    .catch(err => console.log('err', err));
+    .catch(err => console.log('Fetch Error', err.message));
 
   return ping;
 }
@@ -50,32 +56,37 @@ export async function handleOnMessage(
     const type = message.data.type as MessageData['type'];
     switch (type) {
       case 'ping':
-        const ping = await fetchPing(message.data.id as string);
-
-        await notifee.displayNotification({
-          title: ping.title,
-          body: ping.description,
-          android: {
-            // smallIcon: 'ic_small_icon',
-            color: '#9c27b0',
-            channelId: 'ping',
-            actions: [
-              {
-                title: 'View',
-                pressAction: {
-                  id: 'view',
-                  launchActivity: 'default',
+        try {
+          const ping = await fetchPing(message.data.id as string);
+          await notifee.displayNotification({
+            // title: `<p style="color: #4caf50;">${ping.title}</p>`,
+            title: `<p style="color: #4caf50;"><b>${ping.title}</b></p>`,
+            subtitle: 'Ping',
+            body: ping.description,
+            android: {
+              // smallIcon: 'ic_small_icon',
+              color: '#9c27b0',
+              channelId: 'ping',
+              actions: [
+                {
+                  title: 'View',
+                  pressAction: {
+                    id: 'view',
+                    launchActivity: 'default',
+                  },
                 },
-              },
-              {
-                title: 'Join',
-                pressAction: {
-                  id: 'join',
+                {
+                  title: 'Join',
+                  pressAction: {
+                    id: 'join',
+                  },
                 },
-              },
-            ],
-          },
-        });
+              ],
+            },
+          });
+        } catch (err) {
+          console.log('Message Error', err);
+        }
         break;
     }
   }

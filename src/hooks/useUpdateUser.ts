@@ -28,5 +28,7 @@ export const useUpdateUser = () => {
     console.log('result', result);
   };
 
+  const check = () => {};
+
   return { execute, loading, error };
 };
