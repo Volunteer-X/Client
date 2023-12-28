@@ -20,6 +20,7 @@ const documents = {
     "\nmutation createPing($createPingInput: CreatePingInput!) {\n    createPing(payload: $createPingInput){\n        id\n        }\n    }\n    ": types.CreatePingDocument,
     "\nmutation updatePing($id: ObjectID! $UPingInput: UPingInput!) {\n    updatePing(id: $id, payload: $UPingInput) {\n        id\n        createdAt\n        title\n        description\n        picks\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        user {\n            id\n            name {\n                lastName\n                firstName\n            }\n            username\n            picture\n        }\n    }\n    }": types.UpdatePingDocument,
     "\n    mutation UpdateUser($payload: UpdateUserInput!) {\n  updateUser(payload: $payload) {\n    id\n    devices\n    email\n    name {\n      firstName\n      lastName\n      middleName\n    }\n    createdAt\n    picks\n    picture\n    username\n  }\n}\n": types.UpdateUserDocument,
+    "query GetPingsWithinRadius($payload: UPingsWithinRadiusInput!) {\n    getPingsWithinRadius(payload: $payload) {\n      id\n      createdAt\n      title\n      latitude\n      longitude\n      description\n      media {\n        key\n        type\n      }\n      picks\n      radius\n      url\n      userID\n      user {\n        id\n        name {\n          firstName\n          lastName\n          middleName\n        }\n        email\n        createdAt\n        picks\n        picture\n        username\n      }\n    }\n  }\n  ": types.GetPingsWithinRadiusDocument,
 };
 
 /**
@@ -64,6 +65,10 @@ export function gql(source: "\nmutation updatePing($id: ObjectID! $UPingInput: U
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n    mutation UpdateUser($payload: UpdateUserInput!) {\n  updateUser(payload: $payload) {\n    id\n    devices\n    email\n    name {\n      firstName\n      lastName\n      middleName\n    }\n    createdAt\n    picks\n    picture\n    username\n  }\n}\n"): (typeof documents)["\n    mutation UpdateUser($payload: UpdateUserInput!) {\n  updateUser(payload: $payload) {\n    id\n    devices\n    email\n    name {\n      firstName\n      lastName\n      middleName\n    }\n    createdAt\n    picks\n    picture\n    username\n  }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "query GetPingsWithinRadius($payload: UPingsWithinRadiusInput!) {\n    getPingsWithinRadius(payload: $payload) {\n      id\n      createdAt\n      title\n      latitude\n      longitude\n      description\n      media {\n        key\n        type\n      }\n      picks\n      radius\n      url\n      userID\n      user {\n        id\n        name {\n          firstName\n          lastName\n          middleName\n        }\n        email\n        createdAt\n        picks\n        picture\n        username\n      }\n    }\n  }\n  "): (typeof documents)["query GetPingsWithinRadius($payload: UPingsWithinRadiusInput!) {\n    getPingsWithinRadius(payload: $payload) {\n      id\n      createdAt\n      title\n      latitude\n      longitude\n      description\n      media {\n        key\n        type\n      }\n      picks\n      radius\n      url\n      userID\n      user {\n        id\n        name {\n          firstName\n          lastName\n          middleName\n        }\n        email\n        createdAt\n        picks\n        picture\n        username\n      }\n    }\n  }\n  "];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

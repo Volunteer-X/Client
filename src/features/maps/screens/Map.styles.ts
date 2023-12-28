@@ -2,7 +2,6 @@ import { PADDING } from '@app/lib';
 import { AppTheme } from '@app/theme';
 import { StyleSheet } from 'react-native';
 import { EdgeInsets } from 'react-native-safe-area-context';
-import { CircleLayerStyle } from '@rnmapbox/maps';
 
 export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
   StyleSheet.create({
@@ -44,7 +43,7 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
     myLocation: {
       position: 'absolute',
-      top: 150,
+      top: 175,
       right: 10,
       backgroundColor: 'black',
       borderWidth: 1,

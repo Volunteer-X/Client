@@ -17,13 +17,13 @@ const scalars = Object.entries(resolvers).reduce<
 const config: CodegenConfig = {
   generates: {
     './src/__generated__/gql/': {
-      schema: 'http://localhost:3500/graphql/',
+      schema: 'http://192.168.1.222:3500/graphql',
       documents: [
-        // './src/lib/fragments/*.ts',
         './src/features/auth/graphql/auth.*.ts',
         './src/features/ping/graphql/ping.*.ts',
         './src/features/activity/graphql/activity.*.ts',
         './src/graphql/common.*.ts',
+        './src/graphql/map.*.ts',
       ],
       preset: 'client',
       config: {

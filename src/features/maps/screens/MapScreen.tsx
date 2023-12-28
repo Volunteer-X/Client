@@ -6,7 +6,6 @@ import {
   MapView,
   MarkerView,
   ShapeSource,
-  SymbolLayer,
 } from '@rnmapbox/maps';
 import { IconButton, Searchbar } from 'react-native-paper';
 import LottieView from 'lottie-react-native';
@@ -26,26 +25,17 @@ const MapScreen = () => {
   const styles = makeStyles(theme, inset);
 
   const user = useAppSelector(state => state.root.auth.user);
-
   const { coords, geoLoading } = useGeoLocation();
 
-  // if (!geoLoading && !coords) {
-  //   throw new Error('No coords');
-  // }
-
   const [currentLocation, setCurrentLocation] = useState<number[]>();
+  const [picks, setPicks] = useState<string[]>(user?.picks || []);
 
   useEffect(() => {
     if (!coords) {
       return;
     }
-
-    // console.log(coords);
-
     setCurrentLocation([coords?.longitude, coords?.latitude]);
   }, [coords]);
-
-  const [picks, setPicks] = useState<string[]>(user?.picks || []);
 
   const point = [-0.2699972245788475, 51.41351130241327];
 
