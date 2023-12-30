@@ -17,6 +17,7 @@ const CREATE_USER = gql(`
       picture
       picks
       createdAt
+      devices
     }
   }
 `);

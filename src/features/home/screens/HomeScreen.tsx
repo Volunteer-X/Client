@@ -10,6 +10,7 @@ import { View, StyleSheet, StatusBar } from 'react-native';
 import { Button } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import notifee from '@notifee/react-native';
+import { Avatar } from '@app/components';
 
 const HomeScreen = ({ navigation }: { navigation: any }) => {
   const { theme } = useAppTheme();
@@ -19,7 +20,7 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
 
   const { user, accessToken } = useAppSelector(state => state.root.auth);
 
-  // console.log('HomeScreen accessToken', accessToken);
+  console.log('HomeScreen accessToken', accessToken);
 
   const route = useRoute<HomeStackScreenProps<'HomeScreen'>['route']>();
 
@@ -31,6 +32,8 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         barStyle="light-content"
         backgroundColor={theme.colors.background}
       />
+
+      <Avatar size={32} />
 
       <Button
         onPress={async () => {

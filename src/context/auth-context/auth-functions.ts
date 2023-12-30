@@ -2,6 +2,7 @@ import { login } from '@app/features/auth/slices/auth.slice';
 import { AUTH0_SCOPE } from '@env';
 import { Credentials, User } from 'react-native-auth0';
 import { GeoCoordinates } from 'react-native-geolocation-service';
+import messaging from '@react-native-firebase/messaging';
 
 function waitForNonNullValue(value: User | null): Promise<User> {
   return new Promise(resolve => {
@@ -127,11 +128,13 @@ export const loginFunction = async (
     accessToken = credentials.accessToken;
   }
 
+  console.log('auth0User', auth0User);
+
   const {
     email,
-    given_name: firstName,
-    family_name: lastName,
-    middle_name: middleName,
+    givenName: firstName,
+    familyName: lastName,
+    middleName: middleName,
     picture,
   } = auth0User;
 
@@ -140,6 +143,16 @@ export const loginFunction = async (
   }
 
   const { latitude, longitude } = coords;
+
+  let token: string;
+
+  if (!messaging().isDeviceRegisteredForRemoteMessages) {
+    await messaging().registerDeviceForRemoteMessages();
+  }
+
+  token = await messaging().getToken();
+
+  console.log('token', token);
 
   try {
     const result = await createUser({
@@ -154,6 +167,7 @@ export const loginFunction = async (
           picks,
           latitude: latitude,
           longitude: longitude,
+          device: token,
         },
       },
     });
@@ -169,6 +183,7 @@ export const loginFunction = async (
       name,
       picture: _picture,
       picks: _picks,
+      devices,
     } = result.data.createUser;
 
     dispatch(
@@ -184,6 +199,7 @@ export const loginFunction = async (
           middleName: name?.middleName,
           picture: _picture,
           picks: _picks,
+          devices,
         },
       }),
     );

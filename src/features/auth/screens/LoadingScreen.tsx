@@ -27,6 +27,8 @@ const LoadingScreen = (props: Props) => {
   // * Params from the router
   const { username, picks } = props.route.params;
 
+  console.log('username', username);
+
   const { coords, geoLoading } = useGeoLocation();
 
   const { loading, error, login } = useAppAuth();

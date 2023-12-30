@@ -4,6 +4,7 @@ export enum AppIcons {
   NIGHT = 'moon',
   DAY = 'sunny',
   ARROW_DOWN_CIRCLE = 'arrow-down-circle',
+  FLAG = 'flag',
   FORUM = 'chatbox',
   CLOSE = 'close',
   CHECK = 'checkmark',

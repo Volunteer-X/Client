@@ -23,7 +23,7 @@ const config: CodegenConfig = {
         './src/features/ping/graphql/ping.*.ts',
         './src/features/activity/graphql/activity.*.ts',
         './src/graphql/common.*.ts',
-        './src/graphql/map.*.ts',
+        './src/graphql/*.ts',
       ],
       preset: 'client',
       config: {

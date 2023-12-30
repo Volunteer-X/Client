@@ -1,7 +1,7 @@
 import { gql } from '@app/__generated__/gql';
 
 const UPDATE_USER = gql(`
-    mutation UpdateUser($payload: UpdateUserInput!) {
+  mutation UpdateUser($payload: UpdateUserInput!) {
   updateUser(payload: $payload) {
     id
     devices

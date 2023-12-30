@@ -10,6 +10,7 @@ export interface User {
   middleName?: string | null;
   picks?: string[];
   picture?: string | null;
+  devices?: string[];
 }
 
 type Auth = {

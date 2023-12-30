@@ -72,11 +72,19 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
   });
 
-export const circleStyle = {
-  circleRadius: 10,
-  circleOpacity: 1,
-  circleColor: 'red',
-  circleStrokeWidth: 1.5,
-  circleStrokeOpacity: 0.25,
-  circleSortKey: 1,
+export const mapStyle = {
+  icon: {
+    iconImage: ['get', 'icon'],
+    iconAllowOverlap: true,
+    // iconHaloColor: 'white',
+    // iconHaloWidth: 10,
+  },
+  circleStyle: {
+    circleRadius: 10,
+    circleOpacity: 1,
+    circleColor: 'red',
+    circleStrokeWidth: 1.5,
+    circleStrokeOpacity: 0.25,
+    circleSortKey: 1,
+  },
 };
