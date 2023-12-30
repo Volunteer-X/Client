@@ -5,10 +5,12 @@ import {
   CircleLayer,
   Image,
   Images,
+  LocationPuck,
   MapView,
   MarkerView,
   ShapeSource,
   SymbolLayer,
+  UserLocation,
 } from '@rnmapbox/maps';
 import { MAPBOX_STYLE_DARK } from '@env';
 import LocationSearchBar, {
@@ -22,8 +24,11 @@ import { useGeoLocation } from '@app/context/geo-location';
 import { PingStackScreenProps } from '@ts-types/type';
 import { AppIcons } from '@app/theme/icon';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { point } from '@turf/helpers';
 
 export const SearchLocationScreen = () => {
+  const inset = useSafeAreaInsets();
   const navigation =
     useNavigation<PingStackScreenProps<'SearchLocation'>['navigation']>();
   const route = useRoute<PingStackScreenProps<'SearchLocation'>['route']>();
@@ -31,8 +36,6 @@ export const SearchLocationScreen = () => {
   const { coords, geoLoading } = useGeoLocation();
 
   const [currentLocation, setCurrentLocation] = useState<number[]>([]);
-
-  console.log('loading', geoLoading);
 
   useEffect(() => {
     if (!coords) {
@@ -49,7 +52,7 @@ export const SearchLocationScreen = () => {
 
   const searchBarRef = useRef<LocationSearchBarRef>(null);
 
-  const setMarkerCoordinates = ({ coordinates }: Point) => {
+  const setMarkerCoordinates = ({ coordinates }: GeoJSON.Point) => {
     setCoordinate(coordinates);
   };
 
@@ -81,15 +84,16 @@ export const SearchLocationScreen = () => {
     iconSize: 1,
   };
 
-  const shapeFeature: Feature = {
-    type: 'Feature',
-    id: 'Feature-123',
-    geometry: {
-      type: 'Point',
-      coordinates: coordinate ? coordinate : [0, 0],
-    },
-    properties: {},
-  };
+  const shapeFeature = point(coordinate);
+  // const shapeFeature: Feature = {
+  //   type: 'Feature',
+  //   id: 'Feature-123',
+  //   geometry: {
+  //     type: 'Point',
+  //     coordinates: coordinate ? coordinate : [0, 0],
+  //   },
+  //   properties: {},
+  // };
 
   return (
     <View style={styles.container}>
@@ -107,24 +111,31 @@ export const SearchLocationScreen = () => {
         styleURL={MAPBOX_STYLE_DARK}
         style={styles.map}
         projection="mercator"
+        rotateEnabled={false}
         pitchEnabled={false}
         scaleBarEnabled={false}
         attributionEnabled={false}
         logoEnabled={false}
-        compassEnabled
-        compassViewPosition={3}
-        compassPosition={{ bottom: 75, right: 15 }}
+        compassEnabled={false}
+        // compassViewPosition={3}
+        // compassPosition={{ bottom: 100, right: 15 }}
         onPress={e => {
           setMarkerCoordinates(e.geometry as Point);
         }}>
         <Camera
           defaultSettings={{
-            centerCoordinate: [currentLocation[1], currentLocation[0]],
+            centerCoordinate: [0.1276, 51.5072],
           }}
           zoomLevel={13}
           maxZoomLevel={14}
+          minZoomLevel={10}
           animationMode="flyTo"
           centerCoordinate={coordinate}
+        />
+        <LocationPuck
+          pulsing={{
+            isEnabled: true,
+          }}
         />
         <Images>
           <Image name="icon-symbol-layer">
@@ -143,26 +154,36 @@ export const SearchLocationScreen = () => {
 
               <CircleLayer id="circle-blur-id" style={circleBlurStyle} />
 
-              <SymbolLayer id="symbol-id" style={iconStyle} existing />
+              <SymbolLayer id="symbol-id" style={iconStyle} />
             </ShapeSource>
           </>
         )}
       </MapView>
 
-      <IconButton
-        icon={AppIcons.ARROW_BACK}
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      />
-      <LocationSearchBar
-        ref={searchBarRef}
-        containerStyle={styles.searchbar}
-        defaultLocation={{
-          lat: currentLocation[1],
-          lng: currentLocation[0],
-        }}
-        getNewPoint={newPoint => setCoordinate([newPoint.lng, newPoint.lat])}
-      />
+      <View
+        style={[
+          styles.headerContainer,
+          {
+            marginTop: inset.top,
+            marginStart: inset.left,
+            marginEnd: inset.right,
+          },
+        ]}>
+        <IconButton
+          icon={AppIcons.ARROW_BACK}
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        />
+        <LocationSearchBar
+          ref={searchBarRef}
+          containerStyle={styles.searchbar}
+          defaultLocation={{
+            lat: currentLocation[1],
+            lng: currentLocation[0],
+          }}
+          getNewPoint={newPoint => setCoordinate([newPoint.lng, newPoint.lat])}
+        />
+      </View>
 
       <IconButton
         icon={AppIcons.GPS}
@@ -187,37 +208,30 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 10,
     right: 15,
-    left: 5,
+    left: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 6.5,
+    // gap: 6.5,
   },
   backButton: {
     backgroundColor: MD3Colors.neutralVariant10,
-    position: 'absolute',
-    top: 15,
-    left: 15,
   },
-  searchbar: {
-    position: 'absolute',
-    top: 10,
-    right: 15,
-    left: 75,
-  },
+  searchbar: {},
   button: {
     // display: 'none',
     position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+    bottom: 20,
+    left: 15,
+    right: 15,
+    paddingVertical: PADDING.sm,
     marginVertical: PADDING.sm,
     marginHorizontal: PADDING.sm,
   },
   myLocation: {
     position: 'absolute',
-    bottom: 130,
-    right: 14,
+    top: 120,
+    right: 15,
     backgroundColor: 'black',
     borderWidth: 1,
     borderColor: '#c9c9c9',

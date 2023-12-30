@@ -27,6 +27,7 @@ export type ActivityCardProps = {
   isMember?: boolean;
   activity: Activity;
   creator: User;
+  textLines?: number;
   onMenuClick?: () => void;
   onPress?: () => void;
 };
@@ -40,6 +41,7 @@ const ActivityCard = ({
   activity,
   creator,
   isMember,
+  textLines = 3,
 }: ActivityCardProps) => {
   const { title, description, picks, url, media, createdAt } = activity;
 
@@ -174,7 +176,7 @@ const ActivityCard = ({
               </View>
             )}
             {/* Description */}
-            <ViewMoreText numberOfLines={3}>
+            <ViewMoreText numberOfLines={textLines}>
               <Text variant="bodyMedium">{description}</Text>
             </ViewMoreText>
             {/* Actions */}

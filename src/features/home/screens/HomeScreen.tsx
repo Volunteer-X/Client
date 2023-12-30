@@ -6,7 +6,7 @@ import { HomeStackScreenProps } from '@app/types/type';
 import { useRoute } from '@react-navigation/native';
 import React from 'react';
 
-import { View, StyleSheet, StatusBar } from 'react-native';
+import { View, StyleSheet, StatusBar, Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
 import notifee from '@notifee/react-native';

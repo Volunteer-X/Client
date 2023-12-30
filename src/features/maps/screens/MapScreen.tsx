@@ -1,19 +1,17 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { View, StatusBar, Text, Image as RNImage } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { View, StatusBar } from 'react-native';
 import {
   Camera,
-  Image,
   Images,
+  LocationPuck,
   MapView,
   ShapeSource,
   SymbolLayer,
   UserLocation,
   UserLocationRenderMode,
   UserTrackingMode,
-  type ImageEntry,
 } from '@rnmapbox/maps';
 import { feature } from '@turf/helpers';
-import { from } from 'rxjs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MAPBOX_STYLE_DARK } from '@env';
 import { useGeoLocation } from '@app/context/geo-location';
@@ -21,9 +19,13 @@ import useAppTheme from '@app/hooks/useAppTheme';
 import { makeStyles, mapStyle } from './Map.styles';
 import { useAppSelector } from '@app/hooks';
 import { useNearbyPing } from '../hooks/useNearbyPing';
-import exampleIcon from '@app/assets/images/example.png';
-import { Avatar } from '@app/components';
-import FastImage from 'react-native-fast-image';
+import marker from '@app/assets/images/marker.png';
+import { PicksSelectView } from '@app/components';
+import {
+  ActivityBottomSheet,
+  ActivityBottomSheetRef,
+} from '@app/components/bottom-sheets';
+import { Activity } from '@app/types/entities';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
@@ -31,6 +33,7 @@ const MapScreen = () => {
   const styles = makeStyles(theme, inset);
 
   const cameraRef = useRef<Camera>(null);
+  const activityModalRef = useRef<ActivityBottomSheetRef>(null);
 
   const user = useAppSelector(state => state.root.auth.user);
   const { coords, geoLoading } = useGeoLocation();
@@ -38,23 +41,10 @@ const MapScreen = () => {
   const [currentLocation, setCurrentLocation] = useState<number[]>();
   const [picks, setPicks] = useState<string[]>(user?.picks || []);
 
-  const collection = useNearbyPing();
-
-  const allImages: { [key: string]: string } = {
-    abc: 'https://i.imgur.com/iHZtdW9_d.webp',
-    bcd: 'https://i.imgur.com/6QxkGiQ_d.webp',
-  };
-
-  useEffect(() => {
-    const subscribe = from([coords]);
-    setCurrentLocation([coords?.longitude, coords?.latitude]);
-
-    return () => {};
-  }, [coords]);
-
-  // const collection: GeoJSON.FeatureCollection = featureCollection([
-  //   point([-0.2699972245788475, 51.41351130241327]),
-  // ]);
+  const collection = useNearbyPing({
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+  });
 
   const onPress = (e: GeoJSON.Feature) => {
     console.log('e', e.geometry);
@@ -65,6 +55,22 @@ const MapScreen = () => {
     console.log('aFeature', aFeature);
   };
 
+  const onSourceLayerPress = (e: any) => {
+    const selectedFeature: GeoJSON.Feature = e.features[0];
+    console.log('selectedFeature', selectedFeature.properties);
+    activityModalRef.current?.openModal();
+    activityModalRef.current?.setActivity({
+    __typename: selectedFeature.properties.
+      id: selectedFeature.properties.id,
+      title: selectedFeature.properties.title,
+      description: selectedFeature.properties.description,
+      picks: selectedFeature.properties.picks,
+      url: selectedFeature.properties.url,
+      media: selectedFeature.properties.media,
+      createdAt: selectedFeature.properties.createdAt,
+    } as Activity);
+  };
+
   return (
     <View style={styles.page}>
       <StatusBar
@@ -73,6 +79,7 @@ const MapScreen = () => {
         barStyle={theme.dark ? 'light-content' : 'dark-content'}
       />
       <View style={styles.container}>
+        <ActivityBottomSheet ref={activityModalRef} />
         {/* {geoLoading && coords && (
           <View style={styles.overlay}>
             <LottieView
@@ -83,11 +90,11 @@ const MapScreen = () => {
             />
           </View>
         )} */}
-
         <MapView
           style={styles.map}
           styleURL={MAPBOX_STYLE_DARK}
           projection="mercator"
+          rotateEnabled={false}
           pitchEnabled={false}
           scaleBarEnabled={false}
           attributionEnabled={false}
@@ -97,62 +104,32 @@ const MapScreen = () => {
           <Camera
             ref={cameraRef}
             defaultSettings={{
-              centerCoordinate: [-77.036086, 38.910233],
-              // zoomLevel: 13,
+              centerCoordinate: [0.1276, 51.5072],
+              zoomLevel: 13,
             }}
+            centerCoordinate={[coords?.longitude, coords?.latitude]}
             zoomLevel={13}
-            maxZoomLevel={15}
+            minZoomLevel={14}
+            maxZoomLevel={10}
             animationMode="flyTo"
             followUserLocation={true}
             followUserMode={UserTrackingMode.Follow}
           />
-          <UserLocation renderMode={UserLocationRenderMode.Native} />
+
+          <LocationPuck />
 
           <ShapeSource
             id="symbolLocationSource"
             hitbox={{ width: 20, height: 20 }}
-            shape={collection}>
+            shape={collection}
+            onPress={e => onSourceLayerPress(e)}>
             <SymbolLayer
               id="symbolLocationSymbols"
               minZoomLevel={1}
               style={mapStyle.icon}
             />
 
-            <Images>
-              {Object.entries(allImages).map(([key, value]) => {
-                // console.log(value);
-
-                return (
-                  <Image name={key} key={key}>
-                    <View>
-                      <View
-                        style={{
-                          borderRadius: 10,
-                          backgroundColor: 'gray',
-                          padding: 8,
-                          margin: 16,
-                          width: 100,
-                          shadowOffset: { width: 0, height: 8 },
-                          shadowOpacity: 0.2,
-                        }}>
-                        <RNImage
-                          source={exampleIcon}
-                          resizeMode="cover"
-                          style={{
-                            // width: 100,
-                            // height: 100,
-                            backgroundColor: 'red',
-                          }}
-                        />
-                        <Text style={{ fontWeight: 'bold', color: 'white' }}>
-                          RN Pin 3
-                        </Text>
-                      </View>
-                    </View>
-                  </Image>
-                );
-              })}
-            </Images>
+            <Images images={{ icon: marker }} />
           </ShapeSource>
         </MapView>
         {/* <IconButton
@@ -166,14 +143,14 @@ const MapScreen = () => {
             }
           }}
         /> */}
-        {/* <View style={styles.headerView}>
-          <Searchbar
+        <View style={styles.headerView}>
+          {/* <Searchbar
             mode="bar"
             value=""
             placeholder="Search"
             style={styles.searchBar}
             editable={false}
-          />
+          /> */}
           <PicksSelectView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -185,7 +162,7 @@ const MapScreen = () => {
               setPicks(selectedPicks);
             }}
           />
-        </View> */}
+        </View>
 
         {/* <CarouselMapCard /> */}
       </View>

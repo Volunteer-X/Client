@@ -74,8 +74,9 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
 
 export const mapStyle = {
   icon: {
-    iconImage: ['get', 'icon'],
+    iconImage: 'icon',
     iconAllowOverlap: true,
+    iconSize: 0.5,
     // iconHaloColor: 'white',
     // iconHaloWidth: 10,
   },

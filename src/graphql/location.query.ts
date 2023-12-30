@@ -18,6 +18,7 @@ const GET_PINGS_WITHIN_RADIUS = gql(`
           }
           email
           picture
+          picks
         }
         description
         createdAt

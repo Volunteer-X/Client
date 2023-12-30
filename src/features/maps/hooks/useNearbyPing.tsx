@@ -1,16 +1,24 @@
 import { useQuery } from '@apollo/client';
 import { GET_PINGS_WITHIN_RADIUS } from '@app/graphql/location.query';
+import { Activity, User } from '@app/types/entities';
 import { featureCollection, point } from '@turf/helpers';
+import { GraphQLLatitude, GraphQLLongitude } from 'graphql-scalars';
 import { useEffect, useState } from 'react';
 
-export const useNearbyPing = () => {
+export const useNearbyPing = ({
+  latitude,
+  longitude,
+}: {
+  latitude: number;
+  longitude: number;
+}) => {
   const [result, setResult] = useState<GeoJSON.FeatureCollection>();
 
   const { data: queryData, error } = useQuery(GET_PINGS_WITHIN_RADIUS, {
     variables: {
       payload: {
-        latitude: '51.40891902233375',
-        longitude: -0.262499258435156,
+        latitude: latitude.toString(),
+        longitude: longitude,
         radius: 200,
       },
       first: 10,
@@ -18,35 +26,69 @@ export const useNearbyPing = () => {
   });
 
   useEffect(() => {
-    if (queryData?.getPingsWithinRadius) {
-      console.log('total pings', queryData?.getPingsWithinRadius.totalCount);
-    }
     const fetchData = async () => {
-      // Simulate an asynchronous operation (e.g., fetching data)
+      const totalCount = queryData?.getPingsWithinRadius?.totalCount;
+      const edges = queryData?.getPingsWithinRadius?.edges;
+
       const collection = await new Promise<GeoJSON.FeatureCollection>(
         resolve => {
           setTimeout(() => {
-            // Resolve with an array of strings after the specified delay
-            const data: { point: number[]; id: string }[] = [
-              {
-                point: [-0.262499258435156, 51.40891902233375],
-                id: 'abc',
-              },
-              { point: [-0.2658306472791878, 51.40989205909267], id: 'bcd' },
-              // [-0.27901123026694563, 51.40450449136861],
-              // [-0.2540504538884818, 51.409100150458926],
-            ];
+            if (totalCount === 0) {
+              resolve(featureCollection([]));
+              return;
+            }
+            const mappedData = edges?.map(item => {
+              let aFeature = point([
+                GraphQLLongitude.parseValue(item?.node?.longitude),
+                GraphQLLatitude.parseValue(item?.node?.latitude),
+              ]);
+              aFeature.id = `${item?.node?.id}`;
+              // aFeature.properties = {
+              //   ...item?.node,
+              // };
 
-            const features = data.map((item, index) => {
-              let afeature = point(item.point);
-              afeature.id = `${index}`;
-              afeature.properties = {
-                icon: item.id,
+              let activity: Activity = {
+                id: item?.node?.id,
+                title: item?.node?.title,
+                description: item?.node?.description,
+                picks: item?.node?.picks,
+                url: item?.node?.url,
+                media: item?.node?.media,
+                createdAt: item?.node?.createdAt,
+                latitude: item?.node?.latitude,
+                longitude: item?.node?.longitude,
               };
-              return afeature;
-            });
 
-            const aCollection = featureCollection(features);
+              let creator: User = {
+                id: item.node.user?.id ? item.node.user?.id : '',
+                username: item.node.user?.username
+                  ? item.node.user?.username
+                  : '',
+                email: item.node.user?.email ? item.node.user?.email : '',
+                name: {
+                  __typename: item.node.user?.name?.__typename,
+                  firstName: item.node.user?.name?.firstName
+                    ? item.node.user?.name?.firstName
+                    : '',
+                  lastName: item.node.user?.name?.lastName
+                    ? item.node.user?.name?.lastName
+                    : '',
+                },
+                picture: item.node.user?.picture,
+                picks: item.node.user?.picks ? item.node.user.picks : [],
+              };
+
+              return { feature: aFeature, activity, creator };
+            }).reduce((acc, item) => {
+              acc.feature.push(item.feature);
+              acc.activity.push(item.activity);
+              acc.creator.push(item.creator);
+              return acc;
+            }, {feature: [], activity: [], creator: []});
+
+            const aCollection = featureCollection(
+              mappedData. ? features : [],
+            );
 
             resolve(aCollection);
           }, 200);
@@ -57,7 +99,7 @@ export const useNearbyPing = () => {
     };
 
     fetchData();
-  }, [queryData?.getPingsWithinRadius]);
+  }, [queryData]);
 
   return result;
 };

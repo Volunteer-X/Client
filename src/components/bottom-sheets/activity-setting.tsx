@@ -14,7 +14,7 @@ import {
   BottomSheetBackdropProps,
   BottomSheetModal,
 } from '@gorhom/bottom-sheet';
-import { BottomSheetRefProps, settingProps } from './bottom-sheet.type';
+import { BottomSheetRefProps, settingProps } from './bottomsheet.type';
 import { Text } from 'react-native-paper';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 import { SIZES } from '@app/lib';
@@ -64,8 +64,6 @@ export const ActivitySettingModal = forwardRef(
     useImperativeHandle(ref, () => ({
       openModal: () => {
         if (bottomSheetRef.current) {
-          console.log('openModal');
-
           bottomSheetRef.current.present();
         }
       },

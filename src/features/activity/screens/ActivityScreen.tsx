@@ -262,6 +262,7 @@ const ActivityScreen = () => {
                 creator={owner}
                 isOriginalPing
                 showStar
+                textLines={10}
                 onMenuClick={handleOnMenuClick}
               />
             </View>
