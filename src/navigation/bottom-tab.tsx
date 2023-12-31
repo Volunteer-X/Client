@@ -3,7 +3,12 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { StyleSheet } from 'react-native';
 
-import { HomeScreen, MapScreen, SearchScreen } from '@features/index';
+import {
+  ActivityListScreen,
+  HomeScreen,
+  MapScreen,
+  SearchScreen,
+} from '@features/index';
 import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
@@ -12,6 +17,7 @@ import { ActivityNavigation } from './activity-navigation';
 import { BottomTabParamList } from '@ts-types/type';
 import { RouteProp } from '@react-navigation/native';
 import { HomeNavigation } from './home-navigation';
+import { NearbyNavigation } from './nearby.navigation';
 
 function tabBarIcon({
   color,
@@ -91,7 +97,7 @@ const BottomTabNavigation = () => {
       <Tab.Screen name="Search" component={SearchScreen} />
       <Tab.Screen
         name="Activity"
-        component={ActivityNavigation}
+        component={ActivityListScreen}
         options={{ headerShown: false }}
       />
     </Tab.Navigator>

@@ -40,6 +40,8 @@ const ActivityScreen = () => {
   const activity = route.params?.activity;
   const owner = route.params?.owner;
 
+  console.log('ActivityScreen', route.params);
+
   // handle owner and member
   useEffect(() => {
     if (owner?.id === authUser?.id) {
@@ -62,7 +64,7 @@ const ActivityScreen = () => {
   };
 
   if (!activity || !owner) {
-    return <DefualtErrorScreen />;
+    return <DefualtErrorScreen screenName="Activity" />;
   }
 
   return (

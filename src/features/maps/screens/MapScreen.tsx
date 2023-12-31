@@ -27,13 +27,15 @@ import {
 } from '@app/components/bottom-sheets';
 import { Activity, User } from '@app/types/entities';
 import { useEffect } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NearbyStackScreenProps } from '@ts-types/type';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
   const inset = useSafeAreaInsets();
   const styles = makeStyles(theme, inset);
 
-  // const;
+  const navigation = useNavigation();
 
   const cameraRef = useRef<Camera>(null);
   const activityModalRef = useRef<ActivityBottomSheetRef>(null);
@@ -49,17 +51,17 @@ const MapScreen = () => {
     longitude: coords.longitude,
   });
 
-  const onPress = (e: GeoJSON.Feature) => {
-    console.log('e', e.geometry);
-
-    const aFeature = feature(e.geometry);
-    aFeature.id = `${Date.now()}`;
-
-    console.log('aFeature', aFeature);
-  };
-
   const handleOnBottomSheetPress = () => {
     console.log('handleOnBottomSheetPress', activityModalRef.current?.data);
+    activityModalRef.current?.close();
+
+    navigation.navigate('ActivityNavigation', {
+      screen: 'ActivityScreen',
+      params: {
+        activity: activityModalRef.current?.data.activity,
+        owner: activityModalRef.current?.data.creator,
+      },
+    });
   };
 
   const onSourceLayerPress = (e: any) => {
@@ -72,11 +74,7 @@ const MapScreen = () => {
     let activity: Activity = selectedFeature.properties.activity;
     let creator: User = selectedFeature.properties.creator;
 
-    if (!activity) {
-      return;
-    }
-
-    if (!creator) {
+    if (!activity || !creator) {
       return;
     }
 
@@ -114,8 +112,7 @@ const MapScreen = () => {
           scaleBarEnabled={false}
           attributionEnabled={false}
           logoEnabled={false}
-          compassEnabled={false}
-          onPress={onPress}>
+          compassEnabled={false}>
           <Camera
             ref={cameraRef}
             defaultSettings={{

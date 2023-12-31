@@ -1,9 +1,3 @@
-import { PING_FRAGMENT, USER_FRAGMENT } from '@app/lib';
-import { FragmentType } from '@app/__generated__/gql';
-import {
-  PingFragmentFragment,
-  UserFragmentFragment,
-} from '@app/__generated__/gql/graphql';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { DrawerScreenProps } from '@react-navigation/drawer';
 import type {
@@ -56,6 +50,10 @@ export type MainNavList = {
 export type RootStackParamList = {
   Drawer: NavigatorScreenParams<DrawerParamList>;
   ForumNavigation: NavigatorScreenParams<ForumStackParamList>;
+  Home: NavigatorScreenParams<HomeStackParamList>;
+  NearbyNavigation: NavigatorScreenParams<NearbyStackParamList>;
+  Ping: NavigatorScreenParams<PingStackParamList>;
+  ActivityNavigation: NavigatorScreenParams<ActivityStackParamList>;
 };
 
 type RootStackScreenProps<T extends keyof RootStackParamList> =
@@ -71,7 +69,7 @@ export type DrawerParamList = {
 // Bottom tab
 export type BottomTabParamList = {
   Home: undefined;
-  Activity: NavigatorScreenParams<ActivityStackParamList>;
+  Activity: undefined;
   Ping: NavigatorScreenParams<PingStackParamList>;
   Nearby: undefined;
   Search: undefined;
@@ -80,22 +78,7 @@ export type BottomTabParamList = {
 // * Home Screen
 export type HomeStackParamList = {
   HomeScreen: {
-    ping?: {
-      id: string;
-      createdAt?: string | Date | null;
-      title: string;
-      description?: string | null;
-      picks: Array<string>;
-      latitude: number;
-      longitude: number;
-      media?: ({ key: string; type: string } | null)[] | null;
-      user: {
-        id: string;
-        username: string;
-        name?: { firstName: string; lastName: string } | null;
-        picture?: string | null;
-      };
-    };
+    ping?: Activity;
     loading?: boolean;
   };
 };
@@ -114,7 +97,6 @@ export type BottomTabStackScreenProps<T extends keyof BottomTabParamList> =
 
 // * Activity
 export type ActivityStackParamList = {
-  Activities: undefined;
   ActivityScreen: {
     activityID?: string;
     activity?: Activity;
@@ -139,6 +121,14 @@ export type ForumStackParamList = {
 
 export type ForumStackScreenProps<T extends keyof ForumStackParamList> =
   StackScreenProps<ForumStackParamList, T>;
+
+// * Nearby
+export type NearbyStackParamList = {
+  MapScreen: undefined;
+};
+
+export type NearbyStackScreenProps<T extends keyof NearbyStackParamList> =
+  StackScreenProps<NearbyStackParamList, T>;
 
 declare global {
   namespace ReactNavigation {

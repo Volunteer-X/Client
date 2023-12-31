@@ -22,8 +22,7 @@ import { Activity } from '@app/types/entities';
 
 export const ActivityListScreen = () => {
   // Navigation
-  const navigation =
-    useNavigation<ActivityStackScreenProps<'Activities'>['navigation']>();
+  const navigation = useNavigation();
 
   // Theme
   const { theme } = useAppTheme();
@@ -66,10 +65,13 @@ export const ActivityListScreen = () => {
 
   const handleOnCardPress = useCallback(
     (item: Activity) => {
-      navigation.navigate('ActivityScreen', {
-        activityID: item?.id,
-        activity: item,
-        owner: data?.getAllPing.owner,
+      navigation.navigate('ActivityNavigation', {
+        screen: 'ActivityScreen',
+        params: {
+          activityID: item?.id,
+          activity: item,
+          owner: data?.getAllPing.owner,
+        },
       });
     },
     [data?.getAllPing.owner, navigation],

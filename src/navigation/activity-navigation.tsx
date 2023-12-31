@@ -1,15 +1,13 @@
 import React from 'react';
-import { View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ActivityStackParamList } from '@app/types/type';
-import { createStackNavigator } from '@react-navigation/stack';
-import { ActivityListScreen, ActivityScreen } from '@app/features';
+import { ActivityScreen } from '@app/features';
 
 export const ActivityNavigation = () => {
-  const Stack = createStackNavigator<ActivityStackParamList>();
+  const Stack = createNativeStackNavigator<ActivityStackParamList>();
 
   return (
-    <Stack.Navigator initialRouteName="Activities">
-      <Stack.Screen name="Activities" component={ActivityListScreen} />
+    <Stack.Navigator>
       <Stack.Screen
         name="ActivityScreen"
         component={ActivityScreen}

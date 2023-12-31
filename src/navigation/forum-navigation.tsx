@@ -1,10 +1,10 @@
 import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { ForumStackParamList } from '@ts-types/type';
 import { ForumListScreen, ForumScreen } from '@app/features';
 
 export const ForumNavigation = () => {
-  const Stack = createStackNavigator<ForumStackParamList>();
+  const Stack = createNativeStackNavigator<ForumStackParamList>();
 
   return (
     <Stack.Navigator>
