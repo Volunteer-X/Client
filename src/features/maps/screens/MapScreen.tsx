@@ -26,11 +26,14 @@ import {
   ActivityBottomSheetRef,
 } from '@app/components/bottom-sheets';
 import { Activity, User } from '@app/types/entities';
+import { useEffect } from 'react';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
   const inset = useSafeAreaInsets();
   const styles = makeStyles(theme, inset);
+
+  // const;
 
   const cameraRef = useRef<Camera>(null);
   const activityModalRef = useRef<ActivityBottomSheetRef>(null);
@@ -53,6 +56,10 @@ const MapScreen = () => {
     aFeature.id = `${Date.now()}`;
 
     console.log('aFeature', aFeature);
+  };
+
+  const handleOnBottomSheetPress = () => {
+    console.log('handleOnBottomSheetPress', activityModalRef.current?.data);
   };
 
   const onSourceLayerPress = (e: any) => {
@@ -84,7 +91,10 @@ const MapScreen = () => {
         barStyle={theme.dark ? 'light-content' : 'dark-content'}
       />
       <View style={styles.container}>
-        <ActivityBottomSheet ref={activityModalRef} />
+        <ActivityBottomSheet
+          ref={activityModalRef}
+          onPress={handleOnBottomSheetPress}
+        />
         {/* {geoLoading && coords && (
           <View style={styles.overlay}>
             <LottieView

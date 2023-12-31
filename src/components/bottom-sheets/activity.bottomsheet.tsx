@@ -20,7 +20,7 @@ import { makeStyles } from './activity-setting.style';
 import { ActivityBottomSheetRef } from './bottomsheet.type';
 
 export const ActivityBottomSheet = forwardRef(
-  (props: any, ref: Ref<ActivityBottomSheetRef>) => {
+  ({ onPress }: { onPress: () => {} }, ref: Ref<ActivityBottomSheetRef>) => {
     const { theme } = useAppTheme();
     const styles = makeStyles(theme);
     const bottomSheetRef = useRef<BottomSheetModal>(null);
@@ -31,17 +31,9 @@ export const ActivityBottomSheet = forwardRef(
       openModal: (_activity, _creator) => {
         setActivity(_activity);
         setCreator(_creator);
-
         bottomSheetRef.current?.present();
       },
-      // setActivity(_activity) {
-      //   console.log('activity', activity);
-      //   setActivity(_activity);
-      // },
-      // setCreator(_creator) {
-      //   // console.log('creator', creator);
-      //   setCreator(_creator);
-      // },
+      data: { activity: activity ? activity : ({} as Activity), creator },
     }));
 
     const snapPoints = useMemo(() => ['50%'], []);
@@ -71,16 +63,14 @@ export const ActivityBottomSheet = forwardRef(
         backdropComponent={renderBackdrop}
         style={styles.bottomSheetModal}
         handleStyle={styles.handleStyle}
-        handleIndicatorStyle={styles.handleIndicatorStyle}
-        animationDuration={300}
-        {...props}>
+        handleIndicatorStyle={styles.handleIndicatorStyle}>
         <View style={styles.contentContainer}>
           <ActivityCard
             activity={activity}
             creator={creator}
             options={{ isMember: false, showMenu: false, textLines: 10 }}
             onMenuClick={() => {}}
-            onPress={() => {}}
+            onPress={onPress}
           />
         </View>
       </BottomSheetModal>

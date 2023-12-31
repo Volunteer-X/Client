@@ -10,6 +10,5 @@ export type settingProps = {
 
 export type ActivityBottomSheetRef = {
   openModal: (activity: Activity, creator: User) => void;
-  // setActivity: (activity: Activity) => void;
-  // setCreator: (creator: User) => void;
+  data: { activity: Activity; creator: User };
 };
