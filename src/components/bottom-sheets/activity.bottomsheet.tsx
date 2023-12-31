@@ -1,5 +1,5 @@
 import useAppTheme from '@app/hooks/useAppTheme';
-import { Activity } from '@app/types/entities';
+import { Activity, User } from '@app/types/entities';
 import {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -15,7 +15,7 @@ import React, {
 } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
-import { ActivityCard } from '..';
+import ActivityCard from '@components/activity-card';
 import { makeStyles } from './activity-setting.style';
 import { ActivityBottomSheetRef } from './bottomsheet.type';
 
@@ -25,23 +25,31 @@ export const ActivityBottomSheet = forwardRef(
     const styles = makeStyles(theme);
     const bottomSheetRef = useRef<BottomSheetModal>(null);
     const [activity, setActivity] = React.useState<Activity>();
+    const [creator, setCreator] = React.useState<User>();
 
     useImperativeHandle(ref, () => ({
-      openModal: () => {
+      openModal: (_activity, _creator) => {
+        setActivity(_activity);
+        setCreator(_creator);
+
         bottomSheetRef.current?.present();
       },
-      setActivity(_activity) {
-        console.log('activity', activity);
-        setActivity(_activity);
-      },
+      // setActivity(_activity) {
+      //   console.log('activity', activity);
+      //   setActivity(_activity);
+      // },
+      // setCreator(_creator) {
+      //   // console.log('creator', creator);
+      //   setCreator(_creator);
+      // },
     }));
 
-    const snapPoints = useMemo(() => ['20%'], []);
+    const snapPoints = useMemo(() => ['50%'], []);
 
     const renderBackdrop = useCallback(
-      (props: BottomSheetBackdropProps) => (
+      (backdropProps: BottomSheetBackdropProps) => (
         <BottomSheetBackdrop
-          {...props}
+          {...backdropProps}
           opacity={0.85}
           disappearsOnIndex={-1}
           appearsOnIndex={0}
@@ -50,6 +58,10 @@ export const ActivityBottomSheet = forwardRef(
       ),
       [],
     );
+
+    if (!activity || !creator) {
+      return null;
+    }
 
     return (
       <BottomSheetModal
@@ -63,18 +75,13 @@ export const ActivityBottomSheet = forwardRef(
         animationDuration={300}
         {...props}>
         <View style={styles.contentContainer}>
-          {activity && (
-            <ActivityCard
-              activity={activity}
-              creator={activity.creator}
-              isMember={false}
-              showPicks={false}
-              showStar={false}
-              textLines={10}
-              onMenuClick={() => {}}
-              onPress={() => {}}
-            />
-          )}
+          <ActivityCard
+            activity={activity}
+            creator={creator}
+            options={{ isMember: false, showMenu: false, textLines: 10 }}
+            onMenuClick={() => {}}
+            onPress={() => {}}
+          />
         </View>
       </BottomSheetModal>
     );

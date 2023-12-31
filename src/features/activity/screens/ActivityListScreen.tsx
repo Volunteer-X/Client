@@ -170,8 +170,7 @@ export const ActivityListScreen = () => {
                   <ActivityCard
                     activity={item.node}
                     creator={data?.getAllPing.owner}
-                    showPicks
-                    showStar
+                    options={{ showMenu: false, showPicks: false }}
                     onMenuClick={() => {
                       settingModalRef.current?.openModal();
                     }}

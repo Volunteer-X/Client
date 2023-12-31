@@ -13,37 +13,44 @@ import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
 import { getRelativeTime } from '@app/utils';
 import { Activity, User } from '@app/types/entities';
+import useAppTheme from '@app/hooks/useAppTheme';
 
-export type ActivityCardProps = {
+type ActivityOptions = {
   isOriginalPing?: boolean;
-  url?: string;
-  media?: Asset[];
-  title?: string;
-  text?: string;
-  username?: string;
-  picks?: string[];
   showPicks?: boolean;
   showStar?: boolean;
   isMember?: boolean;
+  textLines?: number;
+  showMenu?: boolean;
+};
+
+export type ActivityCardProps = {
   activity: Activity;
   creator: User;
-  textLines?: number;
+  options?: ActivityOptions;
   onMenuClick?: () => void;
   onPress?: () => void;
 };
 
 const ActivityCard = ({
-  isOriginalPing = false,
-  showPicks = false,
-  showStar = false,
   onMenuClick,
   onPress,
   activity,
   creator,
-  isMember,
-  textLines = 3,
+  options = {
+    isOriginalPing: false,
+    showPicks: true,
+    showStar: false,
+    isMember: false,
+    textLines: 3,
+    showMenu: true,
+  },
 }: ActivityCardProps) => {
+  const theme = useAppTheme().theme;
   const { title, description, picks, url, media, createdAt } = activity;
+
+  const { isOriginalPing, showPicks, showStar, isMember, textLines, showMenu } =
+    options;
 
   return (
     <View style={{ width: '100%' }}>
@@ -71,12 +78,14 @@ const ActivityCard = ({
         <View style={styles.rightContainer}>
           {/* Username, timeline, options */}
           <View style={styles.header}>
-            <Text variant="bodyMedium" style={{}}>
+            <Text
+              variant="bodyMedium"
+              style={{ color: theme.colors.onBackground }}>
               {creator?.name &&
                 `${creator.name.firstName} ${creator.name.lastName}`}
             </Text>
             <View style={styles.starTimeAndMenu}>
-              {isMember ? (
+              {!isMember ? (
                 <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
                   Join
                 </Button>
@@ -92,15 +101,19 @@ const ActivityCard = ({
                   style={{ transform: [{ scaleX: -1 }] }}
                 />
               )}
-              <Text variant="bodySmall" style={{}}>
+              <Text
+                variant="bodySmall"
+                style={{ color: theme.colors.onBackground }}>
                 {createdAt && getRelativeTime(createdAt as Date)}
               </Text>
-              <Ionicons
-                name="ellipsis-horizontal"
-                size={20}
-                style={{}}
-                onPress={onMenuClick}
-              />
+              {showMenu && (
+                <Ionicons
+                  name="ellipsis-horizontal"
+                  size={20}
+                  style={{}}
+                  onPress={onMenuClick}
+                />
+              )}
             </View>
           </View>
           {/* Content */}
@@ -122,7 +135,10 @@ const ActivityCard = ({
               </View>
             )}
             {/* Title */}
-            <Text variant="labelLarge" numberOfLines={2} style={styles.title}>
+            <Text
+              variant="labelLarge"
+              numberOfLines={2}
+              style={[styles.title, { color: theme.colors.onBackground }]}>
               {title}
             </Text>
             {/* URL */}
@@ -140,14 +156,17 @@ const ActivityCard = ({
                             variant="labelSmall"
                             numberOfLines={2}
                             ellipsizeMode="tail"
-                            style={{}}>
+                            style={{ color: theme.colors.onBackground }}>
                             {payload.previewData.link}
                           </Text>
                           <Text
                             variant="labelMedium"
                             numberOfLines={2}
                             ellipsizeMode="tail"
-                            style={styles.bold}>
+                            style={[
+                              styles.bold,
+                              { color: theme.colors.onBackground },
+                            ]}>
                             {payload.previewData.title}
                           </Text>
                         </View>
@@ -177,7 +196,11 @@ const ActivityCard = ({
             )}
             {/* Description */}
             <ViewMoreText numberOfLines={textLines}>
-              <Text variant="bodyMedium">{description}</Text>
+              <Text
+                variant="bodyMedium"
+                style={{ color: theme.colors.onBackground }}>
+                {description}
+              </Text>
             </ViewMoreText>
             {/* Actions */}
             {/* <View style={{ flexDirection: 'row', display: 'flex' }}>

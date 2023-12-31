@@ -1,4 +1,4 @@
-import { Activity } from '@app/types/entities';
+import { Activity, User } from '@app/types/entities';
 
 export type BottomSheetRefProps = {
   openModal: () => void;
@@ -8,6 +8,8 @@ export type settingProps = {
   isOwner?: boolean;
 };
 
-export type ActivityBottomSheetRef = BottomSheetRefProps & {
-  setActivity: (activity: Activity) => void;
+export type ActivityBottomSheetRef = {
+  openModal: (activity: Activity, creator: User) => void;
+  // setActivity: (activity: Activity) => void;
+  // setCreator: (creator: User) => void;
 };

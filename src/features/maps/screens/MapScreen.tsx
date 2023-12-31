@@ -25,7 +25,7 @@ import {
   ActivityBottomSheet,
   ActivityBottomSheetRef,
 } from '@app/components/bottom-sheets';
-import { Activity } from '@app/types/entities';
+import { Activity, User } from '@app/types/entities';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
@@ -41,7 +41,7 @@ const MapScreen = () => {
   const [currentLocation, setCurrentLocation] = useState<number[]>();
   const [picks, setPicks] = useState<string[]>(user?.picks || []);
 
-  const collection = useNearbyPing({
+  const { collection } = useNearbyPing({
     latitude: coords.latitude,
     longitude: coords.longitude,
   });
@@ -57,18 +57,23 @@ const MapScreen = () => {
 
   const onSourceLayerPress = (e: any) => {
     const selectedFeature: GeoJSON.Feature = e.features[0];
-    console.log('selectedFeature', selectedFeature.properties);
-    activityModalRef.current?.openModal();
-    activityModalRef.current?.setActivity({
-    __typename: selectedFeature.properties.
-      id: selectedFeature.properties.id,
-      title: selectedFeature.properties.title,
-      description: selectedFeature.properties.description,
-      picks: selectedFeature.properties.picks,
-      url: selectedFeature.properties.url,
-      media: selectedFeature.properties.media,
-      createdAt: selectedFeature.properties.createdAt,
-    } as Activity);
+
+    if (!selectedFeature.properties) {
+      return;
+    }
+
+    let activity: Activity = selectedFeature.properties.activity;
+    let creator: User = selectedFeature.properties.creator;
+
+    if (!activity) {
+      return;
+    }
+
+    if (!creator) {
+      return;
+    }
+
+    activityModalRef.current?.openModal(activity, creator);
   };
 
   return (

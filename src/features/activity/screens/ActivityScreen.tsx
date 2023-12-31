@@ -260,9 +260,11 @@ const ActivityScreen = () => {
               <ActivityCard
                 activity={activity}
                 creator={owner}
-                isOriginalPing
-                showStar
-                textLines={10}
+                options={{
+                  isOriginalPing: true,
+                  showStar: true,
+                  textLines: 10,
+                }}
                 onMenuClick={handleOnMenuClick}
               />
             </View>
