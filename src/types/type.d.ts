@@ -113,7 +113,7 @@ export type ActivityStackScreenProps<T extends keyof ActivityStackParamList> =
 // * Forum
 export type ForumStackParamList = {
   Forums: undefined;
-  ForumScreen: undefined;
+  Channel: { channelID: string };
   ForumMembers: undefined;
   ForumSetting: undefined;
   Profile: undefined;

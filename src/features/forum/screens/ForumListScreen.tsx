@@ -18,32 +18,32 @@ import { EmptyScreen } from './EmptyScreen';
 import { Avatar } from '@app/components';
 
 type Forum = {
-  forumID: string;
+  channel: string;
   title: string;
   timestamp: string;
   username: string;
   replies: number;
-  memberCount?: number;
+  participants?: number;
   picture?: string;
 };
 
 // Forum list
 const forumList: Forum[] = [
   {
-    forumID: '1',
+    channel: '1',
     title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     picture: 'https://picsum.photos/200',
     timestamp: '31 Jun 2023',
-    memberCount: 10,
+    participants: 10,
     username: 'Username',
     replies: 10,
   },
   {
-    forumID: '2',
+    channel: '2',
     title: 'Forum 2',
     picture: 'https://picsum.photos/200',
     timestamp: '31 Jun 2023',
-    memberCount: 2,
+    participants: 2,
     username: 'Username',
     replies: 10,
   },
@@ -65,14 +65,14 @@ export const ForumListScreen = () => {
     });
   }, [navigation, styles.header]);
 
-  const handleOnClick = () => {
-    navigation.navigate('ForumScreen');
+  const handleOnClick = (item: Forum) => {
+    navigation.navigate('Channel', { channelID: item.channel });
   };
 
   // Render item
   const _renderItem: ListRenderItem<Forum> = ({ item: forum }) => {
     return (
-      <Pressable onPress={handleOnClick}>
+      <Pressable onPress={() => handleOnClick(forum)}>
         <View style={styles.forumContainer}>
           <View style={styles.avatarContainer}>
             <Avatar size={50} showBorder uri={forum.picture} />
@@ -93,7 +93,7 @@ export const ForumListScreen = () => {
                 justifyContent: 'space-between',
               }}>
               <Text variant="labelSmall" style={styles.replies}>
-                {`${forum.memberCount} Members | ${forum.replies} Replies`}
+                {`${forum.participants} Members | ${forum.replies} Replies`}
               </Text>
               <Text variant="labelSmall" style={styles.timestamp}>
                 {forum.timestamp}
@@ -125,7 +125,7 @@ export const ForumListScreen = () => {
           <FlatList
             showsVerticalScrollIndicator={false}
             data={forumList}
-            keyExtractor={item => item.forumID}
+            keyExtractor={item => item.channel}
             renderItem={_renderItem}
           />
         )}

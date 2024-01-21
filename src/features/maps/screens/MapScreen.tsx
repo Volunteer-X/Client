@@ -46,6 +46,13 @@ const MapScreen = () => {
   const [currentLocation, setCurrentLocation] = useState<number[]>();
   const [picks, setPicks] = useState<string[]>(user?.picks || []);
 
+  useEffect(() => {
+    cameraRef.current?.setCamera({
+      centerCoordinate: [coords?.longitude, coords?.latitude],
+      zoomLevel: 13,
+    });
+  }, [coords?.latitude, coords?.longitude]);
+
   const { collection } = useNearbyPing({
     latitude: coords.latitude,
     longitude: coords.longitude,
@@ -93,16 +100,6 @@ const MapScreen = () => {
           ref={activityModalRef}
           onPress={handleOnBottomSheetPress}
         />
-        {/* {geoLoading && coords && (
-          <View style={styles.overlay}>
-            <LottieView
-              source={require('@assets/anims/pull-to-refresh.json')}
-              autoPlay
-              loop
-              style={styles.lottie}
-            />
-          </View>
-        )} */}
         <MapView
           style={styles.map}
           styleURL={MAPBOX_STYLE_DARK}
@@ -115,20 +112,16 @@ const MapScreen = () => {
           compassEnabled={false}>
           <Camera
             ref={cameraRef}
-            defaultSettings={{
-              centerCoordinate: [0.1276, 51.5072],
-              zoomLevel: 13,
-            }}
-            centerCoordinate={[coords?.longitude, coords?.latitude]}
             zoomLevel={13}
             minZoomLevel={14}
             maxZoomLevel={10}
             animationMode="flyTo"
+            followZoomLevel={13}
             followUserLocation={true}
             followUserMode={UserTrackingMode.Follow}
           />
 
-          <LocationPuck />
+          <LocationPuck pulsing={{ isEnabled: true }} />
 
           <ShapeSource
             id="symbolLocationSource"
@@ -155,14 +148,14 @@ const MapScreen = () => {
             }
           }}
         /> */}
-        <View style={styles.headerView}>
-          {/* <Searchbar
+        {/* <View style={styles.headerView}>
+          <Searchbar
             mode="bar"
             value=""
             placeholder="Search"
             style={styles.searchBar}
             editable={false}
-          /> */}
+          />
           <PicksSelectView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -174,9 +167,7 @@ const MapScreen = () => {
               setPicks(selectedPicks);
             }}
           />
-        </View>
-
-        {/* <CarouselMapCard /> */}
+        </View> */}
       </View>
     </View>
   );

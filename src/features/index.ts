@@ -22,4 +22,4 @@ export { default as SettingScreen } from './setting/screens/SettingScreen';
 
 // Feature -- Forum
 export { ForumListScreen } from './forum/screens/ForumListScreen';
-export { ForumScreen } from './forum/screens/ForumScreen';
+export { Channel } from './forum/screens/Channel';

@@ -78,7 +78,7 @@ export const ActivityListScreen = () => {
   );
 
   // Header
-  const header = useCallback(() => {
+  const header = () => {
     return (
       <View style={styles.header}>
         <Text
@@ -89,13 +89,13 @@ export const ActivityListScreen = () => {
         </Text>
       </View>
     );
-  }, [styles.header, styles.headerTitleText]);
+  };
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      header,
-    });
-  }, [header, navigation]);
+  // useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     header,
+  //   });
+  // }, [header, navigation]);
 
   const renderEmptyComponent = useCallback(() => {
     return (
@@ -141,6 +141,7 @@ export const ActivityListScreen = () => {
         <ActivityListFab />
         <ActivitySettingModal ref={settingModalRef} />
         <View style={{ flex: 1 }}>
+          {header()}
           {loading ? (
             <View style={styles.loadingContainer}>
               <LottieView

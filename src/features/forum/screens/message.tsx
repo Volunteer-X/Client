@@ -1,5 +1,4 @@
 import useAppTheme from '@app/hooks/useAppTheme';
-import { current } from '@reduxjs/toolkit';
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
 import {
@@ -10,7 +9,6 @@ import {
   isSameUser,
   MessageProps,
 } from 'react-native-gifted-chat';
-import { Text } from 'react-native-paper';
 import { Bubble } from './bubble';
 import { makeMessageStyles } from './forum.style';
 

@@ -37,7 +37,12 @@ import { SIZES } from '@app/lib';
 import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 
-import { MediaTypeView, PicksIcon, TextInputEnhanced } from '@app/components';
+import {
+  BackButton,
+  MediaTypeView,
+  PicksIcon,
+  TextInputEnhanced,
+} from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import { useGeoLocation } from '@app/context/geo-location';
 import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
@@ -81,6 +86,8 @@ export const PingFinalPage = () => {
   // * Update selected point if current location changes
   // ! possible bug when user location changes
   useEffect(() => {
+    console.log('currentLocation', currentLocation);
+
     if (!currentLocation) {
       return;
     }
@@ -278,6 +285,7 @@ export const PingFinalPage = () => {
     navigation.setOptions({
       headerShown: true,
       headerTitle: 'Create a ping',
+      headerLeft: () => <BackButton />,
       headerRight,
       headerStyle: styles.header,
     }),

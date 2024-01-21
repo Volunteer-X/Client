@@ -20,6 +20,16 @@ function waitForNonNullValue(value: User | null): Promise<User> {
   });
 }
 
+/**
+ * Authenticates the user using Auth0.
+ *
+ * @param authorize - The authorization function.
+ * @param auth0User - The Auth0 user object.
+ * @param setLoading - The state setter for loading status.
+ * @param getUserByEmail - The function to get user by email from the database.
+ * @param dispatch - The dispatch function for updating the authentication state.
+ * @returns The authenticated user object.
+ */
 export const auth0Function = async (
   authorize: any,
   auth0User: User | null,

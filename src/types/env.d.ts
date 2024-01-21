@@ -13,4 +13,5 @@ declare module '@env' {
   export const DEV_FILE_PATH: string;
   export const DEV_SCHEME: string;
   export const DEV_FILE: string;
+  export const DEV_SOCKET: number;
 }

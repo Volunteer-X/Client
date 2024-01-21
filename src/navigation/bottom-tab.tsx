@@ -94,7 +94,7 @@ const BottomTabNavigation = () => {
           tabBarStyle: { display: 'none' },
         })}
       />
-      <Tab.Screen name="Search" component={SearchScreen} />
+      {/* <Tab.Screen name="Search" component={SearchScreen} /> */}
       <Tab.Screen
         name="Activity"
         component={ActivityListScreen}
