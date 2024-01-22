@@ -3,12 +3,10 @@ import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { PingStackParamList } from '@ts-types/type';
-import { PingFinalPage, PingSelectPicks } from '@features/ping/screens';
-import { PingHeaderLeft, PingHeaderRight } from '@app/components';
+import { PingFinalPage } from '@features/ping/screens';
 import { AppTheme } from '@app/theme';
 import { MD3Colors } from 'react-native-paper';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { SearchLocationScreen } from '@features/location/screens';
 
 export const PingNavigation = () => {
   const { theme } = useAppTheme();
@@ -28,7 +26,7 @@ export const PingNavigation = () => {
           component={PingFinalPage}
           // options={{ headerShown: true }}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SelectPicks"
           component={PingSelectPicks}
           options={({ route, navigation }) => ({
@@ -39,19 +37,19 @@ export const PingNavigation = () => {
             headerRight: props =>
               PingHeaderRight({ ...props, navigation, route }),
           })}
-        />
+        /> */}
         {/* <Stack.Screen name="Body" component={PingBody} options={{}} /> */}
         {/*
           // * Search Location Screen
          */}
-        <Stack.Screen
+        {/* <Stack.Screen
           name="SearchLocation"
           component={SearchLocationScreen}
           options={{
             headerShown: false,
             headerTitle: 'Add location',
           }}
-        />
+        /> */}
       </Stack.Navigator>
     </>
   );

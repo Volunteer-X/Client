@@ -2,6 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import { Point } from '@app/types/utility-types';
 import { MAPBOX_API } from '@env';
+import { Position } from '@turf/helpers';
 
 interface Response {
   type: string;
@@ -64,7 +65,7 @@ function formatAddress(context: Context[]): string {
 }
 
 // ! Bug Possible crash due to invalid Point
-export const getReverseGeocoding = async (coords: Point) => {
+export const getReverseGeocoding = async (point: Position) => {
   const baseUrl = 'https://api.mapbox.com/geocoding/v5' as const;
 
   enum endpoint {
@@ -72,7 +73,7 @@ export const getReverseGeocoding = async (coords: Point) => {
     PERMENANT_PLACES = 'mapbox.places-permanent',
   }
 
-  let url = `${baseUrl}/${endpoint.PLACES}/${coords.lng},${coords.lat}.json?access_token=${MAPBOX_API}`;
+  let url = `${baseUrl}/${endpoint.PLACES}/${point[0]},${point[1]}.json?access_token=${MAPBOX_API}`;
   // console.log(url);
 
   const response: AxiosResponse<Response, any> = await axios.get(url);

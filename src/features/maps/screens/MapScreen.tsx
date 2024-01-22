@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { View, StatusBar } from 'react-native';
 import {
   Camera,
@@ -24,11 +24,16 @@ import {
 import { Activity, User } from '@app/types/entities';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { FAB, IconButton } from 'react-native-paper';
+import { AppIcons } from '@app/theme/icon';
+import { useHeaderHeight } from '@react-navigation/elements';
+import { Position } from '@turf/helpers';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
   const inset = useSafeAreaInsets();
-  const styles = makeStyles(theme, inset);
+  const headerHeight = useHeaderHeight();
+  const styles = makeStyles(theme, inset, headerHeight);
 
   const navigation = useNavigation();
 
@@ -38,12 +43,26 @@ const MapScreen = () => {
   const user = useAppSelector(state => state.root.auth.user);
   const { coords } = useGeoLocation();
 
+  // const myLocation: Position = useMemo(
+  //   () => [coords.longitude, coords.latitude],
+  //   [coords.latitude, coords.longitude],
+  // );
+
+  const [myLocation, setMyLocation] = React.useState<Position>([
+    coords.longitude,
+    coords.latitude,
+  ]);
+
   useEffect(() => {
     cameraRef.current?.setCamera({
-      centerCoordinate: [coords?.longitude, coords?.latitude],
+      centerCoordinate: myLocation,
       zoomLevel: 13,
     });
-  }, [coords?.latitude, coords?.longitude]);
+  }, [myLocation]);
+
+  const handleMyLocation = useCallback(() => {
+    setMyLocation([coords.longitude, coords.latitude]);
+  }, [coords.latitude, coords.longitude]);
 
   const { collection } = useNearbyPing({
     latitude: coords.latitude,
@@ -80,14 +99,23 @@ const MapScreen = () => {
     activityModalRef.current?.openModal(activity, creator);
   };
 
+  const navigateToPingScreen = () => {
+    navigation.navigate('Ping', {
+      screen: 'FinalPage',
+      params: {
+        picks: user?.picks,
+        point: myLocation,
+      },
+    });
+  };
+
   return (
     <View style={styles.page}>
-      {/* <StatusBar
+      <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
-      /> */}
-      {/* <View style={styles.container}> */}
+        barStyle={'dark-content'}
+      />
       <ActivityBottomSheet
         ref={activityModalRef}
         onPress={handleOnBottomSheetPress}
@@ -104,6 +132,7 @@ const MapScreen = () => {
         compassEnabled={false}>
         <Camera
           ref={cameraRef}
+          centerCoordinate={myLocation}
           zoomLevel={13}
           minZoomLevel={14}
           maxZoomLevel={10}
@@ -129,7 +158,23 @@ const MapScreen = () => {
           <Images images={{ icon: marker }} />
         </ShapeSource>
       </MapView>
-      {/* </View> */}
+      <IconButton
+        icon={AppIcons.GPS}
+        style={styles.myLocation}
+        onPress={handleMyLocation}
+      />
+      <View style={styles.FABContainer}>
+        <FAB
+          icon={AppIcons.PING}
+          style={styles.pingFAB}
+          size="medium"
+          mode="elevated"
+          theme={{
+            colors: { primaryContainer: 'black', onPrimaryContainer: 'white' },
+          }}
+          onPress={navigateToPingScreen}
+        />
+      </View>
     </View>
   );
 };

@@ -14,7 +14,12 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import {
   Text,
   Divider,
@@ -29,6 +34,7 @@ import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import {
   PingCompositeScreenProps,
+  PingStackParamList,
   PingStackScreenProps,
 } from '@app/types/type';
 import { AppTheme } from '@app/theme';
@@ -50,21 +56,23 @@ import EmptyPickView from '../components/empty-pick-view';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import { AppIcons } from '@app/theme/icon';
 import { useCreatePing } from '../hooks/useCreatePing';
+import { Position } from '@turf/helpers';
 
 const { height } = Dimensions.get('window');
 
-export const PingFinalPage = () => {
+export const PingFinalPage = ({
+  route,
+  navigation,
+}: {
+  navigation: NavigationProp<PingStackParamList, 'FinalPage'>;
+  route: RouteProp<PingStackParamList, 'FinalPage'>;
+}) => {
   // Themeing
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
   // Navigation
-
-  const navigation =
-    useNavigation<
-      PingCompositeScreenProps<'Ping', 'FinalPage'>['navigation']
-    >();
-  const route = useRoute<PingStackScreenProps<'FinalPage'>['route']>();
+  const { point, _picks } = route.params;
 
   // Media handling
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
@@ -75,13 +83,10 @@ export const PingFinalPage = () => {
   const [disabled, setDisabled] = useState<boolean>(false);
 
   // * Get current location
-  const { coords: currentLocation, geoLoading } = useGeoLocation();
+  const { coords: currentLocation } = useGeoLocation();
 
   // * Get selected point
-  const [selectedPoint, setSelectedPoint] = useState<Point>(() => ({
-    lat: 0,
-    lng: 0,
-  }));
+  const [selectedPoint, setSelectedPoint] = useState<Position>(() => [0, 0]);
 
   // * Update selected point if current location changes
   // ! possible bug when user location changes
@@ -92,13 +97,10 @@ export const PingFinalPage = () => {
       return;
     }
     if (
-      selectedPoint.lat !== currentLocation.latitude ||
-      selectedPoint.lng !== currentLocation.longitude
+      selectedPoint[1] !== currentLocation.latitude ||
+      selectedPoint[0] !== currentLocation.longitude
     ) {
-      setSelectedPoint({
-        lat: currentLocation.latitude,
-        lng: currentLocation.longitude,
-      });
+      setSelectedPoint([currentLocation.longitude, currentLocation.latitude]);
     }
   }, [currentLocation, selectedPoint]);
 
@@ -109,14 +111,14 @@ export const PingFinalPage = () => {
 
   // * Update place on navigation back
   useEffect(() => {
-    if (route.params && route.params.point !== undefined) {
-      setSelectedPoint(route.params.point);
+    if (route.params && point) {
+      setSelectedPoint(point);
     }
 
     getReverseGeocoding(selectedPoint)
       .then(value => setPlace(value))
       .catch(e => console.error(e));
-  }, [currentLocation, route.params, selectedPoint]);
+  }, [currentLocation, point, route.params, selectedPoint]);
 
   // * Navigate to pick select screen
   const navigateToPickSelect = () => {
@@ -211,7 +213,7 @@ export const PingFinalPage = () => {
   };
 
   // * useCreatePing
-  const { createPing, loading, error } = useCreatePing();
+  const { createPing, loading } = useCreatePing();
 
   const handleOnSubmit = useCallback(async () => {
     if (titleText.length === 0 || picks.length === 0) {

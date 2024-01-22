@@ -25,4 +25,5 @@ export enum AppIcons {
   HOT = 'flame',
   FILTER = 'filter',
   SEARCH = 'search',
+  PING = 'megaphone',
 }

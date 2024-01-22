@@ -6,11 +6,14 @@ import { MainDrawerParamList } from '@ts-types/type';
 import {
   BackButton,
   headerAvatar,
+  headerBackground,
   headerForum,
   headerTitle,
 } from '@app/components';
 import { MainDrawerContent } from './main-content';
 import { useAppSelector } from '@app/hooks';
+import LinearGradient from 'react-native-linear-gradient';
+import { SIZES } from '@app/lib';
 
 const MainDrawer = (): React.JSX.Element => {
   const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -43,11 +46,24 @@ const MainDrawer = (): React.JSX.Element => {
               firstName: user?.firstName,
               picture: user?.picture,
             }),
+          headerLeftContainerStyle: {
+            paddingLeft: SIZES.medium,
+          },
           headerRight: () => headerForum(navigation),
+          headerRightContainerStyle: {
+            paddingRight: SIZES.small,
+          },
+          headerTransparent: true,
+          headerBackground: headerBackground,
+          headerShadowVisible: true,
+          headerStyle: {
+            elevation: 2,
+          },
         })}
       />
       <Drawer.Screen
         name="Profile"
+        initialParams={{ userID: user?.id }}
         component={ProfileScreen}
         options={{
           headerShown: true,

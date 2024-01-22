@@ -3,19 +3,14 @@ import { AppTheme } from '@app/theme';
 import { StyleSheet } from 'react-native';
 import { EdgeInsets } from 'react-native-safe-area-context';
 
-export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
+export const makeStyles = (
+  theme: AppTheme,
+  inset: EdgeInsets,
+  headerHeight: number,
+) =>
   StyleSheet.create({
     page: {
       flex: 1,
-    },
-    container: {
-      // flex: 1,
-      // justifyContent: 'flex-end',
-      // alignItems: 'center',
-      // paddingTop: inset.top,
-      // paddingBottom: inset.bottom,
-      // paddingLeft: inset.left,
-      // paddingRight: inset.right,
     },
     map: {
       flex: 1,
@@ -44,12 +39,12 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
     myLocation: {
       position: 'absolute',
-      top: 175,
-      right: 10,
-      backgroundColor: 'black',
-      borderWidth: 1,
+      top: headerHeight + PADDING.sm,
+      right: inset.right + PADDING.sm,
+      // backgroundColor: 'black',
+      borderWidth: 1.5,
       borderColor: '#c9c9c9',
-      padding: 5,
+      padding: 1.5,
       borderRadius: 10,
     },
     headerView: {
@@ -71,6 +66,15 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       paddingVertical: 10,
       paddingHorizontal: 10,
     },
+    FABContainer: {
+      position: 'absolute',
+      bottom: inset.bottom + PADDING.md,
+      right: 0,
+      left: 0,
+      // justifyContent: 'center',
+      alignItems: 'center',
+    },
+    pingFAB: { paddingHorizontal: PADDING.md },
   });
 
 export const mapStyle = {
