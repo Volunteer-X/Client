@@ -1,32 +1,20 @@
-import React, { useCallback } from 'react';
+import { Avatar } from '@app/components';
+import { useAppSelector } from '@app/hooks';
+import useAppTheme from '@app/hooks/useAppTheme';
+import { SIZES } from '@app/lib';
+import { AppIcons } from '@app/theme/icon';
 import {
   DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
-  createDrawerNavigator,
 } from '@react-navigation/drawer';
-import {
-  Button,
-  Divider,
-  IconButton,
-  MD3Colors,
-  Text,
-} from 'react-native-paper';
+import React, { useCallback } from 'react';
+import { DevSettings, Pressable, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
-import { DevSettings, Pressable, StyleSheet, View } from 'react-native';
+import { Button, Divider, IconButton, Text } from 'react-native-paper';
+import { makeStyles } from './main-drawer.style';
 
-import BottomTabNavigation from '../bottom-tab';
-
-import { SIZES } from '@app/lib/index';
-import { ProfileScreen, SettingScreen } from '@features/index';
-import useAppTheme from '@app/hooks/useAppTheme';
-import { AppTheme } from '@app/theme';
-import { AppIcons } from '@app/theme/icon';
-import { DrawerParamList } from '@ts-types/type';
-import { useAppSelector } from '@app/hooks';
-import { Avatar } from '@app/components';
-
-function HomeDrawerContent(props: DrawerContentComponentProps) {
+export const MainDrawerContent = (props: DrawerContentComponentProps) => {
   const { clearSession } = useAuth0();
 
   const { theme } = useAppTheme();
@@ -58,10 +46,10 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
            * Pick Viewer
            */}
           {/* <IconButton
-            icon="circle"
-            style={styles.picksButton}
-            onPress={() => {}}
-          /> */}
+              icon="circle"
+              style={styles.picksButton}
+              onPress={() => {}}
+            /> */}
           <View style={styles.nameContainer}>
             <Text variant="bodyLarge">{`${user?.firstName} ${user?.lastName}`}</Text>
             <Text style={styles.username} variant="bodySmall">
@@ -111,68 +99,4 @@ function HomeDrawerContent(props: DrawerContentComponentProps) {
       </View>
     </View>
   );
-}
-
-const makeStyles = (theme: AppTheme) =>
-  StyleSheet.create({
-    container: {
-      padding: 20,
-    },
-    footer: {
-      flexDirection: 'row',
-      justifyContent: 'space-evenly',
-      alignItems: 'center',
-    },
-
-    statContainer: {
-      flexDirection: 'row',
-      columnGap: 15,
-      marginVertical: 10,
-    },
-    nameContainer: {
-      marginTop: 10,
-    },
-    username: {
-      color: MD3Colors.neutral50,
-    },
-    picksButton: {
-      position: 'absolute',
-      top: 10,
-      right: 0,
-    },
-  });
-
-const HomeDrawer = (): React.JSX.Element => {
-  const Drawer = createDrawerNavigator<DrawerParamList>();
-
-  return (
-    <Drawer.Navigator
-      detachInactiveScreens
-      initialRouteName="BottomTab"
-      screenOptions={{ headerShown: false }}
-      drawerContent={props => HomeDrawerContent(props)}>
-      <Drawer.Screen
-        name="BottomTab"
-        component={BottomTabNavigation}
-        options={{ drawerItemStyle: { display: 'none' } }}
-      />
-      <Drawer.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          headerShown: true,
-          headerLeft(props) {
-            // return BackButton(props);
-          },
-        }}
-      />
-      <Drawer.Screen
-        name="AppSettings"
-        options={{ title: 'Settings' }}
-        component={SettingScreen}
-      />
-    </Drawer.Navigator>
-  );
 };
-
-export default HomeDrawer;

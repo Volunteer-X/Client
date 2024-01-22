@@ -12,7 +12,7 @@ import {
 import { PingNavigation } from './ping-navigation';
 import useAppTheme from '@hooks/useAppTheme';
 import { AppTheme } from '@app/theme';
-import { HomeHeader } from '@app/components';
+import { MainHeader } from '@app/components';
 import { ActivityNavigation } from './activity-navigation';
 import { BottomTabParamList } from '@ts-types/type';
 import { RouteProp } from '@react-navigation/native';
@@ -78,7 +78,7 @@ const BottomTabNavigation = () => {
         name="Home"
         component={HomeNavigation}
         options={{
-          header: () => HomeHeader(),
+          header: () => MainHeader(),
         }}
       />
       <Tab.Screen
@@ -89,7 +89,7 @@ const BottomTabNavigation = () => {
       <Tab.Screen
         name="Ping"
         component={PingNavigation}
-        options={({ route, navigation }) => ({
+        options={() => ({
           headerShown: false,
           tabBarStyle: { display: 'none' },
         })}

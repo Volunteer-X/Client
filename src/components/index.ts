@@ -12,7 +12,7 @@ export * from './video-player';
 
 export * from './headers/ping-headers';
 
-export * from './headers/home-header';
+export * from './headers/main-header';
 
 export * from './pull-to-refresh-list';
 

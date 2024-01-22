@@ -9,6 +9,8 @@ import UserFeeds from './UserFeeds';
 import { useAppSelector } from '@app/hooks';
 import { Avatar } from '@app/components';
 import { AppIcons } from '@app/theme/icon';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { MainDrawerParamList } from '@app/types/type';
 
 const StatView = ({
   statCount,
@@ -53,14 +55,16 @@ const TabIcon = (
 };
 
 type Props = {
-  userID: string;
+  route: RouteProp<MainDrawerParamList, 'Profile'>;
 };
 
-const ProfileScreen = ({ userID }: Props) => {
+const ProfileScreen = ({ route }: Props) => {
   const [isOwner, setIsOwner] = useState<boolean>(false); //state which controlls if the user viewing is the owner or not
 
   // If the userID is same as the logged in user's ID, then the user is the owner
   const { user } = useAppSelector(state => state.root.auth);
+
+  const userID = route.params?.userID;
 
   useEffect(() => {
     if (user?.id === userID) {

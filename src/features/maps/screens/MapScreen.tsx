@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { View, StatusBar } from 'react-native';
 import {
   Camera,
@@ -7,11 +7,8 @@ import {
   MapView,
   ShapeSource,
   SymbolLayer,
-  UserLocation,
-  UserLocationRenderMode,
   UserTrackingMode,
 } from '@rnmapbox/maps';
-import { feature } from '@turf/helpers';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MAPBOX_STYLE_DARK } from '@env';
 import { useGeoLocation } from '@app/context/geo-location';
@@ -20,7 +17,6 @@ import { makeStyles, mapStyle } from './Map.styles';
 import { useAppSelector } from '@app/hooks';
 import { useNearbyPing } from '../hooks/useNearbyPing';
 import marker from '@app/assets/images/marker.png';
-import { PicksSelectView } from '@app/components';
 import {
   ActivityBottomSheet,
   ActivityBottomSheetRef,
@@ -28,7 +24,6 @@ import {
 import { Activity, User } from '@app/types/entities';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { NearbyStackScreenProps } from '@ts-types/type';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
@@ -41,10 +36,7 @@ const MapScreen = () => {
   const activityModalRef = useRef<ActivityBottomSheetRef>(null);
 
   const user = useAppSelector(state => state.root.auth.user);
-  const { coords, geoLoading } = useGeoLocation();
-
-  const [currentLocation, setCurrentLocation] = useState<number[]>();
-  const [picks, setPicks] = useState<string[]>(user?.picks || []);
+  const { coords } = useGeoLocation();
 
   useEffect(() => {
     cameraRef.current?.setCamera({
@@ -90,85 +82,54 @@ const MapScreen = () => {
 
   return (
     <View style={styles.page}>
-      <StatusBar
+      {/* <StatusBar
         translucent
         backgroundColor="transparent"
         barStyle={theme.dark ? 'light-content' : 'dark-content'}
+      /> */}
+      {/* <View style={styles.container}> */}
+      <ActivityBottomSheet
+        ref={activityModalRef}
+        onPress={handleOnBottomSheetPress}
       />
-      <View style={styles.container}>
-        <ActivityBottomSheet
-          ref={activityModalRef}
-          onPress={handleOnBottomSheetPress}
+      <MapView
+        style={styles.map}
+        styleURL={MAPBOX_STYLE_DARK}
+        projection="mercator"
+        rotateEnabled={false}
+        pitchEnabled={false}
+        scaleBarEnabled={false}
+        attributionEnabled={false}
+        logoEnabled={false}
+        compassEnabled={false}>
+        <Camera
+          ref={cameraRef}
+          zoomLevel={13}
+          minZoomLevel={14}
+          maxZoomLevel={10}
+          animationMode="flyTo"
+          followZoomLevel={13}
+          followUserLocation={true}
+          followUserMode={UserTrackingMode.Follow}
         />
-        <MapView
-          style={styles.map}
-          styleURL={MAPBOX_STYLE_DARK}
-          projection="mercator"
-          rotateEnabled={false}
-          pitchEnabled={false}
-          scaleBarEnabled={false}
-          attributionEnabled={false}
-          logoEnabled={false}
-          compassEnabled={false}>
-          <Camera
-            ref={cameraRef}
-            zoomLevel={13}
-            minZoomLevel={14}
-            maxZoomLevel={10}
-            animationMode="flyTo"
-            followZoomLevel={13}
-            followUserLocation={true}
-            followUserMode={UserTrackingMode.Follow}
+
+        <LocationPuck pulsing={{ isEnabled: true }} />
+
+        <ShapeSource
+          id="symbolLocationSource"
+          hitbox={{ width: 20, height: 20 }}
+          shape={collection}
+          onPress={e => onSourceLayerPress(e)}>
+          <SymbolLayer
+            id="symbolLocationSymbols"
+            minZoomLevel={1}
+            style={mapStyle.icon}
           />
 
-          <LocationPuck pulsing={{ isEnabled: true }} />
-
-          <ShapeSource
-            id="symbolLocationSource"
-            hitbox={{ width: 20, height: 20 }}
-            shape={collection}
-            onPress={e => onSourceLayerPress(e)}>
-            <SymbolLayer
-              id="symbolLocationSymbols"
-              minZoomLevel={1}
-              style={mapStyle.icon}
-            />
-
-            <Images images={{ icon: marker }} />
-          </ShapeSource>
-        </MapView>
-        {/* <IconButton
-          icon={AppIcons.GPS}
-          style={styles.myLocation}
-          size={24}
-          disabled={!coords}
-          onPress={() => {
-            if (coords) {
-              setCurrentLocation([coords?.longitude, coords?.latitude]);
-            }
-          }}
-        /> */}
-        {/* <View style={styles.headerView}>
-          <Searchbar
-            mode="bar"
-            value=""
-            placeholder="Search"
-            style={styles.searchBar}
-            editable={false}
-          />
-          <PicksSelectView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            chipStyle={styles.picksChip}
-            chipTextStyle={styles.picksChipText}
-            selectedPicks={picks}
-            style={styles.picksSelectView}
-            onPickSelect={selectedPicks => {
-              setPicks(selectedPicks);
-            }}
-          />
-        </View> */}
-      </View>
+          <Images images={{ icon: marker }} />
+        </ShapeSource>
+      </MapView>
+      {/* </View> */}
     </View>
   );
 };

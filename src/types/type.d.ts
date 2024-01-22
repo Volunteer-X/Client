@@ -48,9 +48,9 @@ export type MainNavList = {
 
 // * Root
 export type RootStackParamList = {
-  Drawer: NavigatorScreenParams<DrawerParamList>;
+  Drawer: NavigatorScreenParams<MainDrawerParamList>;
   ForumNavigation: NavigatorScreenParams<ForumStackParamList>;
-  Home: NavigatorScreenParams<HomeStackParamList>;
+  // Home: NavigatorScreenParams<HomeStackParamList>;
   NearbyNavigation: NavigatorScreenParams<NearbyStackParamList>;
   Ping: NavigatorScreenParams<PingStackParamList>;
   ActivityNavigation: NavigatorScreenParams<ActivityStackParamList>;
@@ -60,20 +60,20 @@ type RootStackScreenProps<T extends keyof RootStackParamList> =
   StackScreenProps<RootStackParamList, T>;
 
 // Drawer
-export type DrawerParamList = {
+export type MainDrawerParamList = {
+  Nearby: undefined;
   BottomTab: NavigatorScreenParams<BottomTabParamList>;
-  Profile: undefined;
+  Profile: { userID: string };
   AppSettings: undefined;
 };
-
 // Bottom tab
-export type BottomTabParamList = {
-  Home: undefined;
-  Activity: undefined;
-  Ping: NavigatorScreenParams<PingStackParamList>;
-  Nearby: undefined;
-  Search: undefined;
-};
+// export type BottomTabParamList = {
+//   Home: undefined;
+//   Activity: undefined;
+//   Ping: NavigatorScreenParams<PingStackParamList>;
+//   Nearby: undefined;
+//   Search: undefined;
+// };
 
 // * Home Screen
 export type HomeStackParamList = {
@@ -90,7 +90,7 @@ export type BottomTabStackScreenProps<T extends keyof BottomTabParamList> =
   CompositeScreenProps<
     CompositeScreenProps<
       BottomTabScreenProps<BottomTabParamList, T>,
-      DrawerScreenProps<DrawerParamList, 'BottomTab'>
+      DrawerScreenProps<MainDrawerParamList, 'BottomTab'>
     >,
     RootStackScreenProps<keyof RootStackParamList>
   >;
@@ -133,5 +133,6 @@ export type NearbyStackScreenProps<T extends keyof NearbyStackParamList> =
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
+    interface MainDrawerParamList extends MainDrawerParamList {}
   }
 }
