@@ -31,12 +31,14 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
     },
     listHeaderContainer: {},
     header: {
-      height: 80,
+      flexDirection: 'row',
+      height: 70,
       elevation: 0,
-      backgroundColor: theme.colors.background,
-      justifyContent: 'center',
       marginTop: inset.top,
-      paddingHorizontal: PADDING.lg,
+      alignItems: 'center',
+      backgroundColor: theme.colors.background,
+      // justifyContent: 'center',
+      // paddingHorizontal: PADDING.lg,
     },
     headerTitleText: { letterSpacing: 0.5, fontStyle: 'italic' },
     filterPinsContainer: {

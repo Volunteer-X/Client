@@ -62,8 +62,9 @@ type RootStackScreenProps<T extends keyof RootStackParamList> =
 // Drawer
 export type MainDrawerParamList = {
   Nearby: undefined;
-  BottomTab: NavigatorScreenParams<BottomTabParamList>;
+  // BottomTab: NavigatorScreenParams<BottomTabParamList>;
   Profile: { userID: string };
+  Activity: undefined;
   AppSettings: undefined;
 };
 // Bottom tab

@@ -1,7 +1,12 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { MapScreen, ProfileScreen, SettingScreen } from '@features/index';
+import {
+  ActivityListScreen,
+  MapScreen,
+  ProfileScreen,
+  SettingScreen,
+} from '@features/index';
 import { MainDrawerParamList } from '@ts-types/type';
 import {
   BackButton,
@@ -68,6 +73,13 @@ const MainDrawer = (): React.JSX.Element => {
         options={{
           headerShown: true,
           headerLeft: actionButton,
+        }}
+      />
+      <Drawer.Screen
+        name="Activity"
+        component={ActivityListScreen}
+        options={{
+          headerShown: false,
         }}
       />
       <Drawer.Screen

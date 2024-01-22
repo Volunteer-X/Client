@@ -1,6 +1,7 @@
 import {
   ActivityCard,
   ActivityListFab,
+  BackButton,
   PicksSelectView,
 } from '@app/components';
 import {
@@ -81,6 +82,7 @@ export const ActivityListScreen = () => {
   const header = () => {
     return (
       <View style={styles.header}>
+        <BackButton />
         <Text
           variant="displaySmall"
           numberOfLines={2}
