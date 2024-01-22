@@ -6,11 +6,12 @@ import { useAppSelector } from '@app/hooks';
 import { Point } from '@app/types/utility-types';
 import { Asset } from 'react-native-image-picker';
 import { useS3Upload } from './useS3Upload';
+import { Position } from '@turf/helpers';
 
 type Input = {
   title: string; // required
   picks: Array<string>; // required
-  point: Point; // required
+  point: Position; // required
   description?: string; // optional
   url?: string; // optional
   assets?: Array<Asset>; // optional
@@ -72,8 +73,8 @@ export const useCreatePing = () => {
             title,
             description,
             picks,
-            latitude: point.lat.toString(),
-            longitude: point.lng,
+            latitude: point[1].toString(),
+            longitude: point[0],
             url,
           },
         },

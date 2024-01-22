@@ -14,12 +14,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import {
   Text,
   Divider,
@@ -32,23 +27,13 @@ import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
-import {
-  PingCompositeScreenProps,
-  PingStackParamList,
-  PingStackScreenProps,
-} from '@app/types/type';
+import { PingStackParamList } from '@app/types/type';
 import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { SIZES } from '@app/lib';
-import { Point } from '@ts-types/utility-types';
 import GoogleStaticMaps from '@components/google-static-map';
 
-import {
-  BackButton,
-  MediaTypeView,
-  PicksIcon,
-  TextInputEnhanced,
-} from '@app/components';
+import { MediaTypeView, PicksIcon, TextInputEnhanced } from '@app/components';
 import { MediaFlatlist } from '@app/components/swiper-flatlist';
 import { useGeoLocation } from '@app/context/geo-location';
 import { getReverseGeocoding } from '@app/utils/reverse-geocoding';
@@ -283,11 +268,15 @@ export const PingFinalPage = ({
     );
   };
 
+  const closeButton = () => {
+    return <Ionicon name={AppIcons.CLOSE} size={SIZES.large} />;
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
       headerTitle: 'Create a ping',
-      headerLeft: () => <BackButton />,
+      headerLeft: closeButton,
       headerRight,
       headerStyle: styles.header,
     }),
