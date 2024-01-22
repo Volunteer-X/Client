@@ -11,7 +11,6 @@ export * from './media-type-view';
 export * from './video-player';
 
 export * from './headers/ping-headers';
-
 export * from './headers/main-header';
 
 export * from './pull-to-refresh-list';

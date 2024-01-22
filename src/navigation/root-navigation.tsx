@@ -11,6 +11,7 @@ export const RootNavigation = () => {
 
   return (
     <Stack.Navigator
+      id="RootNavigation"
       initialRouteName="Drawer"
       screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Drawer" component={MainDrawer} />

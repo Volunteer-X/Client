@@ -2,9 +2,10 @@ import React from 'react';
 import { PixelRatio, StyleProp, ViewStyle } from 'react-native';
 import { Image } from '@rneui/themed';
 import { MAP_API_KEY } from '@env';
+import { Position } from '@turf/helpers';
 
 interface GoogleStaticMapsProps {
-  center: string | Point;
+  center: string | Position;
   zoom?: number;
   size: Size;
   scale?: 1 | 2;
@@ -26,10 +27,10 @@ interface GoogleStaticMapsProps {
   enableImplicitPositioning?: boolean;
 }
 
-interface Point {
-  lat: number;
-  lng: number;
-}
+// interface Point {
+//   lat: number;
+//   lng: number;
+// }
 
 interface MapStyle {
   feature?: string;
@@ -54,14 +55,14 @@ interface Size {
 }
 
 interface Path extends Color {
-  points: Array<string> | Array<Point>;
+  points: Array<string> | Array<Position>;
   weigth?: number;
   fillColor?: string;
   geodesic?: boolean;
 }
 
 interface Marker extends Color {
-  location: string | Point;
+  location: string | Position;
   size?: 'tiny' | 'mid' | 'small' | 'normal';
   label?: string;
   scale?: 1 | 2 | 4;
@@ -87,9 +88,9 @@ const defaultScale = () => {
   return isRetina ? 2 : 1;
 };
 
-const setLocations = (items: Array<string> | Array<Point>) => {
+const setLocations = (items: Array<string> | Array<Position>) => {
   return items
-    .map(item => (typeof item === 'string' ? item : `${item.lat},${item.lng}`))
+    .map(item => (typeof item === 'string' ? item : `${item[1]},${item[0]}`))
     .join('|');
 };
 
@@ -125,7 +126,7 @@ const GoogleStaticMaps = ({
     if (!enableImplicitPositioning) {
       typeof center === 'string'
         ? params.append('center', center)
-        : params.append('center', `${center.lat},${center.lng}`);
+        : params.append('center', `${center[1]},${center[0]}`);
     } else if (!(markers || paths || visible)) {
       console.error(
         'If enableImplicitPositioning=true, add either a marker, path or visible',
@@ -192,7 +193,7 @@ const GoogleStaticMaps = ({
         let locationUri =
           typeof marker.location === 'string'
             ? marker.location
-            : `${marker.location.lat},${marker.location.lng}`;
+            : `${marker.location[1]},${marker.location[0]}`;
 
         params.append('markers', `${styleUri}${locationUri}`);
       });

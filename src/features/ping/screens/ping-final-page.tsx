@@ -14,7 +14,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { NavigationProp, RouteProp } from '@react-navigation/native';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   Text,
   Divider,
@@ -58,6 +62,7 @@ export const PingFinalPage = ({
 
   // Navigation
   const { point, _picks } = route.params;
+  const rootNavigation = useNavigation();
 
   // Media handling
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
@@ -116,6 +121,10 @@ export const PingFinalPage = ({
       setPicks(route.params.picks);
     }
   }, [picks, route.params]);
+
+  useEffect(() => {
+    navigation.addListener('beforeRemove', e => {});
+  }, []);
 
   const textInputProps = {
     contentStyle: styles.textInputContent,
@@ -224,24 +233,25 @@ export const PingFinalPage = ({
         assets,
       });
 
-      console.log('id::', ping);
-
       // * Navigate to Home screen
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: 'Home',
-            params: {
-              screen: 'HomeScreen',
-              params: {
-                ping: ping,
-                loading: loading,
-              },
-            },
-          },
-        ],
-      });
+
+      navigation.getParent()?.navigate('Nearby');
+
+      // navigation.getParent()?.reset({
+      //   index: 0,
+      //   routes: [
+      //     {
+      //       name: 'Nearby',
+      //       params: {
+      //         screen: '',
+      //         params: {
+      //           // ping: ping,
+      //           // loading: loading,
+      //         },
+      //       },
+      //     },
+      //   ],
+      // });
     }
   }, [
     assets,

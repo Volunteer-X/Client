@@ -1,13 +1,13 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { PingStackParamList } from '@ts-types/type';
 import { PingFinalPage, PingSelectPicks } from '@features/ping/screens';
 import { AppTheme } from '@app/theme';
 import { MD3Colors } from 'react-native-paper';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { SearchLocationScreen } from '@app/features/location/screens';
+import { PingHeaderLeft, PingHeaderRight } from '@app/components';
 
 export const PingNavigation = () => {
   const { theme } = useAppTheme();
