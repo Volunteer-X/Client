@@ -13,7 +13,7 @@ import { Text } from 'react-native-paper';
 type Prop = {
   children: React.ReactNode;
   // textStyles?: StyleProp<TextStyle>;
-  numberOfLines: number;
+  numberOfLines?: number;
 };
 
 export const ViewMoreText = ({

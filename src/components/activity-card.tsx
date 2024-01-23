@@ -4,16 +4,14 @@ import { Button, Divider, Text } from 'react-native-paper';
 import { PADDING, Picks } from '@app/lib';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { LinkPreview } from '@flyerhq/react-native-link-preview';
-import { Image } from 'react-native';
 import { MediaView } from './swiper-flatlist';
-import { Asset } from 'react-native-image-picker';
 import { PicksIcon } from './picks-icon';
 import { ViewMoreText } from './view-more-text';
 import { Avatar } from './avatar/Avatar';
 import { getRelativeTime } from '@app/utils';
 import { Activity, User } from '@app/types/entities';
 import useAppTheme from '@app/hooks/useAppTheme';
+import { LinkPreview } from './link-preview-view';
 
 type ActivityOptions = {
   isOriginalPing?: boolean;
@@ -47,23 +45,23 @@ const ActivityCard = ({
   },
 }: ActivityCardProps) => {
   const theme = useAppTheme().theme;
-  const { title, description, picks, url, media, createdAt } = activity;
+  const {
+    title,
+    description,
+    picks,
+    url,
+    media,
+    createdAt,
+    latitude,
+    longitude,
+  } = activity;
 
   const { isOriginalPing, showPicks, showStar, isMember, textLines, showMenu } =
     options;
 
   return (
-    <View style={{ width: '100%' }}>
-      <Pressable
-        style={{
-          position: 'absolute',
-          top: 0,
-          right: 0,
-          left: 0,
-          bottom: 0,
-        }}
-        onPress={() => onPress && onPress()}
-      />
+    <View style={styles.root}>
+      <Pressable style={styles.overlay} onPress={() => onPress && onPress()} />
       <View style={styles.container}>
         {/* Left side */}
         <View style={styles.leftContainer}>
@@ -142,55 +140,12 @@ const ActivityCard = ({
               {title}
             </Text>
             {/* URL */}
-            {url && (
-              <LinkPreview
-                renderLinkPreview={payload => {
-                  // console.log(payload);
-                  if (payload.previewData && payload.previewData.image?.url) {
-                    const { previewData } = payload;
-                    const uri = previewData.image?.url;
-                    return (
-                      <View style={styles.urlContainer}>
-                        <View style={{ flex: 1, padding: 10 }}>
-                          <Text
-                            variant="labelSmall"
-                            numberOfLines={2}
-                            ellipsizeMode="tail"
-                            style={{ color: theme.colors.onBackground }}>
-                            {payload.previewData.link}
-                          </Text>
-                          <Text
-                            variant="labelMedium"
-                            numberOfLines={2}
-                            ellipsizeMode="tail"
-                            style={[
-                              styles.bold,
-                              { color: theme.colors.onBackground },
-                            ]}>
-                            {payload.previewData.title}
-                          </Text>
-                        </View>
-                        <Image
-                          source={{ uri: uri }}
-                          style={styles.minimizedImage}
-                        />
-                      </View>
-                    );
-                  }
-                }}
-                enableAnimation
-                text={url.toString()}
-              />
-            )}
+            {url && <LinkPreview url={url.toString()} theme={theme} />}
             {/* Media */}
             {media && media !== null && media.length > 0 && (
               <View
                 hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                style={{
-                  maxHeight: 200,
-                  overflow: 'hidden',
-                  borderRadius: 15,
-                }}>
+                style={styles.mediaContainer}>
                 <MediaView media={media} />
               </View>
             )}
@@ -202,24 +157,6 @@ const ActivityCard = ({
                 {description}
               </Text>
             </ViewMoreText>
-            {/* Actions */}
-            {/* <View style={{ flexDirection: 'row', display: 'flex' }}>
-            <Ionicons
-              name="heart-outline"
-              size={24}
-              color="#FFF"
-              style={{
-                padding: 0,
-                marginVertical: 5,
-              }}
-            />
-          </View> */}
-            {/* <GoogleStaticMaps
-            center={'43, High Drive, New Malden, UK'}
-            zoom={14}
-            size={{ height: 600, width: 300 }}
-            containerStyle={{ borderRadius: 10, height: 100 }}
-          /> */}
           </View>
         </View>
       </View>
@@ -230,6 +167,14 @@ const ActivityCard = ({
 export default ActivityCard;
 
 const styles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    left: 0,
+    bottom: 0,
+  },
+  root: { width: '100%' },
   container: {
     gap: 15,
     flexDirection: 'row',
@@ -293,5 +238,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     resizeMode: 'cover',
+  },
+  mediaContainer: {
+    maxHeight: 200,
+    overflow: 'hidden',
+    borderRadius: 15,
   },
 });

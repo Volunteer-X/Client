@@ -1,8 +1,8 @@
-import { SIZES } from '@app/lib';
+import { APP_NAME, SIZES } from '@app/lib';
 import { AppIcons } from '@app/theme/icon';
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
 import { Avatar } from '../avatar/Avatar';
 import logoTypo from '@assets/images/logo-typo.png';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,6 +24,11 @@ const headerBackground = () => {
 
 const headerTitle = () => {
   return <Image source={logoTypo} style={styles.appName} />;
+  // return (
+  //   <Text variant="titleLarge" style={styles.appName}>
+  //     {APP_NAME}
+  //   </Text>
+  // );
 };
 
 const headerAvatar = (
@@ -59,6 +64,9 @@ export { headerBackground, headerTitle, headerAvatar, headerForum };
 
 const styles = StyleSheet.create({
   appName: {
+    // fontWeight: '900',
+    // color: 'black',
+    // fontStyle: 'italic',
     width: 250,
     height: 25,
     resizeMode: 'contain',

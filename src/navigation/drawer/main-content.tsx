@@ -9,7 +9,7 @@ import {
   DrawerItemList,
 } from '@react-navigation/drawer';
 import React, { useCallback } from 'react';
-import { DevSettings, Pressable, View } from 'react-native';
+import { DevSettings, View } from 'react-native';
 import { useAuth0 } from 'react-native-auth0';
 import { Button, Divider, IconButton, Text } from 'react-native-paper';
 import { makeStyles } from './main-drawer.style';
@@ -57,20 +57,9 @@ export const MainDrawerContent = (props: DrawerContentComponentProps) => {
             </Text>
           </View>
           <View style={styles.statContainer}>
-            <Pressable
-              android_disableSound
-              onPress={() => {
-                console.log('Activities');
-              }}>
-              <Text variant="bodyMedium">{`${2} Activities`}</Text>
-            </Pressable>
-            <Pressable
-              android_disableSound
-              onPress={() => {
-                console.log('Followers');
-              }}>
-              <Text variant="bodyMedium">{`${20} Followers`}</Text>
-            </Pressable>
+            <Text variant="bodyMedium">{`${user?.activityCount} Activities`}</Text>
+
+            {/* <Text variant="bodyMedium">{`${20} Followers`}</Text> */}
           </View>
         </View>
 

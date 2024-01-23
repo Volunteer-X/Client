@@ -11,6 +11,7 @@ export interface User {
   picks?: string[];
   picture?: string | null;
   devices?: string[];
+  activityCount?: number;
 }
 
 type Auth = {

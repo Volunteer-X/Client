@@ -24,6 +24,16 @@ export const makeStyles = (
       right: 0,
       backgroundColor: theme.colors.background,
     },
+    loadingOverlay: {
+      position: 'absolute',
+      top: headerHeight,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: '#16161dCC',
+      zIndex: 1001,
+      justifyContent: 'center',
+    },
     overlay: {
       ...StyleSheet.absoluteFillObject,
       backgroundColor: theme.colors.background,
@@ -37,11 +47,24 @@ export const makeStyles = (
       width: 100,
       height: 100,
     },
-    myLocation: {
+    actionContainers: {
       position: 'absolute',
       top: headerHeight + PADDING.sm,
       right: inset.right + PADDING.sm,
+      backgroundColor: '#000',
+      borderRadius: 10,
+      gap: 0,
+      // padding: 5,
+      flexDirection: 'column',
+    },
+    myLocation: {
       // backgroundColor: 'black',
+      borderWidth: 1.5,
+      borderColor: '#c9c9c9',
+      padding: 1.5,
+      borderRadius: 10,
+    },
+    refresh: {
       borderWidth: 1.5,
       borderColor: '#c9c9c9',
       padding: 1.5,

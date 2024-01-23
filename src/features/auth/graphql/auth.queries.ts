@@ -20,6 +20,7 @@ query GetUserByEmail($email: EmailAddress!) {
     picture
     picks
     createdAt
+    activityCount
   }
 }
 `);

@@ -1,13 +1,18 @@
 import { RootStackParamList } from '@ts-types/type';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ForumNavigation } from './forum-navigation';
 import MainDrawer from './drawer/main.drawer';
 import { ActivityNavigation } from './activity-navigation';
 import { PingNavigation } from './ping-navigation';
+import { useFileHandlerClient } from '@app/context';
 
 export const RootNavigation = () => {
   const Stack = createNativeStackNavigator<RootStackParamList>();
+
+  const { authorize } = useFileHandlerClient();
+
+  useEffect(() => authorize && authorize(), [authorize]);
 
   return (
     <Stack.Navigator

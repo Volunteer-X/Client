@@ -1,68 +1,45 @@
 import { useAppSelector } from '@app/hooks';
 import FileHandlerApi from '@app/services/fileHandler';
 import axios, { AxiosInstance } from 'axios';
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { createContext, useContext } from 'react';
-import { useAuth0 } from 'react-native-auth0';
 
-const FileHandlerContext = createContext<AxiosInstance>(axios.create({}));
+type FilehandlerContextType = {
+  client: AxiosInstance;
+  authorize?: () => void;
+};
+
+const FileHandlerContext = createContext<FilehandlerContextType>({
+  client: axios.create({}),
+});
 
 const FileHandlerClient = ({ children }: any) => {
-  // const { getCredentials, hasValidCredentials } = useAuth0();
-
   const { isAuthenticated, accessToken } = useAppSelector(
     state => state.root.auth,
   );
 
-  // const [token, setToken] = useState<string>();
+  const authorize = () => {
+    if (!isAuthenticated) {
+      console.log('User is not loggedIn');
+      // throw new Error('User is not logged in');
+    }
 
-  // const auth = useCallback(async () => {
-  //   try {
-  //     const loggedIn = await hasValidCredentials();
-  //     if (!loggedIn) {
-  //       throw new Error('User is not logged in');
-  //     }
-  //     const credentials = await getCredentials();
-  //     let accessToken = credentials?.accessToken;
-
-  //     if (!accessToken) {
-  //       throw new Error('Access token is missing');
-  //     }
-
-  //     setToken(accessToken);
-  //   } catch (error) {
-  //     throw new Error(`${error}`);
-  //   }
-  // }, [getCredentials, hasValidCredentials]);
-
-  // useEffect(() => {
-  //   auth()
-  //     //   .then(val => {
-  //     //     if (val) {
-  //     //       setToken(val);
-  //     //     }
-  //     //   })
-  //     .catch(e => console.log(e));
-
-  //   return () => {
-  //     setToken('');
-  //   };
-  // }, [auth]);
-
-  if (!isAuthenticated) {
-    throw new Error('User is not logged in');
-  }
+    if (accessToken) {
+      fileHandler.setToken(accessToken);
+    }
+  };
 
   const fileHandler = FileHandlerApi.getInstance();
 
   const client = fileHandler.client;
 
-  if (accessToken) {
-    fileHandler.setToken(accessToken);
-  }
+  const value: FilehandlerContextType = {
+    client,
+    authorize,
+  };
 
   return (
-    <FileHandlerContext.Provider value={client}>
+    <FileHandlerContext.Provider value={value}>
       {children}
     </FileHandlerContext.Provider>
   );

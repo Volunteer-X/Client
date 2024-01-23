@@ -19,6 +19,7 @@ import { useAppSelector } from '@app/hooks';
 import DefualtErrorScreen from '@app/components/defualt-error';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import { MemberHorizontalView } from '../component/member-horizontal-view';
+import { ActionsActivity } from '../component';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -36,11 +37,8 @@ const ActivityScreen = () => {
     useNavigation<ActivityStackScreenProps<'ActivityScreen'>['navigation']>();
   const route = useRoute<ActivityStackScreenProps<'ActivityScreen'>['route']>();
   // route params
-  const id = route.params?.activityID;
-  const activity = route.params?.activity;
-  const owner = route.params?.owner;
 
-  console.log('ActivityScreen', route.params);
+  const { activityID: id, activity, owner } = route.params;
 
   // handle owner and member
   useEffect(() => {
@@ -76,33 +74,8 @@ const ActivityScreen = () => {
         resizeMode="cover"
         style={styles.imageBackground}>
         {/* Actions */}
-        <View style={styles.headerFloat}>
-          <Ionicon
-            name={AppIcons.ARROW_BACK}
-            size={24}
-            style={[styles.actions]}
-            onPress={() => navigation.goBack()}
-          />
-          {/* Show add only if you are not a member or not the owner */}
-          <View style={{ flexDirection: 'column', gap: 10 }}>
-            {!isOwner && !isMember && (
-              <Ionicon
-                name={AppIcons.PERSON_ADD}
-                size={24}
-                style={styles.actions}
-              />
-            )}
-            {/* show setting, only if owner  */}
-            {isOwner && (
-              <Ionicon
-                name={AppIcons.SETTINGS}
-                size={24}
-                style={styles.actions}
-              />
-            )}
-            <Ionicon name={AppIcons.FORUM} size={24} style={styles.actions} />
-          </View>
-        </View>
+        <ActionsActivity isOwner isMember onPress={() => navigation.goBack()} />
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           overScrollMode="never"
@@ -116,7 +89,13 @@ const ActivityScreen = () => {
             <View style={styles.header}>
               <View style={[styles.avatarContainer]}>
                 <View style={styles.avatarBorder}>
-                  <Avatar size={75} showBorder borderColor="#000" />
+                  <Avatar
+                    size={75}
+                    name={owner.name?.firstName}
+                    uri={owner.picture}
+                    showBorder
+                    borderColor="#000"
+                  />
                 </View>
               </View>
               <Text
@@ -164,69 +143,18 @@ const ActivityScreen = () => {
 
             {/* Body container */}
             <View style={styles.bodyContainer}>
-              {/* Update option, only for owner */}
-              {/* {isOwner && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    borderRadius: 20,
-                    backgroundColor: '#16161d',
-                    padding: 10,
-                    marginBottom: 10,
-                    gap: 10,
-                  }}>
-                  <Avatar
-                    uri={owner?.picture}
-                    size={32}
-                    // style={styles.avatar}
-                  />
-                  <TextInput
-                    mode="flat"
-                    placeholder="Update on the activity..."
-                    style={{
-                      flex: 1,
-                      backgroundColor: 'transparent',
-                    }}
-                    cursorColor={'#000'}
-                  />
-                  <Button>Post</Button>
-                </View>
-              )} */}
-              {!isOwner && (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                    alignItems: 'center',
-                    padding: 10,
-                    marginBottom: 10,
-                    gap: 10,
-                  }}>
-                  {!isMember && (
-                    <Button
-                      icon={AppIcons.PERSON_ADD}
-                      mode="contained"
-                      style={{ flex: 1 }}>
-                      Join
-                    </Button>
-                  )}
-
-                  <Button
-                    icon={AppIcons.FORUM}
-                    mode="contained"
-                    style={{ flex: 1 }}>
-                    Forum
-                  </Button>
-                </View>
-              )}
+              <ActionButtonGroupHorizontal
+                isOwner={isOwner}
+                isMember={isMember}
+                actionButtonGroupContainer={styles.actionButtonGroupContainer}
+              />
               {/* Activity Body */}
               <ActivityCard
                 activity={activity}
                 creator={owner}
                 options={{
                   isOriginalPing: true,
+                  isMember: isMember,
                   showStar: true,
                   textLines: 10,
                 }}
@@ -241,3 +169,34 @@ const ActivityScreen = () => {
 };
 
 export default ActivityScreen;
+
+const ActionButtonGroupHorizontal = ({
+  isOwner,
+  isMember,
+  actionButtonGroupContainer,
+}: {
+  isOwner: boolean;
+  isMember: boolean;
+  actionButtonGroupContainer: {};
+}) => {
+  return (
+    <>
+      {!isOwner && (
+        <View style={actionButtonGroupContainer}>
+          {!isMember && (
+            <Button
+              icon={AppIcons.PERSON_ADD}
+              mode="contained"
+              style={{ flex: 1 }}>
+              Join
+            </Button>
+          )}
+
+          <Button icon={AppIcons.FORUM} mode="contained" style={{ flex: 1 }}>
+            Forum
+          </Button>
+        </View>
+      )}
+    </>
+  );
+};

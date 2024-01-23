@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import { View, StatusBar } from 'react-native';
 import {
   Camera,
@@ -24,11 +24,10 @@ import {
 import { Activity, User } from '@app/types/entities';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
-import { FAB, IconButton } from 'react-native-paper';
+import { ActivityIndicator, FAB, IconButton } from 'react-native-paper';
 import { AppIcons } from '@app/theme/icon';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Position } from '@turf/helpers';
-import { useFileHandlerClient } from '@app/context';
 import LinearGradient from 'react-native-linear-gradient';
 
 const MapScreen = () => {
@@ -42,13 +41,20 @@ const MapScreen = () => {
   const cameraRef = useRef<Camera>(null);
   const activityModalRef = useRef<ActivityBottomSheetRef>(null);
 
-  const user = useAppSelector(state => state.root.auth.user);
+  const { user, accessToken } = useAppSelector(state => state.root.auth);
   const { coords } = useGeoLocation();
+
+  // console.log(accessToken);
 
   // const myLocation: Position = useMemo(
   //   () => [coords.longitude, coords.latitude],
   //   [coords.latitude, coords.longitude],
   // );
+
+  const { collection, loading, refetch } = useNearbyPing({
+    latitude: coords.latitude,
+    longitude: coords.longitude,
+  });
 
   const [myLocation, setMyLocation] = React.useState<Position>([
     coords.longitude,
@@ -62,14 +68,13 @@ const MapScreen = () => {
     });
   }, [myLocation]);
 
+  const handleRefresh = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
   const handleMyLocation = useCallback(() => {
     setMyLocation([coords.longitude, coords.latitude]);
   }, [coords.latitude, coords.longitude]);
-
-  const { collection } = useNearbyPing({
-    latitude: coords.latitude,
-    longitude: coords.longitude,
-  });
 
   const handleOnBottomSheetPress = () => {
     console.log('handleOnBottomSheetPress', activityModalRef.current?.data);
@@ -121,6 +126,11 @@ const MapScreen = () => {
         ref={activityModalRef}
         onPress={handleOnBottomSheetPress}
       />
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size={64} />
+        </View>
+      )}
       <MapView
         style={styles.map}
         styleURL={MAPBOX_STYLE_DARK}
@@ -159,11 +169,18 @@ const MapScreen = () => {
           <Images images={{ icon: marker }} />
         </ShapeSource>
       </MapView>
-      <IconButton
-        icon={AppIcons.GPS}
-        style={styles.myLocation}
-        onPress={handleMyLocation}
-      />
+      <View style={styles.actionContainers}>
+        <IconButton
+          icon={AppIcons.GPS}
+          style={styles.myLocation}
+          onPress={handleMyLocation}
+        />
+        <IconButton
+          icon={AppIcons.REFRESH}
+          style={styles.refresh}
+          onPress={handleRefresh}
+        />
+      </View>
       <View style={styles.FABContainer}>
         <LinearGradient
           colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}

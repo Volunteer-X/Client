@@ -88,6 +88,7 @@ export const auth0Function = async (
                 middleName: _user.name?.middleName,
                 picture: _user.picture,
                 picks: _user?.picks as string[],
+                activityCount: _user.activityCount,
               },
             }),
           );
@@ -137,8 +138,6 @@ export const loginFunction = async (
 
     accessToken = credentials.accessToken;
   }
-
-  console.log('auth0User', auth0User);
 
   const {
     email,

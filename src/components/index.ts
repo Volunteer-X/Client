@@ -29,3 +29,6 @@ export * from './FAB/activity-list-fab';
 export * from './FAB/ping.fab';
 
 export * from './avatar/Avatar';
+
+export * from './location-view';
+export * from './link-preview-view';

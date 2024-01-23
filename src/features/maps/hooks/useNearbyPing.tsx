@@ -16,7 +16,12 @@ export const useNearbyPing = ({
     featureCollection([]),
   );
 
-  const { data: queryData, error } = useQuery(GET_PINGS_WITHIN_RADIUS, {
+  const {
+    data: queryData,
+    loading,
+    error,
+    refetch,
+  } = useQuery(GET_PINGS_WITHIN_RADIUS, {
     variables: {
       payload: {
         latitude: latitude.toString(),
@@ -25,6 +30,7 @@ export const useNearbyPing = ({
       },
       first: 10,
     },
+    notifyOnNetworkStatusChange: true,
   });
 
   useEffect(() => {
@@ -101,5 +107,7 @@ export const useNearbyPing = ({
 
   return {
     collection: result,
+    loading,
+    refetch,
   };
 };

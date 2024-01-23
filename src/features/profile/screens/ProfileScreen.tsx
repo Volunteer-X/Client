@@ -9,7 +9,7 @@ import UserFeeds from './UserFeeds';
 import { useAppSelector } from '@app/hooks';
 import { Avatar } from '@app/components';
 import { AppIcons } from '@app/theme/icon';
-import { RouteProp, useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import { MainDrawerParamList } from '@app/types/type';
 
 const StatView = ({
@@ -79,17 +79,20 @@ const ProfileScreen = ({ route }: Props) => {
       {/* Profile Header */}
       <View style={styles.profileHeaderContainer}>
         {/* If the account is accessed by the account-owner */}
-        {isOwner && (
+        {/* {isOwner && (
           // Edit Profile Button
-          <IconButton icon={AppIcons.EDIT} size={128} />
-        )}
+          <IconButton icon={AppIcons.EDIT} size={28} />
+        )} */}
         <Avatar size={108} uri={user?.picture} />
         <Text variant="titleLarge">{`${user?.firstName} ${user?.lastName}`}</Text>
         <Text variant="bodySmall">{`@${user?.username}`}</Text>
         <View style={styles.statsContainer}>
           {/* <StatView statCount={234} statLabel="Followers" />
           <StatView statCount={123} statLabel="Following" /> */}
-          <StatView statCount={2} statLabel="Activities" />
+          <StatView
+            statCount={user?.activityCount as number}
+            statLabel="Activities"
+          />
         </View>
         <View style={styles.headerActionContainer}>
           <Button>Follow</Button>
