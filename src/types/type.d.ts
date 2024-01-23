@@ -14,7 +14,7 @@ import { Activity, User } from './entities';
 export type PingStackParamList = {
   FinalPage: { point?: Position; picks?: Array<string> };
   SelectPicks: { picks?: Array<string> };
-  SearchLocation: { point: Point };
+  SearchLocation: { point: Position };
 };
 
 export type PingCompositeScreenProps<

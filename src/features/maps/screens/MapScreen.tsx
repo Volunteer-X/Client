@@ -28,6 +28,8 @@ import { FAB, IconButton } from 'react-native-paper';
 import { AppIcons } from '@app/theme/icon';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Position } from '@turf/helpers';
+import { useFileHandlerClient } from '@app/context';
+import LinearGradient from 'react-native-linear-gradient';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
@@ -103,7 +105,6 @@ const MapScreen = () => {
     navigation.navigate('Ping', {
       screen: 'FinalPage',
       params: {
-        picks: user?.picks,
         point: myLocation,
       },
     });
@@ -164,16 +165,23 @@ const MapScreen = () => {
         onPress={handleMyLocation}
       />
       <View style={styles.FABContainer}>
-        <FAB
-          icon={AppIcons.PING}
-          style={styles.pingFAB}
-          size="medium"
-          mode="elevated"
-          theme={{
-            colors: { primaryContainer: 'black', onPrimaryContainer: 'white' },
-          }}
-          onPress={navigateToPingScreen}
-        />
+        <LinearGradient
+          colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
+          // useAngle={true}
+          // angle={90}
+          // angleCenter={{ x: 0.5, y: 0.5 }}
+          style={styles.gradient}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}>
+          <FAB
+            icon={AppIcons.PING}
+            color="#A633E9"
+            style={styles.pingFAB}
+            size="medium"
+            mode="flat"
+            onPress={navigateToPingScreen}
+          />
+        </LinearGradient>
       </View>
     </View>
   );

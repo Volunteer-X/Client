@@ -17,7 +17,17 @@ export const RootNavigation = () => {
       <Stack.Screen name="Drawer" component={MainDrawer} />
       <Stack.Screen name="Ping" component={PingNavigation} />
       <Stack.Screen name="ForumNavigation" component={ForumNavigation} />
-      <Stack.Screen name="ActivityNavigation" component={ActivityNavigation} />
+      <Stack.Screen
+        name="ActivityNavigation"
+        component={ActivityNavigation}
+        // options={{
+        //   headerTitleStyle: {
+        //     fontSize: 18,
+        //     fontWeight: '600',
+        //   },
+        //   headerBackVisible: true
+        // }}
+      />
     </Stack.Navigator>
   );
 };

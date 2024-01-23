@@ -3,7 +3,6 @@ import { useMutation } from '@apollo/client';
 import { CREATE_PING, UPDATE_PING } from '../graphQL/ping.mutation';
 import { MediaInput } from '../../../__generated__/gql/graphql';
 import { useAppSelector } from '@app/hooks';
-import { Point } from '@app/types/utility-types';
 import { Asset } from 'react-native-image-picker';
 import { useS3Upload } from './useS3Upload';
 import { Position } from '@turf/helpers';

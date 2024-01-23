@@ -74,7 +74,13 @@ export const makeStyles = (
       // justifyContent: 'center',
       alignItems: 'center',
     },
-    pingFAB: { paddingHorizontal: PADDING.md },
+    pingFAB: {
+      paddingHorizontal: PADDING.md,
+      backgroundColor: 'transparent',
+    },
+    gradient: {
+      borderRadius: 15,
+    },
   });
 
 export const mapStyle = {

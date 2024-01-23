@@ -28,6 +28,7 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { IconProps } from 'react-native-vector-icons/Icon';
 import { PermissionProvider } from '@app/context/permissions/permission';
 import { Notification } from '@app/notification/Notification';
+import { FileHandlerClient } from '@app/context/file-handler';
 
 /*
  */
@@ -51,29 +52,31 @@ const App = () => {
           <PersistGate loading={null} persistor={persistor}>
             <PermissionProvider>
               <AuthProvider>
-                <GeoLocationProvider>
-                  <Notification>
-                    <GestureHandlerRootView
-                      style={styles.gestureHandlerRootView}>
-                      <BottomSheetModalProvider>
-                        <AppThemeProvider value={themePreference}>
-                          <ThemeProvider>
-                            <PaperProvider
-                              theme={theme}
-                              settings={{
-                                rippleEffectEnabled: false,
-                                icon: customIcon,
-                              }}>
-                              <NavigationContainer theme={theme}>
-                                <RootNavController />
-                              </NavigationContainer>
-                            </PaperProvider>
-                          </ThemeProvider>
-                        </AppThemeProvider>
-                      </BottomSheetModalProvider>
-                    </GestureHandlerRootView>
-                  </Notification>
-                </GeoLocationProvider>
+                <FileHandlerClient>
+                  <GeoLocationProvider>
+                    <Notification>
+                      <GestureHandlerRootView
+                        style={styles.gestureHandlerRootView}>
+                        <BottomSheetModalProvider>
+                          <AppThemeProvider value={themePreference}>
+                            <ThemeProvider>
+                              <PaperProvider
+                                theme={theme}
+                                settings={{
+                                  rippleEffectEnabled: false,
+                                  icon: customIcon,
+                                }}>
+                                <NavigationContainer theme={theme}>
+                                  <RootNavController />
+                                </NavigationContainer>
+                              </PaperProvider>
+                            </ThemeProvider>
+                          </AppThemeProvider>
+                        </BottomSheetModalProvider>
+                      </GestureHandlerRootView>
+                    </Notification>
+                  </GeoLocationProvider>
+                </FileHandlerClient>
               </AuthProvider>
             </PermissionProvider>
           </PersistGate>

@@ -5,20 +5,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import {
-  Alert,
-  Dimensions,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {
-  NavigationProp,
-  RouteProp,
-  useNavigation,
-} from '@react-navigation/native';
+import { Alert, Pressable, ScrollView, StatusBar, View } from 'react-native';
+import { NavigationProp, RouteProp } from '@react-navigation/native';
 import {
   Text,
   Divider,
@@ -32,7 +20,6 @@ import { ImagePickerResponse, Asset } from 'react-native-image-picker';
 import Ionicon from 'react-native-vector-icons/Ionicons';
 
 import { PingStackParamList } from '@app/types/type';
-import { AppTheme } from '@app/theme';
 import useAppTheme from '@hooks/useAppTheme';
 import { SIZES } from '@app/lib';
 import GoogleStaticMaps from '@components/google-static-map';
@@ -46,8 +33,7 @@ import { findPickFromLabel } from '@app/utils/pick-finder';
 import { AppIcons } from '@app/theme/icon';
 import { useCreatePing } from '../hooks/useCreatePing';
 import { Position } from '@turf/helpers';
-
-const { height } = Dimensions.get('window');
+import { makeStyles } from './ping.style';
 
 export const PingFinalPage = ({
   route,
@@ -61,8 +47,7 @@ export const PingFinalPage = ({
   const styles = makeStyles(theme);
 
   // Navigation
-  const { point, _picks } = route.params;
-  const rootNavigation = useNavigation();
+  const { point } = route.params;
 
   // Media handling
   const mediaTypeRef = useRef<{ getResponse: () => ImagePickerResponse }>(null);
@@ -81,8 +66,6 @@ export const PingFinalPage = ({
   // * Update selected point if current location changes
   // ! possible bug when user location changes
   useEffect(() => {
-    console.log('currentLocation', currentLocation);
-
     if (!currentLocation) {
       return;
     }
@@ -121,10 +104,6 @@ export const PingFinalPage = ({
       setPicks(route.params.picks);
     }
   }, [picks, route.params]);
-
-  useEffect(() => {
-    navigation.addListener('beforeRemove', e => {});
-  }, []);
 
   const textInputProps = {
     contentStyle: styles.textInputContent,
@@ -206,6 +185,9 @@ export const PingFinalPage = ({
     setDescriptionText(text);
   };
 
+  // * Prevent user from going back if title is empty
+  useEffect(() => {}, []);
+
   // * useCreatePing
   const { createPing, loading } = useCreatePing();
 
@@ -257,7 +239,6 @@ export const PingFinalPage = ({
     assets,
     createPing,
     descriptionText,
-    loading,
     navigation,
     picks,
     selectedPoint,
@@ -267,7 +248,7 @@ export const PingFinalPage = ({
 
   // * Render header right
   // * Handle submit button
-  const headerRight = () => {
+  const headerRight = useCallback(() => {
     return (
       <IconButton
         icon={AppIcons.SEND}
@@ -276,10 +257,16 @@ export const PingFinalPage = ({
         disabled={isSubmitButtonDisabled}
       />
     );
-  };
+  }, [handleOnSubmit, isSubmitButtonDisabled]);
 
   const closeButton = () => {
-    return <Ionicon name={AppIcons.CLOSE} size={SIZES.large} />;
+    return (
+      <Ionicon
+        name={AppIcons.CLOSE}
+        size={SIZES.large}
+        style={{ padding: SIZES.medium }}
+      />
+    );
   };
 
   useLayoutEffect(() => {
@@ -289,9 +276,14 @@ export const PingFinalPage = ({
       headerLeft: closeButton,
       headerRight,
       headerStyle: styles.header,
-    }),
-      [navigation];
-  });
+      headerRightContainerStyle: {
+        paddingRight: SIZES.small,
+      },
+      headerLeftContainerStyle: {
+        paddingRight: SIZES.small,
+      },
+    });
+  }, [headerRight, navigation, styles.header]);
 
   return (
     <View style={styles.superContainer}>
@@ -482,96 +474,3 @@ export const PingFinalPage = ({
     </View>
   );
 };
-
-const makeStyles = (theme: AppTheme) =>
-  StyleSheet.create({
-    superContainer: {
-      flex: 1,
-      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
-    },
-    container: {
-      paddingHorizontal: SIZES.medium,
-      flex: 1,
-      paddingVertical: 10,
-      gap: 10,
-    },
-    subContainer: {
-      padding: 10,
-      borderRadius: 10,
-      gap: 1.5,
-
-      // ! Change
-      backgroundColor: theme.dark ? MD3Colors.neutral10 : MD3Colors.neutral90,
-    },
-    header: {
-      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral90,
-      elevation: 0,
-    },
-    headerTitle: {
-      fontWeight: 'bold',
-      letterSpacing: 2.5,
-    },
-    pickTitle: {
-      fontWeight: '600',
-      letterSpacing: 1.1,
-    },
-    picksContainer: {
-      gap: 10,
-    },
-    picksHorizontalContainer: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-    },
-    chip: {
-      paddingHorizontal: 2.5,
-      paddingVertical: 5,
-      marginRight: 7.5,
-      marginVertical: 5,
-    },
-    iconContainerStyle: {
-      backgroundColor: 'transparent',
-      paddingHorizontal: 0,
-      paddingVertical: 0,
-      marginHorizontal: 0,
-      marginVertical: 0,
-    },
-    textInput: {
-      backgroundColor: 'transparent',
-    },
-    textArea: {
-      minHeight: height / 5,
-    },
-    textInputContent: {},
-    mapContainerStyle: {
-      flex: 1,
-      height: height * 0.15,
-      borderBottomStartRadius: 10,
-      borderBottomEndRadius: 10,
-    },
-    locationLabel: {
-      padding: 10,
-    },
-    selectedPlace: {
-      color: MD3Colors.neutral60,
-      fontWeight: '700',
-    },
-    mediaContainer: {
-      paddingHorizontal: SIZES.medium,
-      paddingVertical: 10,
-      flexDirection: 'row',
-      gap: 15,
-      justifyContent: 'flex-start',
-      backgroundColor: theme.dark ? MD3Colors.neutral0 : MD3Colors.neutral100,
-      elevation: 5,
-    },
-    mediaTypeIcon: {
-      padding: 0,
-      margin: 0,
-      backgroundColor: theme.dark ? MD3Colors.neutral10 : MD3Colors.neutral80,
-    },
-    urlContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    },
-  });

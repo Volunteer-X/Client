@@ -1,5 +1,6 @@
+import { useFileHandlerClient } from '@app/context';
 import { getTypeFromMIME } from '@app/utils';
-import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { useAuth0 } from 'react-native-auth0';
 import { Asset } from 'react-native-image-picker';
@@ -10,31 +11,21 @@ type URIResponse = {
   signedUrl: string;
 };
 
-export const useS3Upload = async () => {
+export const useS3Upload = () => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<any | unknown>();
   const [signingError, setSigningError] = useState<any | unknown>();
 
-  const { getCredentials, hasValidCredentials } = useAuth0();
+  const axios = useFileHandlerClient();
 
-  const loggedIn = await hasValidCredentials();
-
-  let token: string | undefined = '';
-
-  if (loggedIn) {
-    const credentials = await getCredentials();
-
-    token = credentials?.accessToken;
-  }
-
-  const options: AxiosRequestConfig = {
-    method: 'GET',
-    baseURL: 'http://192.168.1.222:3550/api/v1/',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  // const options: AxiosRequestConfig = {
+  //   method: 'GET',
+  //   baseURL: 'http://192.168.1.222:3550/api/v1/',
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     Authorization: `Bearer ${token}`,
+  //   },
+  // };
 
   const getSignedUrl = async (type: string) => {
     console.log(type);
@@ -42,7 +33,12 @@ export const useS3Upload = async () => {
     try {
       const response: AxiosResponse<URIResponse> = await axios.get(
         `upload?type=${encodeURIComponent(type)}`,
-        options,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
       );
 
       return response.data;
@@ -79,6 +75,7 @@ export const useS3Upload = async () => {
     } catch (error) {
       setUploadError(error);
       console.error('Error uploading file to S3:', error);
+      throw new Error(`Error uploading file to S3: ${error}`);
     }
   };
 

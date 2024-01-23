@@ -68,13 +68,15 @@ function formatAddress(context: Context[]): string {
 export const getReverseGeocoding = async (point: Position) => {
   const baseUrl = 'https://api.mapbox.com/geocoding/v5' as const;
 
+  console.log('position: ', point);
+
   enum endpoint {
     PLACES = 'mapbox.places',
     PERMENANT_PLACES = 'mapbox.places-permanent',
   }
 
   let url = `${baseUrl}/${endpoint.PLACES}/${point[0]},${point[1]}.json?access_token=${MAPBOX_API}`;
-  // console.log(url);
+  console.log(url);
 
   const response: AxiosResponse<Response, any> = await axios.get(url);
 

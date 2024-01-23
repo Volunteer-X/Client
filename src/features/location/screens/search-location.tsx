@@ -18,24 +18,24 @@ import LocationSearchBar, {
 } from '@app/components/location-search-bar';
 import { Button, IconButton, MD3Colors } from 'react-native-paper';
 import { PADDING } from '@app/lib';
-import { Point, Feature } from 'geojson/index';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useGeoLocation } from '@app/context/geo-location';
 import { PingStackScreenProps } from '@ts-types/type';
 import { AppIcons } from '@app/theme/icon';
 import LottieView from 'lottie-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { point } from '@turf/helpers';
+import { Point, point, Position } from '@turf/helpers';
 
 export const SearchLocationScreen = () => {
   const inset = useSafeAreaInsets();
   const navigation =
     useNavigation<PingStackScreenProps<'SearchLocation'>['navigation']>();
-  const route = useRoute<PingStackScreenProps<'SearchLocation'>['route']>();
+  const { point: lastPosition } =
+    useRoute<PingStackScreenProps<'SearchLocation'>['route']>().params;
 
   const { coords, geoLoading } = useGeoLocation();
 
-  const [currentLocation, setCurrentLocation] = useState<number[]>([]);
+  const [currentLocation, setCurrentLocation] = useState<Position>([]);
 
   useEffect(() => {
     if (!coords) {
@@ -45,20 +45,17 @@ export const SearchLocationScreen = () => {
     setCurrentLocation([coords?.longitude, coords?.latitude]);
   }, [coords]);
 
-  const [coordinate, setCoordinate] = useState<Array<number>>([
-    route.params.point?.lng,
-    route.params.point?.lat,
-  ]);
+  const [coordinate, setCoordinate] = useState<Position>(lastPosition);
 
   const searchBarRef = useRef<LocationSearchBarRef>(null);
 
-  const setMarkerCoordinates = ({ coordinates }: GeoJSON.Point) => {
-    setCoordinate(coordinates);
+  const setMarkerCoordinates = (position: Position) => {
+    setCoordinate(position);
   };
 
   const handleSubmition = () => {
     navigation.navigate('FinalPage', {
-      point: { lat: coordinate[1], lng: coordinate[0] },
+      point: coordinate,
     });
   };
 
@@ -85,15 +82,6 @@ export const SearchLocationScreen = () => {
   };
 
   const shapeFeature = point(coordinate);
-  // const shapeFeature: Feature = {
-  //   type: 'Feature',
-  //   id: 'Feature-123',
-  //   geometry: {
-  //     type: 'Point',
-  //     coordinates: coordinate ? coordinate : [0, 0],
-  //   },
-  //   properties: {},
-  // };
 
   return (
     <View style={styles.container}>
@@ -120,7 +108,7 @@ export const SearchLocationScreen = () => {
         // compassViewPosition={3}
         // compassPosition={{ bottom: 100, right: 15 }}
         onPress={e => {
-          setMarkerCoordinates(e.geometry as Point);
+          setMarkerCoordinates((e.geometry as Point).coordinates);
         }}>
         <Camera
           defaultSettings={{
@@ -177,11 +165,8 @@ export const SearchLocationScreen = () => {
         <LocationSearchBar
           ref={searchBarRef}
           containerStyle={styles.searchbar}
-          defaultLocation={{
-            lat: currentLocation[1],
-            lng: currentLocation[0],
-          }}
-          getNewPoint={newPoint => setCoordinate([newPoint.lng, newPoint.lat])}
+          defaultLocation={currentLocation}
+          getNewPoint={newPoint => setCoordinate(newPoint)}
         />
       </View>
 

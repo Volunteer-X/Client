@@ -10,9 +10,10 @@ import LinearGradient from 'react-native-linear-gradient';
 const headerBackground = () => {
   return (
     <LinearGradient
-      colors={['#E3E3E340', '#CAD0FFFF', '#E3E3E340']}
+      // colors={['#E3E3E340', '#CAD0FFFF', '#E3E3E340']}
+      colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
       useAngle={true}
-      angle={90}
+      angle={180}
       angleCenter={{ x: 0.5, y: 0.5 }}
       style={styles.headerBackground}
       // start={{ x: 1, y: 0 }}
@@ -44,7 +45,7 @@ const headerAvatar = (
 const headerForum = (navigation: any) => {
   return (
     <IconButton
-      iconColor="#000"
+      iconColor="#454545"
       icon={AppIcons.FORUM}
       onPress={() => {
         navigation.navigate('ForumNavigation', { sreen: 'ForumScreen' });

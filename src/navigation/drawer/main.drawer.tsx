@@ -17,7 +17,6 @@ import {
 } from '@app/components';
 import { MainDrawerContent } from './main-content';
 import { useAppSelector } from '@app/hooks';
-import LinearGradient from 'react-native-linear-gradient';
 import { SIZES } from '@app/lib';
 
 const MainDrawer = (): React.JSX.Element => {
@@ -31,7 +30,10 @@ const MainDrawer = (): React.JSX.Element => {
   return (
     <Drawer.Navigator
       initialRouteName="Nearby"
-      screenOptions={{ headerShown: false, swipeEnabled: false }}
+      screenOptions={{
+        headerShown: false,
+        swipeEnabled: false,
+      }}
       drawerContent={props => MainDrawerContent(props)}>
       {/* <Drawer.Screen
         name="BottomTab"

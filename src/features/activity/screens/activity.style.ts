@@ -30,16 +30,12 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
       height: 200,
     },
     listHeaderContainer: {},
-    header: {
-      flexDirection: 'row',
-      height: 70,
-      elevation: 0,
-      marginTop: inset.top,
-      alignItems: 'center',
-      backgroundColor: theme.colors.background,
-      // justifyContent: 'center',
-      // paddingHorizontal: PADDING.lg,
-    },
+    // header: {
+    //   height: 70,
+    //   // marginTop: inset.top,
+    //   // alignItems: 'center',
+    //   backgroundColor: theme.colors.background,
+    // },
     headerTitleText: { letterSpacing: 0.5, fontStyle: 'italic' },
     filterPinsContainer: {
       marginHorizontal: PADDING.sm,
@@ -130,13 +126,6 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
       padding: 0,
       margin: 0,
       elevation: 1,
-    },
-    memberContainer: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 20,
-      paddingBottom: PADDING.sm,
     },
     headerFloat: {
       flexDirection: 'row',

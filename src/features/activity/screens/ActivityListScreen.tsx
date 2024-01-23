@@ -1,7 +1,6 @@
 import {
   ActivityCard,
   ActivityListFab,
-  BackButton,
   PicksSelectView,
 } from '@app/components';
 import {
@@ -9,22 +8,32 @@ import {
   BottomSheetRefProps,
 } from '@app/components/bottom-sheets';
 import useAppTheme from '@app/hooks/useAppTheme';
-import { ActivityStackScreenProps } from '@ts-types/type';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
+import { RootStackParamList } from '@ts-types/type';
+import { NavigationProp } from '@react-navigation/native';
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { FlatList, StatusBar, View } from 'react-native';
-import { Portal, Text } from 'react-native-paper';
+import { IconButton, Portal, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { makeStyles } from './activity.style';
-import { useQuery } from '@apollo/client';
+import { NetworkStatus, useQuery } from '@apollo/client';
 import { GET_ALL_PING } from '../graphQL/activity.query';
 import LottieView from 'lottie-react-native';
 import { Activity } from '@app/types/entities';
+import { AppIcons } from '@app/theme/icon';
+import { SIZES } from '@app/lib';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 
-export const ActivityListScreen = () => {
-  // Navigation
-  const navigation = useNavigation();
-
+export const ActivityListScreen = ({
+  navigation,
+}: {
+  navigation: NavigationProp<RootStackParamList>;
+}) => {
   // Theme
   const { theme } = useAppTheme();
   const inset = useSafeAreaInsets();
@@ -33,12 +42,16 @@ export const ActivityListScreen = () => {
   // * Get Activity List
   // const { data, loading, error } = useActivityList();
 
-  const { data, loading, fetchMore } = useQuery(GET_ALL_PING, {
-    variables: {
-      first: 3,
-      after: null,
+  const { data, loading, fetchMore, refetch, networkStatus } = useQuery(
+    GET_ALL_PING,
+    {
+      variables: {
+        first: 3,
+        after: null,
+      },
+      notifyOnNetworkStatusChange: true,
     },
-  });
+  );
 
   useEffect(() => {
     // console.log('data', data?.getAllPing.edges.length);
@@ -47,19 +60,19 @@ export const ActivityListScreen = () => {
   }, [data, loading]);
 
   const fetchMoreData = useCallback(() => {
-    // if()
-
+    if (!data?.getAllPing.pageInfo.hasNextPage) {
+      return;
+    }
     fetchMore({
       variables: {
         after: data?.getAllPing.pageInfo.endCursor,
       },
     });
-  }, [data?.getAllPing.pageInfo.endCursor, fetchMore]);
-
-  // useEffect(() => {
-  //   if (data && data.getAllPing.edges.length > 0) {
-  //   }
-  // }, [data]);
+  }, [
+    data?.getAllPing.pageInfo.endCursor,
+    data?.getAllPing.pageInfo.hasNextPage,
+    fetchMore,
+  ]);
 
   // Setting Modal
   const settingModalRef = useRef<BottomSheetRefProps>(null);
@@ -78,26 +91,56 @@ export const ActivityListScreen = () => {
     [data?.getAllPing.owner, navigation],
   );
 
-  // Header
-  const header = () => {
-    return (
-      <View style={styles.header}>
-        <BackButton />
-        <Text
-          variant="displaySmall"
-          numberOfLines={2}
-          style={styles.headerTitleText}>
-          Your Activities
-        </Text>
-      </View>
-    );
-  };
+  const handleRefresh = useCallback(() => {
+    console.log('Refresh clicked');
 
-  // useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     header,
-  //   });
-  // }, [header, navigation]);
+    refetch();
+  }, [refetch]);
+
+  // Header
+  // * Render header right
+  // * Handle submit button
+  const headerRight = useCallback(() => {
+    return (
+      <IconButton
+        icon={AppIcons.REFRESH}
+        // iconColor="green"
+        onPress={handleRefresh}
+        // disabled={isSubmitButtonDisabled}
+      />
+    );
+  }, [handleRefresh]);
+
+  const headerLeft = useCallback(() => {
+    return (
+      <Ionicon
+        name={AppIcons.ARROW_BACK}
+        size={SIZES.large}
+        style={{ paddingLeft: SIZES.medium }}
+        onPress={() => navigation.goBack()}
+      />
+    );
+  }, [navigation]);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerShown: true,
+      headerTitle: 'Activities',
+      // headerBackVisible: true,
+      headerLeft,
+      headerRight,
+      headerTitleStyle: {
+        fontSize: 32,
+        fontWeight: '600',
+      },
+      headerRightContainerStyle: {
+        paddingRight: SIZES.small,
+      },
+      headerLeftContainerStyle: {
+        paddingRight: SIZES.small,
+      },
+    });
+  }, [headerLeft, headerRight, navigation]);
 
   const renderEmptyComponent = useCallback(() => {
     return (
@@ -137,13 +180,13 @@ export const ActivityListScreen = () => {
     <Portal.Host>
       <View style={styles.page}>
         <StatusBar
+          translucent
           barStyle={theme.dark ? 'light-content' : 'dark-content'}
-          backgroundColor={theme.colors.background}
+          backgroundColor="transparent"
         />
         <ActivityListFab />
         <ActivitySettingModal ref={settingModalRef} />
         <View style={{ flex: 1 }}>
-          {header()}
           {loading ? (
             <View style={styles.loadingContainer}>
               <LottieView
@@ -155,7 +198,6 @@ export const ActivityListScreen = () => {
             </View>
           ) : (
             <FlatList
-              // style={{ height: '100%' }}
               contentContainerStyle={{ flexGrow: 1 }}
               overScrollMode="never"
               nestedScrollEnabled

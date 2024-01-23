@@ -1,9 +1,8 @@
-import { ImageBackground, StatusBar, StyleSheet, View } from 'react-native';
+import { ImageBackground, StatusBar, View } from 'react-native';
 import React, { useEffect } from 'react';
-import { Button, IconButton, Text, TextInput } from 'react-native-paper';
-import { EdgeInsets, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Button, IconButton, Text } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicon from 'react-native-vector-icons/Ionicons';
-import { PADDING, Picks } from '@app/lib';
 import { ActivityCard, Avatar } from '@app/components';
 import { PicksIcon } from '@app/components';
 import {
@@ -19,6 +18,7 @@ import { ActivityStackScreenProps } from '@ts-types/type';
 import { useAppSelector } from '@app/hooks';
 import DefualtErrorScreen from '@app/components/defualt-error';
 import { findPickFromLabel } from '@app/utils/pick-finder';
+import { MemberHorizontalView } from '../component/member-horizontal-view';
 
 const ActivityScreen = () => {
   const inset = useSafeAreaInsets();
@@ -159,46 +159,9 @@ const ActivityScreen = () => {
                   ))}
               </View>
             </View>
-            {/* Member container */}
-            <View style={styles.memberContainer}>
-              {Array(3)
-                .fill(0)
-                .map((_, i) => (
-                  <View
-                    style={{
-                      alignItems: 'center',
-                      gap: 5,
-                    }}
-                    key={i}>
-                    <View
-                      style={{
-                        borderColor: '#FFF',
-                        borderWidth: 1.5,
-                        height: 55,
-                        width: 55,
-                        borderRadius: 55 / 2,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Avatar size={45} showBorder borderColor="#FFF" />
-                    </View>
-                    <Text variant="bodySmall">Members</Text>
-                  </View>
-                ))}
-              <View
-                style={{
-                  alignItems: 'center',
-                  gap: 5,
-                }}>
-                <IconButton
-                  icon={`${AppIcons.MENU_X}-outline`}
-                  size={32}
-                  iconColor="#b2b2b2"
-                  style={{ backgroundColor: '#FFF', padding: 0, margin: 0 }}
-                />
-                <Text variant="bodySmall">View all</Text>
-              </View>
-            </View>
+
+            <MemberHorizontalView />
+
             {/* Body container */}
             <View style={styles.bodyContainer}>
               {/* Update option, only for owner */}
