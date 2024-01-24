@@ -256,7 +256,7 @@ export const PingFinalPage = ({
     );
   }, [handleOnSubmit, isSubmitButtonDisabled]);
 
-  const closeButton = () => {
+  const closeButton = useCallback(() => {
     return (
       <Ionicon
         name={AppIcons.CLOSE}
@@ -267,12 +267,12 @@ export const PingFinalPage = ({
         style={{ padding: SIZES.medium }}
       />
     );
-  };
+  }, [navigation]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      headerTitle: 'Create a ping',
+      headerTitle: 'Ping',
       headerLeft: closeButton,
       headerRight,
       headerStyle: styles.header,
@@ -283,7 +283,7 @@ export const PingFinalPage = ({
         paddingRight: SIZES.small,
       },
     });
-  }, [headerRight, navigation, styles.header]);
+  }, [closeButton, headerRight, navigation, styles.header]);
 
   return (
     <View style={styles.superContainer}>

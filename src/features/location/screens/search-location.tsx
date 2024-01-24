@@ -33,7 +33,7 @@ export const SearchLocationScreen = () => {
   const { point: lastPosition } =
     useRoute<PingStackScreenProps<'SearchLocation'>['route']>().params;
 
-  const { coords, geoLoading } = useGeoLocation();
+  const { coords } = useGeoLocation();
 
   const [currentLocation, setCurrentLocation] = useState<Position>([]);
 
@@ -85,16 +85,6 @@ export const SearchLocationScreen = () => {
 
   return (
     <View style={styles.container}>
-      {geoLoading && (
-        <View style={styles.overlay}>
-          <LottieView
-            source={require('@assets/anims/pull-to-refresh.json')}
-            autoPlay
-            loop
-            style={styles.lottie}
-          />
-        </View>
-      )}
       <MapView
         styleURL={MAPBOX_STYLE_DARK}
         style={styles.map}
@@ -118,6 +108,7 @@ export const SearchLocationScreen = () => {
           maxZoomLevel={14}
           minZoomLevel={10}
           animationMode="flyTo"
+          animationDuration={10}
           centerCoordinate={coordinate}
         />
         <LocationPuck

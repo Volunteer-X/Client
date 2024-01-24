@@ -33,10 +33,12 @@ const LocationSearchBar = forwardRef(
     // const [point, setPoint] = useState<Point>(defaultLocation);
 
     const _setPoint = (lat?: number, lng?: number) => {
-      console.log('Point changing', lat, lng);
       // setPoint(_point);
+      if (!lat || !lng) {
+        return;
+      }
 
-      // getNewPoint([lng, lat]);
+      getNewPoint([lng, lat]);
     };
 
     useImperativeHandle(ref, () => ({}), []);
@@ -70,8 +72,8 @@ const LocationSearchBar = forwardRef(
           }}
           onPress={(_, details) =>
             _setPoint(
-              details?.geometry.location.lng,
               details?.geometry.location.lat,
+              details?.geometry.location.lng,
             )
           }
         />
