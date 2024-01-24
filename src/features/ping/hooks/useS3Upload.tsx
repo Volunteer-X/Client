@@ -1,8 +1,6 @@
 import { useFileHandlerClient } from '@app/context';
-import { getTypeFromMIME } from '@app/utils';
-import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
-import { useEffect, useState } from 'react';
-import { useAuth0 } from 'react-native-auth0';
+import { AxiosResponse } from 'axios';
+import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -16,16 +14,7 @@ export const useS3Upload = () => {
   const [uploadError, setUploadError] = useState<any | unknown>();
   const [signingError, setSigningError] = useState<any | unknown>();
 
-  const axios = useFileHandlerClient();
-
-  // const options: AxiosRequestConfig = {
-  //   method: 'GET',
-  //   baseURL: 'http://192.168.1.222:3550/api/v1/',
-  //   headers: {
-  //     'Content-Type': 'application/json',
-  //     Authorization: `Bearer ${token}`,
-  //   },
-  // };
+  const { client: axios } = useFileHandlerClient();
 
   const getSignedUrl = async (type: string) => {
     console.log(type);

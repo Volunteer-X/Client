@@ -104,8 +104,8 @@ export const SearchLocationScreen = () => {
           defaultSettings={{
             centerCoordinate: [0.1276, 51.5072],
           }}
-          zoomLevel={13}
-          maxZoomLevel={14}
+          zoomLevel={16}
+          maxZoomLevel={16}
           minZoomLevel={10}
           animationMode="flyTo"
           animationDuration={10}

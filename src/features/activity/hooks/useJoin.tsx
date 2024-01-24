@@ -15,7 +15,9 @@ type ParticipantsInfo = {
 };
 
 export const useJoin = (activityId: string, userID: string) => {
-  const [mutate, { data, error }] = useMutation(ADD_PARTICIPANT);
+  const [mutate, { data, error }] = useMutation(ADD_PARTICIPANT, {
+    refetchQueries: [GET_PARTICIPANTS, 'GetParticipants'],
+  });
   const { data: participantData } = useQuery(GET_PARTICIPANTS, {
     variables: {
       activityId,

@@ -61,7 +61,7 @@ const MapScreen = () => {
   useEffect(() => {
     cameraRef.current?.setCamera({
       centerCoordinate: myLocation,
-      zoomLevel: 13,
+      zoomLevel: 14,
     });
   }, [myLocation]);
 
@@ -141,7 +141,7 @@ const MapScreen = () => {
         <Camera
           ref={cameraRef}
           centerCoordinate={myLocation}
-          zoomLevel={13}
+          zoomLevel={14}
           minZoomLevel={14}
           maxZoomLevel={10}
           animationMode="flyTo"

@@ -52,6 +52,8 @@ const ActivityScreen = ({ navigation, route }: Props) => {
 
   const { participants, join, isJoined, error } = useJoin(id as string, userId);
 
+  console.log('Activity Screen', participants);
+
   // handle owner and member
   useEffect(() => {
     if (owner?.id === authUser?.id) {
