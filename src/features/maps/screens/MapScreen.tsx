@@ -44,13 +44,6 @@ const MapScreen = () => {
   const { user, accessToken } = useAppSelector(state => state.root.auth);
   const { coords } = useGeoLocation();
 
-  // console.log(accessToken);
-
-  // const myLocation: Position = useMemo(
-  //   () => [coords.longitude, coords.latitude],
-  //   [coords.latitude, coords.longitude],
-  // );
-
   const { collection, loading, refetch } = useNearbyPing({
     latitude: coords.latitude,
     longitude: coords.longitude,
@@ -60,6 +53,10 @@ const MapScreen = () => {
     coords.longitude,
     coords.latitude,
   ]);
+
+  useEffect(() => {
+    setMyLocation([coords.longitude, coords.latitude]);
+  }, [coords.latitude, coords.longitude]);
 
   useEffect(() => {
     cameraRef.current?.setCamera({
@@ -77,12 +74,12 @@ const MapScreen = () => {
   }, [coords.latitude, coords.longitude]);
 
   const handleOnBottomSheetPress = () => {
-    console.log('handleOnBottomSheetPress', activityModalRef.current?.data);
     activityModalRef.current?.close();
 
     navigation.navigate('ActivityNavigation', {
       screen: 'ActivityScreen',
       params: {
+        activityID: activityModalRef.current?.data.activity.id,
         activity: activityModalRef.current?.data.activity,
         owner: activityModalRef.current?.data.creator,
       },
@@ -110,7 +107,7 @@ const MapScreen = () => {
     navigation.navigate('Ping', {
       screen: 'FinalPage',
       params: {
-        point: myLocation,
+        point: [coords.longitude, coords.latitude],
       },
     });
   };

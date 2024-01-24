@@ -13,40 +13,54 @@ import { AppIcons } from '@app/theme/icon';
 import { ScrollView } from 'react-native-gesture-handler';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { makeActivityStyles } from './activity.style';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { ActivityStackScreenProps } from '@ts-types/type';
+import {
+  NavigationProp,
+  RouteProp,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import {
+  ActivityStackParamList,
+  ActivityStackScreenProps,
+} from '@ts-types/type';
 import { useAppSelector } from '@app/hooks';
 import DefualtErrorScreen from '@app/components/defualt-error';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import { MemberHorizontalView } from '../component/member-horizontal-view';
 import { ActionsActivity } from '../component';
+import { useJoin } from '../hooks';
 
-const ActivityScreen = () => {
+type Props = {
+  navigation: NavigationProp<ActivityStackParamList, 'ActivityScreen'>;
+  route: RouteProp<ActivityStackParamList, 'ActivityScreen'>;
+};
+
+const ActivityScreen = ({ navigation, route }: Props) => {
   const inset = useSafeAreaInsets();
   const { theme } = useAppTheme();
 
   const styles = makeActivityStyles(theme, inset);
+
+  const { activityID: id, activity, owner } = route.params;
 
   // States
   const [isOwner, setIsOwner] = React.useState(false);
   const [isMember, setIsMember] = React.useState(false);
 
   const { user: authUser } = useAppSelector(state => state.root.auth);
+  const userId = authUser?.id as string;
 
-  const navigation =
-    useNavigation<ActivityStackScreenProps<'ActivityScreen'>['navigation']>();
-  const route = useRoute<ActivityStackScreenProps<'ActivityScreen'>['route']>();
-  // route params
-
-  const { activityID: id, activity, owner } = route.params;
+  const { participants, join, isJoined, error } = useJoin(id as string, userId);
 
   // handle owner and member
   useEffect(() => {
     if (owner?.id === authUser?.id) {
       setIsOwner(true);
       setIsMember(true);
+      return;
     }
-  }, [authUser?.id, owner?.id]);
+    setIsMember(isJoined);
+  }, [authUser?.id, isJoined, owner?.id]);
 
   // Refs
   const settingModalRef = React.useRef<BottomSheetRefProps>(null);
@@ -59,6 +73,11 @@ const ActivityScreen = () => {
     if (settingModalRef.current) {
       settingModalRef.current.openModal();
     }
+  };
+
+  const handleOnJoin = () => {
+    console.log('Join Clicked');
+    join(id as string, userId);
   };
 
   if (!activity || !owner) {
@@ -75,14 +94,13 @@ const ActivityScreen = () => {
         style={styles.imageBackground}>
         {/* Actions */}
         <ActionsActivity isOwner isMember onPress={() => navigation.goBack()} />
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           overScrollMode="never"
           nestedScrollEnabled
           style={styles.scrollView}
-          contentContainerStyle={{ flexGrow: 1 }}>
-          <View style={{ flex: 1 }}>
+          contentContainerStyle={styles.flexGrow}>
+          <View style={styles.flex}>
             <ActivitySettingModal ref={settingModalRef} />
 
             {/* Avatar and Activity Title  */}
@@ -105,41 +123,31 @@ const ActivityScreen = () => {
                 style={styles.activityTitle}>
                 {activity.title}
               </Text>
-              <View style={{ flexDirection: 'row' }}>
-                <Text variant="bodySmall" style={{ color: '#000' }}>
+              <View style={styles.row}>
+                <Text variant="bodySmall" style={styles.black}>
                   {'Created by '}
-                  <Text
-                    style={{
-                      fontWeight: '800',
-                      color: '#000',
-                    }}>
-                    {owner.username}
-                  </Text>
-                  {'  |  '}
-                  <Text
-                    variant="bodySmall"
-                    style={{ color: '#000' }}>{`5 Members`}</Text>
+                  <Text style={styles.username}>{owner.username}</Text>
+                  {Boolean(participants.totalCount) && (
+                    <>
+                      {'  |  '}
+                      <Text
+                        variant="bodySmall"
+                        style={
+                          styles.black
+                        }>{`${participants.totalCount} Members`}</Text>
+                    </>
+                  )}
                 </Text>
               </View>
               {/* Picks */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  gap: 2.5,
-                  marginTop: 5,
-                }}>
-                {activity.picks &&
-                  activity.picks.map(pick => (
-                    <PicksIcon
-                      key={pick}
-                      icon={findPickFromLabel(pick).icon}
-                      size={20}
-                    />
-                  ))}
-              </View>
+              <PicksView
+                picks={activity.picks}
+                picksContainer={styles.picksContainer}
+              />
             </View>
-
-            <MemberHorizontalView />
+            {participants.members && participants.members.length > 0 && (
+              <MemberHorizontalView members={participants.members} />
+            )}
 
             {/* Body container */}
             <View style={styles.bodyContainer}>
@@ -147,6 +155,7 @@ const ActivityScreen = () => {
                 isOwner={isOwner}
                 isMember={isMember}
                 actionButtonGroupContainer={styles.actionButtonGroupContainer}
+                onJoin={handleOnJoin}
               />
               {/* Activity Body */}
               <ActivityCard
@@ -170,14 +179,35 @@ const ActivityScreen = () => {
 
 export default ActivityScreen;
 
+const PicksView = ({
+  picks,
+  picksContainer,
+}: {
+  picks: string[];
+  picksContainer: {};
+}) => {
+  return (
+    <View style={picksContainer}>
+      {picks &&
+        picks.map(pick => (
+          <PicksIcon key={pick} icon={findPickFromLabel(pick).icon} size={20} />
+        ))}
+    </View>
+  );
+};
+
 const ActionButtonGroupHorizontal = ({
   isOwner,
   isMember,
   actionButtonGroupContainer,
+  onJoin,
+  onForum,
 }: {
   isOwner: boolean;
   isMember: boolean;
   actionButtonGroupContainer: {};
+  onJoin?: () => void;
+  onForum?: () => void;
 }) => {
   return (
     <>
@@ -187,12 +217,17 @@ const ActionButtonGroupHorizontal = ({
             <Button
               icon={AppIcons.PERSON_ADD}
               mode="contained"
-              style={{ flex: 1 }}>
+              style={{ flex: 1 }}
+              onPress={onJoin}>
               Join
             </Button>
           )}
 
-          <Button icon={AppIcons.FORUM} mode="contained" style={{ flex: 1 }}>
+          <Button
+            icon={AppIcons.FORUM}
+            mode="contained"
+            style={{ flex: 1 }}
+            onPress={onForum}>
             Forum
           </Button>
         </View>

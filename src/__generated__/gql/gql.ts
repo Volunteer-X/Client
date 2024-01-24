@@ -13,7 +13,9 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+    "\nmutation AddParticipant($activityID: ObjectID!, $userId: ObjectID!) {\n  addParticipant(id: $activityID, userID: $userId) \n}": types.AddParticipantDocument,
     "\n  query GetAllPing($first: Int!, $after: String) {\n    getAllPing(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      edges {\n        cursor\n        node {\n          id\n        title\n        description\n        createdAt\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        picks\n        radius\n        url\n        }\n      }\n      owner {\n        id\n        createdAt\n        username\n        email\n        name {\n            firstName\n            lastName\n            middleName\n        }\n        picture\n        picks\n      }\n    }\n  }\n": types.GetAllPingDocument,
+    "\nquery GetParticipants($activityId: ObjectID!, $first: Int, $after: String) {\n  getParticipants(pingID: $activityId, first: $first, after: $after) {\n    members {\n      id\n      username\n      picture\n      name {\n        firstName\n        lastName\n        middleName\n      }\n    }\n    totalCount\n  }\n}\n": types.GetParticipantsDocument,
     "\n  mutation createUser($createUserInput: CreateUserInput!) {\n    createUser(payload: $createUserInput) {\n      id\n      email\n      username\n      name {\n        firstName\n        lastName\n        middleName\n      }\n      picture\n      picks\n      createdAt\n      devices\n    }\n  }\n": types.CreateUserDocument,
     "\n  query isUsernameAvailable($username: String!) {\n    isUsernameAvailable(username: $username)\n  }\n": types.IsUsernameAvailableDocument,
     "\nquery GetUserByEmail($email: EmailAddress!) {\n  getUserByEmail(email: $email) {\n    id\n    email\n    username\n    name {\n      firstName\n      lastName\n      middleName\n    }\n    picture\n    picks\n    createdAt\n    activityCount\n  }\n}\n": types.GetUserByEmailDocument,
@@ -40,7 +42,15 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\nmutation AddParticipant($activityID: ObjectID!, $userId: ObjectID!) {\n  addParticipant(id: $activityID, userID: $userId) \n}"): (typeof documents)["\nmutation AddParticipant($activityID: ObjectID!, $userId: ObjectID!) {\n  addParticipant(id: $activityID, userID: $userId) \n}"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\n  query GetAllPing($first: Int!, $after: String) {\n    getAllPing(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      edges {\n        cursor\n        node {\n          id\n        title\n        description\n        createdAt\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        picks\n        radius\n        url\n        }\n      }\n      owner {\n        id\n        createdAt\n        username\n        email\n        name {\n            firstName\n            lastName\n            middleName\n        }\n        picture\n        picks\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetAllPing($first: Int!, $after: String) {\n    getAllPing(first: $first, after: $after) {\n      pageInfo {\n        endCursor\n        hasNextPage\n      }\n      edges {\n        cursor\n        node {\n          id\n        title\n        description\n        createdAt\n        latitude\n        longitude\n        media {\n            key\n            type\n        }\n        picks\n        radius\n        url\n        }\n      }\n      owner {\n        id\n        createdAt\n        username\n        email\n        name {\n            firstName\n            lastName\n            middleName\n        }\n        picture\n        picks\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetParticipants($activityId: ObjectID!, $first: Int, $after: String) {\n  getParticipants(pingID: $activityId, first: $first, after: $after) {\n    members {\n      id\n      username\n      picture\n      name {\n        firstName\n        lastName\n        middleName\n      }\n    }\n    totalCount\n  }\n}\n"): (typeof documents)["\nquery GetParticipants($activityId: ObjectID!, $first: Int, $after: String) {\n  getParticipants(pingID: $activityId, first: $first, after: $after) {\n    members {\n      id\n      username\n      picture\n      name {\n        firstName\n        lastName\n        middleName\n      }\n    }\n    totalCount\n  }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

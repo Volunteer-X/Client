@@ -61,105 +61,106 @@ const ActivityCard = ({
 
   return (
     <View style={styles.root}>
-      <Pressable style={styles.overlay} onPress={() => onPress && onPress()} />
-      <View style={styles.container}>
-        {/* Left side */}
-        <View style={styles.leftContainer}>
-          <Avatar
-            name={creator?.name?.firstName}
-            uri={creator?.picture}
-            size={32}
-          />
-          <Divider bold style={styles.verticalDivider} />
-        </View>
-        {/* Right side */}
-        <View style={styles.rightContainer}>
-          {/* Username, timeline, options */}
-          <View style={styles.header}>
-            <Text
-              variant="bodyMedium"
-              style={{ color: theme.colors.onBackground }}>
-              {creator?.name &&
-                `${creator.name.firstName} ${creator.name.lastName}`}
-            </Text>
-            <View style={styles.starTimeAndMenu}>
-              {!isMember ? (
-                <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
-                  Join
-                </Button>
-              ) : (
-                <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
-                  Forum
-                </Button>
-              )}
-              {showStar && isOriginalPing && (
-                <AntDesign
-                  name="star"
-                  size={14}
-                  style={{ transform: [{ scaleX: -1 }] }}
-                />
-              )}
-              <Text
-                variant="bodySmall"
-                style={{ color: theme.colors.onBackground }}>
-                {createdAt && getRelativeTime(createdAt as Date)}
-              </Text>
-              {showMenu && (
-                <Ionicons
-                  name="ellipsis-horizontal"
-                  size={20}
-                  style={{}}
-                  onPress={onMenuClick}
-                />
-              )}
-            </View>
+      <Pressable onPress={() => onPress && onPress()}>
+        <View style={styles.container}>
+          {/* Left side */}
+          <View style={styles.leftContainer}>
+            <Avatar
+              name={creator?.name?.firstName}
+              uri={creator?.picture}
+              size={32}
+            />
+            <Divider bold style={styles.verticalDivider} />
           </View>
-          {/* Content */}
-          <View style={{ gap: 10 }}>
-            {/* Picks */}
-            {picks && showPicks && (
-              <View style={[styles.picksContainer]}>
-                {picks.map(pick => {
-                  const pickObj = Picks.find(val => val.label === pick);
-                  return (
-                    <PicksIcon
-                      key={pickObj?.label}
-                      icon={pickObj?.icon ? pickObj.icon : 'star'}
-                      size={16}
-                      iconStyle={{ opacity: 0.75 }}
-                    />
-                  );
-                })}
-              </View>
-            )}
-            {/* Title */}
-            <Text
-              variant="labelLarge"
-              numberOfLines={2}
-              style={[styles.title, { color: theme.colors.onBackground }]}>
-              {title}
-            </Text>
-            {/* URL */}
-            {url && <LinkPreview url={url.toString()} theme={theme} />}
-            {/* Media */}
-            {media && media !== null && media.length > 0 && (
-              <View
-                hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
-                style={styles.mediaContainer}>
-                <MediaView media={media} />
-              </View>
-            )}
-            {/* Description */}
-            <ViewMoreText numberOfLines={textLines}>
+          {/* Right side */}
+          <View style={styles.rightContainer}>
+            {/* Username, timeline, options */}
+            <View style={styles.header}>
               <Text
                 variant="bodyMedium"
                 style={{ color: theme.colors.onBackground }}>
-                {description}
+                {creator?.name &&
+                  `${creator.name.firstName} ${creator.name.lastName}`}
               </Text>
-            </ViewMoreText>
+              <View style={styles.starTimeAndMenu}>
+                {!isMember ? (
+                  <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
+                    Join
+                  </Button>
+                ) : (
+                  <Button compact mode="text" style={{ margin: 0, padding: 0 }}>
+                    Forum
+                  </Button>
+                )}
+                {showStar && isOriginalPing && (
+                  <AntDesign
+                    name="star"
+                    size={14}
+                    style={{ transform: [{ scaleX: -1 }] }}
+                  />
+                )}
+                <Text
+                  variant="bodySmall"
+                  style={{ color: theme.colors.onBackground }}>
+                  {createdAt && getRelativeTime(createdAt as Date)}
+                </Text>
+                {showMenu && (
+                  <Ionicons
+                    name="ellipsis-horizontal"
+                    size={20}
+                    style={{}}
+                    onPress={onMenuClick}
+                  />
+                )}
+              </View>
+            </View>
+            {/* Content */}
+            <View style={{ gap: 10 }}>
+              {/* Picks */}
+              {picks && showPicks && (
+                <View style={[styles.picksContainer]}>
+                  {picks.map(pick => {
+                    const pickObj = Picks.find(val => val.label === pick);
+                    return (
+                      <PicksIcon
+                        key={pickObj?.label}
+                        icon={pickObj?.icon ? pickObj.icon : 'star'}
+                        size={16}
+                        iconStyle={{ opacity: 0.75 }}
+                      />
+                    );
+                  })}
+                </View>
+              )}
+              {/* Title */}
+              <Text
+                variant="labelLarge"
+                numberOfLines={2}
+                style={[styles.title, { color: theme.colors.onBackground }]}>
+                {title}
+              </Text>
+              {/* URL */}
+              {url && <LinkPreview url={url.toString()} theme={theme} />}
+              {/* Media */}
+              {media && media !== null && media.length > 0 && (
+                <View
+                  hitSlop={{ top: 0, bottom: 0, left: 0, right: 0 }}
+                  style={styles.mediaContainer}>
+                  <MediaView media={media} />
+                </View>
+              )}
+              {/* Description */}
+              <ViewMoreText numberOfLines={textLines}>
+                <Text
+                  variant="bodyMedium"
+                  style={{ color: theme.colors.onBackground }}>
+                  {description}
+                </Text>
+              </ViewMoreText>
+            </View>
           </View>
         </View>
-      </View>
+      </Pressable>
     </View>
   );
 };

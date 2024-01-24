@@ -55,6 +55,10 @@ export const makeStyles = (theme: AppTheme, inset: EdgeInsets) =>
 
 export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
   StyleSheet.create({
+    flex: { flex: 1 },
+    flexGrow: { flexGrow: 1 },
+    row: { flexDirection: 'row' },
+    black: { color: '#000' },
     page: {
       // flex: 0,
       // backgroundColor: 'blue',
@@ -134,5 +138,14 @@ export const makeActivityStyles = (theme: AppTheme, inset: EdgeInsets) =>
       padding: 10,
       marginBottom: 10,
       gap: 10,
+    },
+    username: {
+      fontWeight: '800',
+      color: '#000',
+    },
+    picksContainer: {
+      flexDirection: 'row',
+      gap: 2.5,
+      marginTop: 5,
     },
   });

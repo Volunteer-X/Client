@@ -58,24 +58,21 @@ export const PingFinalPage = ({
   const [disabled, setDisabled] = useState<boolean>(false);
 
   // * Get current location
-  const { coords: currentLocation } = useGeoLocation();
+  const { coords: myLocation } = useGeoLocation();
 
   // * Get selected point
-  const [selectedPoint, setSelectedPoint] = useState<Position>(() => [0, 0]);
+  const [selectedPoint, setSelectedPoint] = useState<Position>([10, 10]);
 
   // * Update selected point if current location changes
   // ! possible bug when user location changes
   useEffect(() => {
-    if (!currentLocation) {
-      return;
-    }
     if (
-      selectedPoint[1] !== currentLocation.latitude ||
-      selectedPoint[0] !== currentLocation.longitude
+      selectedPoint[1] !== myLocation.latitude ||
+      selectedPoint[0] !== myLocation.longitude
     ) {
-      setSelectedPoint([currentLocation.longitude, currentLocation.latitude]);
+      setSelectedPoint([myLocation.longitude, myLocation.latitude]);
     }
-  }, [currentLocation, selectedPoint]);
+  }, [myLocation, selectedPoint]);
 
   // * Get reverse geocoding
   const [place, setPlace] = useState<string>();
@@ -91,7 +88,7 @@ export const PingFinalPage = ({
     getReverseGeocoding(selectedPoint)
       .then(value => setPlace(value))
       .catch(e => console.error(e));
-  }, [currentLocation, point, route.params, selectedPoint]);
+  }, [myLocation, point, route.params, selectedPoint]);
 
   // * Navigate to pick select screen
   const navigateToPickSelect = () => {
@@ -264,6 +261,9 @@ export const PingFinalPage = ({
       <Ionicon
         name={AppIcons.CLOSE}
         size={SIZES.large}
+        onPress={() => {
+          navigation.goBack();
+        }}
         style={{ padding: SIZES.medium }}
       />
     );

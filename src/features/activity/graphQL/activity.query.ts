@@ -41,3 +41,21 @@ export const GET_ALL_PING = gql(`
     }
   }
 `);
+
+export const GET_PARTICIPANTS = gql(`
+query GetParticipants($activityId: ObjectID!, $first: Int, $after: String) {
+  getParticipants(pingID: $activityId, first: $first, after: $after) {
+    members {
+      id
+      username
+      picture
+      name {
+        firstName
+        lastName
+        middleName
+      }
+    }
+    totalCount
+  }
+}
+`);

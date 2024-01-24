@@ -1,8 +1,8 @@
-import { APP_NAME, SIZES } from '@app/lib';
+import { SIZES } from '@app/lib';
 import { AppIcons } from '@app/theme/icon';
 import React from 'react';
 import { Image, StyleSheet } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 import { Avatar } from '../avatar/Avatar';
 import logoTypo from '@assets/images/logo-typo.png';
 import LinearGradient from 'react-native-linear-gradient';
@@ -11,9 +11,10 @@ const headerBackground = () => {
   return (
     <LinearGradient
       // colors={['#E3E3E340', '#CAD0FFFF', '#E3E3E340']}
-      colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
+      // colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
+      colors={['#FFEFC1', '#874F9E']}
       useAngle={true}
-      angle={180}
+      angle={90}
       angleCenter={{ x: 0.5, y: 0.5 }}
       style={styles.headerBackground}
       // start={{ x: 1, y: 0 }}
