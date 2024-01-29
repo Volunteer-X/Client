@@ -8,7 +8,13 @@ import { PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import { Auth0Provider } from 'react-native-auth0';
-import { AUTH0_DOMAIN, AUTH0_CLIENT, MAPBOX_API } from '@env';
+import {
+  AUTH0_DOMAIN,
+  AUTH0_CLIENT,
+  MAPBOX_API,
+  DEV_FILE,
+  DEV_HOST,
+} from '@env';
 import { ApolloProvider } from '@apollo/client';
 import { PersistGate } from 'redux-persist/integration/react';
 import Mapbox from '@rnmapbox/maps';
@@ -34,7 +40,6 @@ import { FileHandlerClient } from '@app/context/file-handler';
  */
 const App = () => {
   const { themePreference, theme } = useAppTheme();
-
   Mapbox.setAccessToken(MAPBOX_API);
 
   const customIcon = (

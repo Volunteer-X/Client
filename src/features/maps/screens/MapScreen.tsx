@@ -123,7 +123,7 @@ const MapScreen = () => {
         ref={activityModalRef}
         onPress={handleOnBottomSheetPress}
       />
-      {loading && (
+      {false && (
         <View style={styles.loadingOverlay}>
           <ActivityIndicator size={64} />
         </View>

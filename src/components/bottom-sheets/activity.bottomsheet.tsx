@@ -39,7 +39,7 @@ export const ActivityBottomSheet = forwardRef(
       },
     }));
 
-    const snapPoints = useMemo(() => ['50%'], []);
+    const snapPoints = useMemo(() => ['50%', '75%'], []);
 
     const renderBackdrop = useCallback(
       (backdropProps: BottomSheetBackdropProps) => (

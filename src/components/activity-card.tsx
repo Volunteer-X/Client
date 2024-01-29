@@ -20,6 +20,7 @@ type ActivityOptions = {
   isMember?: boolean;
   textLines?: number;
   showMenu?: boolean;
+  displayMedia?: boolean;
 };
 
 export type ActivityCardProps = {
@@ -42,6 +43,7 @@ const ActivityCard = ({
     isMember: false,
     textLines: 3,
     showMenu: true,
+    displayMedia: true,
   },
 }: ActivityCardProps) => {
   const theme = useAppTheme().theme;

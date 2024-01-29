@@ -48,11 +48,6 @@ export const auth0Function = async (
     }
     const accessToken = credentials.accessToken;
 
-    console.log(
-      '🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ accessToken',
-      accessToken,
-    );
-
     const user = await waitForNonNullValue(auth0User);
 
     if (!user) {
@@ -73,6 +68,8 @@ export const auth0Function = async (
         if (res.data?.getUserByEmail) {
           let _user = res.data.getUserByEmail;
           // setIsAuthenticated(true);
+
+          console.log('user exists in db', true);
 
           // set auth state to authenticated
           dispatch(

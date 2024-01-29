@@ -1,3 +1,4 @@
+import { DEV_FILE } from '@env';
 import axios, { AxiosInstance } from 'axios';
 
 class FileHandlerApi {
@@ -7,7 +8,7 @@ class FileHandlerApi {
 
   constructor() {
     this.client = axios.create({
-      baseURL: 'http://192.168.1.222:3550/api/v1/',
+      baseURL: DEV_FILE,
     });
   }
 

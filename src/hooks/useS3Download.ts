@@ -20,6 +20,13 @@ export const useS3Download = (media: Media) => {
     async (type: string, key: string) => {
       //   console.log('getS3DownloadUrl', type, key);
 
+      console.log(
+        'DEV_FILE',
+        `${DEV_FILE}/download?type=${encodeURIComponent(
+          type,
+        )}&Key=${encodeURIComponent(key)}`,
+      );
+
       try {
         const response: AxiosResponse<{ uri: string }> = await axios.get(
           `download?type=${encodeURIComponent(type)}&Key=${encodeURIComponent(

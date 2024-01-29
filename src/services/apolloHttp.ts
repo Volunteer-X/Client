@@ -46,8 +46,6 @@ const authLink = setContext(async (_, { headers }) => {
   if (hasValidCredentials) {
     token = credentials.accessToken;
 
-    // console.log('token', token);
-
     return {
       headers: {
         ...headers,
@@ -56,6 +54,11 @@ const authLink = setContext(async (_, { headers }) => {
     };
   }
 });
+
+console.log(
+  'URL hello',
+  `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
+);
 
 const link = createHttpLink({
   uri: `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
