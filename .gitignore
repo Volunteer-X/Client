@@ -63,3 +63,5 @@ yarn-error.log
 .metro-health-check*
 
 test.drawio
+
+android\app\google-services.json
