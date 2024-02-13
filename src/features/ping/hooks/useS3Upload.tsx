@@ -2,7 +2,7 @@ import { useFileHandlerClient } from '@app/context';
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { Asset } from 'react-native-image-picker';
-import RNFetchBlob from 'rn-fetch-blob';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 type URIResponse = {
   Key: string;
@@ -49,13 +49,13 @@ export const useS3Upload = () => {
 
       const { signedUrl, Key } = await getSignedUrl(type);
 
-      await RNFetchBlob.fetch(
+      await ReactNativeBlobUtil.fetch(
         'PUT',
         signedUrl,
         {
           'Content-Type': type,
         },
-        RNFetchBlob.wrap(uri),
+        ReactNativeBlobUtil.wrap(uri),
       );
 
       console.log('File upload success', Key);

@@ -12,10 +12,10 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetFlatList,
 } from '@gorhom/bottom-sheet';
-import { Button, Divider } from '@rneui/themed';
+import { Button, Divider } from 'react-native-paper';
 
 import { DefaultValue, PICKS_DATA } from '@app/lib';
-import { useAppDispatch, useAppSelector } from '@hooks';
+import { useAppDispatch, useAppSelector } from '@hooks/index';
 
 import { PicksChip } from '../chips';
 import { onSelection } from '../../features/picks/slices/picksSlice';
