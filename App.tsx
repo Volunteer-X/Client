@@ -3,7 +3,6 @@ import 'react-native-url-polyfill/auto';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StyleSheet } from 'react-native';
-import { ThemeProvider } from '@rneui/themed';
 import { PaperProvider } from 'react-native-paper';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
@@ -64,18 +63,16 @@ const App = () => {
                         style={styles.gestureHandlerRootView}>
                         <BottomSheetModalProvider>
                           <AppThemeProvider value={themePreference}>
-                            <ThemeProvider>
-                              <PaperProvider
-                                theme={theme}
-                                settings={{
-                                  rippleEffectEnabled: false,
-                                  icon: customIcon,
-                                }}>
-                                <NavigationContainer theme={theme}>
-                                  <RootNavController />
-                                </NavigationContainer>
-                              </PaperProvider>
-                            </ThemeProvider>
+                            <PaperProvider
+                              theme={theme}
+                              settings={{
+                                rippleEffectEnabled: false,
+                                icon: customIcon,
+                              }}>
+                              <NavigationContainer theme={theme}>
+                                <RootNavController />
+                              </NavigationContainer>
+                            </PaperProvider>
                           </AppThemeProvider>
                         </BottomSheetModalProvider>
                       </GestureHandlerRootView>

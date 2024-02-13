@@ -1,8 +1,8 @@
 import React from 'react';
-import { PixelRatio, StyleProp, ViewStyle } from 'react-native';
-import { Image } from '@rneui/themed';
-import { MAP_API_KEY } from '@env';
+import { ImageStyle, PixelRatio, StyleProp } from 'react-native';
+import { Image } from 'react-native';
 import { Position } from '@turf/helpers';
+import { MAP_API_KEY } from '@env';
 
 interface GoogleStaticMapsProps {
   center: string | Position;
@@ -23,7 +23,7 @@ interface GoogleStaticMapsProps {
   paths?: Array<Path>;
   markers?: Array<Marker>;
   visible?: Array<string>;
-  containerStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ImageStyle>;
   enableImplicitPositioning?: boolean;
 }
 
@@ -213,7 +213,7 @@ const GoogleStaticMaps = ({
   return (
     <>
       <Image
-        containerStyle={containerStyle}
+        style={containerStyle}
         source={{
           uri: getStaticMapUrl(),
         }}
