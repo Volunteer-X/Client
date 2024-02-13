@@ -1,35 +1,33 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
 buildscript {
     ext {
 
-        RNMapboxMapsImpl = "mapbox"
+        // RNMapboxMapsImpl = "mapbox"
 
-        if(project.hasProperty('RMBX11') && project.property('RMBX11').toString().toBoolean()) {
-            RNMapboxMapsUseV11 = true
-            RNMapboxMapsVersion = '11.0.0-beta.5'
-        }
+        // if(project.hasProperty('RMBX11') && project.property('RMBX11').toString().toBoolean()) {
+        //     RNMapboxMapsUseV11 = true
+        //     RNMapboxMapsVersion = '11.0.0-beta.5'
+        // }
 
-        useCustomMapbox = false
+        // useCustomMapbox = false
 
-        if(System.getenv('CI_MAP_IMPL').equals('mapbox11')) {
-            RNMapboxMapsImpl = "mapbox"
-            kotlinVersion = '1.6.21'
-        }else if(System.getenv('CI_MAP_IMPL').equals('mapbox11')) {
-            RNMapboxMapsUseV11 = true
-            RNMapboxMapsVersion = '11.0.0-beta.5'
-            RNMapboxMapsImpl = 'mapbox'
-        }
+        // if(System.getenv('CI_MAP_IMPL').equals('mapbox11')) {
+        //     RNMapboxMapsImpl = "mapbox"
+        //     kotlinVersion = '1.6.21'
+        // }else if(System.getenv('CI_MAP_IMPL').equals('mapbox11')) {
+        //     RNMapboxMapsUseV11 = true
+        //     RNMapboxMapsVersion = '11.0.0-beta.5'
+        //     RNMapboxMapsImpl = 'mapbox'
+        // }
 
-        buildToolsVersion = "33.0.0"
+        buildToolsVersion = "34.0.0"
         minSdkVersion = 21
-        compileSdkVersion = 33
-        targetSdkVersion = 33
-        kotlinVersion = "1.6.0"
+        compileSdkVersion = 34
+        targetSdkVersion = 34
+        ndkVersion = "25.2.9519653"
+        kotlinVersion = "1.8.0"
         playServicesLocationVersion = "21.0.1"
+        RNMapboxMapsVersion = '11.0.0'
 
-        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
     }
     repositories {
         google()
@@ -38,24 +36,22 @@ buildscript {
     dependencies {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
-        classpath "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1"
-        classpath "com.google.gms.google-services:com.google.gms.google-services.gradle.plugin:4.4.0"
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("com.google.gms.google-services:com.google.gms.google-services.gradle.plugin:4.4.0")
     }
-
 
 }
 
+apply plugin: "com.facebook.react.rootproject"
+
 allprojects {
     repositories {
-        // ...other repos
         maven {
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
             authentication {
                 basic(BasicAuthentication)
             }
             credentials {
-                // Do not change the username below.
-                // This should always be `mapbox` (not your username).
                 username = 'mapbox'
                 // Use the secret token you stored in gradle.properties as the password
                 password = System.getenv('MAPBOX_DOWNLOADS_TOKEN') ?: project.properties['MAPBOX_DOWNLOADS_TOKEN'] as String
