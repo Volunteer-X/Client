@@ -94,15 +94,8 @@ export const makeStyles = (
       bottom: inset.bottom + PADDING.md,
       right: 0,
       left: 0,
-      // justifyContent: 'center',
+      backgroundColor: 'black',
       alignItems: 'center',
-    },
-    pingFAB: {
-      paddingHorizontal: PADDING.md,
-      backgroundColor: 'transparent',
-    },
-    gradient: {
-      borderRadius: 15,
     },
   });
 

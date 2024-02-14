@@ -29,6 +29,7 @@ import { AppIcons } from '@app/theme/icon';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { Position } from '@turf/helpers';
 import LinearGradient from 'react-native-linear-gradient';
+import IconFAB from '../components/IconFAB';
 
 const MapScreen = () => {
   const { theme } = useAppTheme();
@@ -179,23 +180,25 @@ const MapScreen = () => {
         />
       </View>
       <View style={styles.FABContainer}>
-        <LinearGradient
+        <IconFAB
           colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
-          // useAngle={true}
-          // angle={90}
-          // angleCenter={{ x: 0.5, y: 0.5 }}
-          style={styles.gradient}
-          start={{ x: 1, y: 0 }}
-          end={{ x: 0, y: 1 }}>
-          <FAB
-            icon={AppIcons.PING}
-            color="#A633E9"
-            style={styles.pingFAB}
-            size="medium"
-            mode="flat"
-            onPress={navigateToPingScreen}
-          />
-        </LinearGradient>
+          icon={AppIcons.PING}
+          color="#A633E9"
+          style={{ marginBottom: 10 }}
+          onPress={navigateToPingScreen}
+        />
+        <IconFAB
+          colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
+          icon={AppIcons.FILTER}
+          color="#FFF"
+          onPress={() => {}}
+        />
+        <IconFAB
+          colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
+          icon={AppIcons.ACTIVITY}
+          color="#A633E9"
+          onPress={() => {}}
+        />
       </View>
     </View>
   );

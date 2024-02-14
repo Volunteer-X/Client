@@ -27,4 +27,5 @@ export enum AppIcons {
   SEARCH = 'search',
   PING = 'megaphone',
   REFRESH = 'refresh',
+  ACTIVITY = 'pulse',
 }

@@ -9,9 +9,7 @@ import {
   DEV_PORT,
   DEV_SCHEME,
 } from '@env';
-import Auth0, { useAuth0 } from 'react-native-auth0';
-import { tokens } from 'react-native-paper/lib/typescript/src/styles/themes/v3/tokens';
-import { has } from 'lodash';
+import Auth0 from 'react-native-auth0';
 
 export const errorLink = onError(
   ({ graphQLErrors, networkError }: ErrorResponse) => {
@@ -55,10 +53,7 @@ const authLink = setContext(async (_, { headers }) => {
   }
 });
 
-console.log(
-  'URL hello',
-  `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
-);
+console.log('URL', `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`);
 
 const link = createHttpLink({
   uri: `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
