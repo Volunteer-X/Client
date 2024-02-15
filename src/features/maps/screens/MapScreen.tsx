@@ -184,20 +184,7 @@ const MapScreen = () => {
           colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
           icon={AppIcons.PING}
           color="#A633E9"
-          style={{ marginBottom: 10 }}
           onPress={navigateToPingScreen}
-        />
-        <IconFAB
-          colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
-          icon={AppIcons.FILTER}
-          color="#FFF"
-          onPress={() => {}}
-        />
-        <IconFAB
-          colors={['#FCDBCA', '#E6A5CC', '#D5B3E8']}
-          icon={AppIcons.ACTIVITY}
-          color="#A633E9"
-          onPress={() => {}}
         />
       </View>
     </View>
