@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { GET_PINGS_WITHIN_RADIUS } from '@app/graphql/location.query';
 import { Activity, User } from '@app/types/entities';
-import { Feature, featureCollection, point } from '@turf/helpers';
+import { featureCollection, point } from '@turf/helpers';
 import { GraphQLLatitude, GraphQLLongitude } from 'graphql-scalars';
 import { useEffect, useState } from 'react';
 

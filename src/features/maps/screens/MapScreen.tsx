@@ -27,8 +27,6 @@ import { useNavigation } from '@react-navigation/native';
 import { ActivityIndicator, FAB, IconButton } from 'react-native-paper';
 import { AppIcons } from '@app/theme/icon';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { Position } from '@turf/helpers';
-import LinearGradient from 'react-native-linear-gradient';
 import IconFAB from '../components/IconFAB';
 
 const MapScreen = () => {
@@ -50,7 +48,7 @@ const MapScreen = () => {
     longitude: coords.longitude,
   });
 
-  const [myLocation, setMyLocation] = React.useState<Position>([
+  const [myLocation, setMyLocation] = React.useState<GeoJSON.Position>([
     coords.longitude,
     coords.latitude,
   ]);

@@ -6,10 +6,9 @@ import {
   Point,
 } from 'react-native-google-places-autocomplete';
 import { MD3Colors, TextInput } from 'react-native-paper';
-import { Position } from '@turf/helpers';
 
 export type LocationSearchBarRef = {
-  setPoint?: (point: Position) => void;
+  setPoint?: (point: GeoJSON.Position) => void;
 };
 
 // Todo - Complete styling the search bar
@@ -23,8 +22,8 @@ const LocationSearchBar = forwardRef(
       getNewPoint,
     }: {
       containerStyle: StyleProp<ViewStyle>;
-      defaultLocation: Position;
-      getNewPoint: (newPoint: Position) => void;
+      defaultLocation: GeoJSON.Position;
+      getNewPoint: (newPoint: GeoJSON.Position) => void;
     },
     ref?: Ref<LocationSearchBarRef>,
   ) => {

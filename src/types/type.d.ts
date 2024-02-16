@@ -5,16 +5,15 @@ import type {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { Position } from '@turf/helpers';
 import { Activity, User } from './entities';
 
 /*
  * PingStackParamList
  */
 export type PingStackParamList = {
-  FinalPage: { point?: Position; picks?: Array<string> };
+  FinalPage: { point?: GeoJSON.Position; picks?: Array<string> };
   SelectPicks: { picks?: Array<string> };
-  SearchLocation: { point: Position };
+  SearchLocation: { point: GeoJSON.Position };
 };
 
 export type PingCompositeScreenProps<

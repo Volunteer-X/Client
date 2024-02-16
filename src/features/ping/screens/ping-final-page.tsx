@@ -32,7 +32,6 @@ import EmptyPickView from '../components/empty-pick-view';
 import { findPickFromLabel } from '@app/utils/pick-finder';
 import { AppIcons } from '@app/theme/icon';
 import { useCreatePing } from '../hooks/useCreatePing';
-import { Position } from '@turf/helpers';
 import { makeStyles } from './ping.style';
 
 export const PingFinalPage = ({
@@ -61,7 +60,9 @@ export const PingFinalPage = ({
   const { coords: myLocation } = useGeoLocation();
 
   // * Get selected point
-  const [selectedPoint, setSelectedPoint] = useState<Position>([10, 10]);
+  const [selectedPoint, setSelectedPoint] = useState<GeoJSON.Position>([
+    10, 10,
+  ]);
 
   // * Update selected point if current location changes
   // ! possible bug when user location changes

@@ -1,8 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { Point } from '@app/types/utility-types';
 import { MAPBOX_API } from '@env';
-import { Position } from '@turf/helpers';
 
 interface Response {
   type: string;
@@ -65,7 +63,7 @@ function formatAddress(context: Context[]): string {
 }
 
 // ! Bug Possible crash due to invalid Point
-export const getReverseGeocoding = async (point: Position) => {
+export const getReverseGeocoding = async (point: GeoJSON.Position) => {
   const baseUrl = 'https://api.mapbox.com/geocoding/v5' as const;
 
   enum endpoint {

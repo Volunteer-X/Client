@@ -5,12 +5,11 @@ import { MediaInput } from '../../../__generated__/gql/graphql';
 import { useAppSelector } from '@app/hooks';
 import { Asset } from 'react-native-image-picker';
 import { useS3Upload } from './useS3Upload';
-import { Position } from '@turf/helpers';
 
 type Input = {
   title: string; // required
   picks: Array<string>; // required
-  point: Position; // required
+  point: GeoJSON.Position; // required
   description?: string; // optional
   url?: string; // optional
   assets?: Array<Asset>; // optional

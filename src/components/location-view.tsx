@@ -2,7 +2,6 @@ import GoogleStaticMaps from '@app/components/google-static-map';
 import useAppTheme from '@app/hooks/useAppTheme';
 import { DIMENSIONS } from '@app/lib';
 import { AppTheme } from '@app/theme';
-import { Position } from '@turf/helpers';
 import React, { StyleSheet, View } from 'react-native';
 import { MD3Colors, Text } from 'react-native-paper';
 
@@ -11,7 +10,7 @@ export const LocationView = ({
   position,
 }: {
   place: string;
-  position: Position;
+  position: GeoJSON.Position;
 }) => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);

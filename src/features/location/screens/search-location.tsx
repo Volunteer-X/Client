@@ -24,7 +24,7 @@ import { PingStackScreenProps } from '@ts-types/type';
 import { AppIcons } from '@app/theme/icon';
 import LottieView from 'lottie-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Point, point, Position } from '@turf/helpers';
+import { point } from '@turf/helpers';
 
 export const SearchLocationScreen = () => {
   const inset = useSafeAreaInsets();
@@ -35,7 +35,7 @@ export const SearchLocationScreen = () => {
 
   const { coords } = useGeoLocation();
 
-  const [currentLocation, setCurrentLocation] = useState<Position>([]);
+  const [currentLocation, setCurrentLocation] = useState<GeoJSON.Position>([]);
 
   useEffect(() => {
     if (!coords) {
@@ -45,11 +45,11 @@ export const SearchLocationScreen = () => {
     setCurrentLocation([coords?.longitude, coords?.latitude]);
   }, [coords]);
 
-  const [coordinate, setCoordinate] = useState<Position>(lastPosition);
+  const [coordinate, setCoordinate] = useState<GeoJSON.Position>(lastPosition);
 
   const searchBarRef = useRef<LocationSearchBarRef>(null);
 
-  const setMarkerCoordinates = (position: Position) => {
+  const setMarkerCoordinates = (position: GeoJSON.Position) => {
     setCoordinate(position);
   };
 
@@ -98,7 +98,7 @@ export const SearchLocationScreen = () => {
         // compassViewPosition={3}
         // compassPosition={{ bottom: 100, right: 15 }}
         onPress={e => {
-          setMarkerCoordinates((e.geometry as Point).coordinates);
+          setMarkerCoordinates((e.geometry as GeoJSON.Point).coordinates);
         }}>
         <Camera
           defaultSettings={{

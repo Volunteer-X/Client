@@ -1,11 +1,10 @@
 import React from 'react';
 import { ImageStyle, PixelRatio, StyleProp } from 'react-native';
 import { Image } from 'react-native';
-import { Position } from '@turf/helpers';
 import { MAP_API_KEY } from '@env';
 
 interface GoogleStaticMapsProps {
-  center: string | Position;
+  center: string | GeoJSON.Position;
   zoom?: number;
   size: Size;
   scale?: 1 | 2;
@@ -55,14 +54,14 @@ interface Size {
 }
 
 interface Path extends Color {
-  points: Array<string> | Array<Position>;
+  points: Array<string> | Array<GeoJSON.Position>;
   weigth?: number;
   fillColor?: string;
   geodesic?: boolean;
 }
 
 interface Marker extends Color {
-  location: string | Position;
+  location: string | GeoJSON.Position;
   size?: 'tiny' | 'mid' | 'small' | 'normal';
   label?: string;
   scale?: 1 | 2 | 4;
@@ -88,7 +87,7 @@ const defaultScale = () => {
   return isRetina ? 2 : 1;
 };
 
-const setLocations = (items: Array<string> | Array<Position>) => {
+const setLocations = (items: Array<string> | Array<GeoJSON.Position>) => {
   return items
     .map(item => (typeof item === 'string' ? item : `${item[1]},${item[0]}`))
     .join('|');
