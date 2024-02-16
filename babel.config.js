@@ -1,7 +1,13 @@
+import { babelOptimizerPlugin } from '@graphql-codegen/client-preset';
+
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [
-    'import-graphql',
+    [
+      babelOptimizerPlugin,
+      { artifactDirectory: './src/__generated__/gql', gqlTagName: 'gql' },
+    ],
+    // 'import-graphql',
     [
       'module:react-native-dotenv',
       {

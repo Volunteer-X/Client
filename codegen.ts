@@ -30,6 +30,7 @@ const config: CodegenConfig = {
         scalars: {
           ...scalars,
         },
+        skipTypename: true,
         strictScalars: true,
       },
       plugins: [],
