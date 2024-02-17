@@ -37,7 +37,7 @@ import { TextInput } from '@components/index';
 import { AppTheme } from '@theme/index';
 import { useYupResolver } from '@hooks/index';
 import { yupScheme } from '../helpers/yupSchema';
-import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.queries';
+import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.query';
 import { Query } from '@app/__generated__/gql/graphql';
 import { AppIcons } from '@app/theme/icon';
 

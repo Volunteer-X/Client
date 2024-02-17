@@ -1,13 +1,12 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
+import { CREATE_USER, GET_USER_BY_EMAIL, logout } from '@features/auth';
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '@app/hooks';
-import { useAuth0 } from 'react-native-auth0';
-import { AuthProps } from './AuthContext.type';
-import { GET_USER_BY_EMAIL } from '@features/auth/graphql/auth.queries';
-import { CREATE_USER } from '@features/auth/graphql/auth.mutation';
-import { logout } from '@app/features/auth/slices/auth.slice';
 import { authFunction, loginFunction } from './utils';
+import { useAppDispatch, useAppSelector } from '@app/hooks';
+import { useLazyQuery, useMutation } from '@apollo/client';
+
+import { AuthProps } from './AuthContext.type';
 import { GeoCoordinates } from 'react-native-geolocation-service';
+import { useAuth0 } from 'react-native-auth0';
 
 const initialState: AuthProps = {
   isAuthenticated: false,

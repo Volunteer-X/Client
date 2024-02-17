@@ -1,15 +1,12 @@
 import React, { useCallback } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { useAuth0 } from 'react-native-auth0';
 import { Button, Text } from 'react-native-paper';
-import { AUTH0_SCOPE } from '@env';
 
-import { AuthStackParamList } from '@ts-types/type';
-import useAppTheme from '@hooks/useAppTheme';
-import { AppTheme } from '@theme/index';
 import { useAppAuth } from '@app/context/auth-context';
-import { useGeoLocation } from '@app/context/geo-location';
+import useAppTheme from '@hooks/useAppTheme';
+import { StackScreenProps } from '@react-navigation/stack';
+import { AppTheme } from '@theme/index';
+import { AuthStackParamList } from '@ts-types/type';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 

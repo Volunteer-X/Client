@@ -1,6 +1,7 @@
-import { login } from '@app/features/auth/slices/auth.slice';
 import { Credentials, User } from 'react-native-auth0';
+
 import { GeoCoordinates } from 'react-native-geolocation-service';
+import { login } from '@app/features/auth/slices/auth.slice';
 import messaging from '@react-native-firebase/messaging';
 
 export const loginFunction = async (
