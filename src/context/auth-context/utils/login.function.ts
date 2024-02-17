@@ -57,7 +57,7 @@ export const loginFunction = async (
 
   token = await messaging().getToken();
 
-  console.log('token', token);
+  console.log('Login function: token', token);
 
   try {
     const result = await createUser({

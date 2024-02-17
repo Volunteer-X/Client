@@ -14,13 +14,15 @@ const initialState: AuthProps = {
   loading: true,
 };
 
-/*
- * Auth Context (React Context)
+/**
+ * Context for managing authentication state.
  */
 const AuthContext = createContext<AuthProps>(initialState);
 
-/*
- * Auth Provider (React Context Provider)
+/**
+ * Provides authentication functionality to the application.
+ * @param {ReactNode} children - The child components to be wrapped by the AuthProvider.
+ * @returns {JSX.Element} - The AuthProvider component.
  */
 const AuthProvider = ({ children }: any) => {
   // Redux
@@ -43,24 +45,24 @@ const AuthProvider = ({ children }: any) => {
   } = useAuth0();
   const [loading, setLoading] = useState(false);
 
-  // ! Bug fix for auth0
-  // Initial login not working
-  // auth0
+  // ! Bug fix for auth0User being null on first render
+  /**
+   * Callback function for authentication using Auth0.
+   * @returns {void}
+   */
   const auth0 = useCallback(
-    // () => {
-    //   const cred = await authorize({
-    //     scope: 'openid profile email',
-    //     audience: 'https://api.volunteerX.module',
-    //   });
-
-    //   return undefined;
-    // },
     () =>
       authFunction(authorize, auth0User, setLoading, getUserByEmail, dispatch),
     [auth0User, authorize, dispatch, getUserByEmail],
   );
 
   // Login
+  /**
+   * Logs in the user with the provided username, picks, and coordinates.
+   * @param {string} username - The username of the user.
+   * @param {string[]} picks - The picks of the user.
+   * @param {GeoCoordinates} coords - The coordinates of the user.
+   */
   const _login = useCallback(
     (username: string, picks: string[], coords: GeoCoordinates) =>
       loginFunction(
@@ -77,7 +79,9 @@ const AuthProvider = ({ children }: any) => {
     [auth0User, createUser, dispatch, getCredentials, hasValidCredentials],
   );
 
-  // Logout
+  /**
+   * Logs out the user by clearing the session and dispatching the logout action.
+   */
   const _logout = useCallback(() => {
     clearSession().then(() => {
       dispatch(logout());
@@ -96,13 +100,15 @@ const AuthProvider = ({ children }: any) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-/*
- * useAuth Hook
+/**
+ * Custom hook that provides access to the authentication context.
+ * Throws an error if used outside of an AuthProvider.
+ * @returns The authentication context.
  */
 const useAppAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within a AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
