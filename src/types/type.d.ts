@@ -61,19 +61,19 @@ type RootStackScreenProps<T extends keyof RootStackParamList> =
 // Drawer
 export type MainDrawerParamList = {
   Nearby: undefined;
-  // BottomTab: NavigatorScreenParams<BottomTabParamList>;
+  BottomTab: NavigatorScreenParams<BottomTabParamList>;
   Profile: { userID: string };
   Activity: undefined;
   AppSettings: undefined;
 };
 // Bottom tab
-// export type BottomTabParamList = {
-//   Home: undefined;
-//   Activity: undefined;
-//   Ping: NavigatorScreenParams<PingStackParamList>;
-//   Nearby: undefined;
-//   Search: undefined;
-// };
+export type BottomTabParamList = {
+  Home: undefined;
+  Activity: undefined;
+  Ping: NavigatorScreenParams<PingStackParamList>;
+  Nearby: undefined;
+  Event: undefined;
+};
 
 // * Home Screen
 export type HomeStackParamList = {

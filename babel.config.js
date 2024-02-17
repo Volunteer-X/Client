@@ -1,4 +1,4 @@
-import { babelOptimizerPlugin } from '@graphql-codegen/client-preset';
+const { babelOptimizerPlugin } = require('@graphql-codegen/client-preset');
 
 module.exports = {
   presets: ['module:@react-native/babel-preset'],

@@ -18,6 +18,7 @@ import {
 import { MainDrawerContent } from './main-content';
 import { useAppSelector } from '@app/hooks';
 import { SIZES } from '@app/lib';
+import BottomTabNavigation from '../bottom-tab';
 
 const MainDrawer = (): React.JSX.Element => {
   const Drawer = createDrawerNavigator<MainDrawerParamList>();
@@ -29,22 +30,22 @@ const MainDrawer = (): React.JSX.Element => {
 
   return (
     <Drawer.Navigator
-      initialRouteName="Nearby"
+      initialRouteName="BottomTab"
       screenOptions={{
         headerShown: false,
         swipeEnabled: false,
       }}
       drawerContent={props => MainDrawerContent(props)}>
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="BottomTab"
         component={BottomTabNavigation}
         options={{ drawerItemStyle: { display: 'none' } }}
-      /> */}
+      />
       <Drawer.Screen
         name="Nearby"
         component={MapScreen}
         options={({ navigation }) => ({
-          drawerItemStyle: { display: 'none' },
+          // drawerItemStyle: { display: 'none' },
           headerShown: true,
           headerTitle: headerTitle,
           headerTitleAlign: 'center',

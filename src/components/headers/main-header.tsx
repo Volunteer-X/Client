@@ -51,7 +51,7 @@ const headerAvatar = (
 const headerForum = (navigation: any) => {
   return (
     <IconButton
-      iconColor="#454545"
+      iconColor="#FFEFC1"
       icon={AppIcons.FORUM}
       onPress={() => {
         navigation.navigate('ForumNavigation', { sreen: 'ForumScreen' });

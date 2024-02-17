@@ -6,7 +6,7 @@ import { AuthProps } from './AuthContext.type';
 import { GET_USER_BY_EMAIL } from '@features/auth/graphql/auth.queries';
 import { CREATE_USER } from '@features/auth/graphql/auth.mutation';
 import { logout } from '@app/features/auth/slices/auth.slice';
-import { auth0Function, loginFunction } from './auth-functions';
+import { authFunction, loginFunction } from './utils';
 import { GeoCoordinates } from 'react-native-geolocation-service';
 
 const initialState: AuthProps = {
@@ -56,7 +56,7 @@ const AuthProvider = ({ children }: any) => {
     //   return undefined;
     // },
     () =>
-      auth0Function(authorize, auth0User, setLoading, getUserByEmail, dispatch),
+      authFunction(authorize, auth0User, setLoading, getUserByEmail, dispatch),
     [auth0User, authorize, dispatch, getUserByEmail],
   );
 

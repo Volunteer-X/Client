@@ -33,24 +33,6 @@ const HomeScreen = ({ navigation }: { navigation: any }) => {
         backgroundColor={theme.colors.background}
       />
 
-      <Avatar size={32} />
-
-      <Button
-        onPress={async () => {
-          await notifee.displayNotification({
-            title: 'Title',
-            body: 'Body',
-            // android: {
-            //   channelId: await notifee.createChannel({
-            //     id: 'default',
-            //     name: 'Default Channel',
-            //   }),
-            // },
-          });
-        }}>
-        Click me
-      </Button>
-
       {/* Flatlist Header Component */}
       {/* <ScrollView
         overScrollMode="never"
