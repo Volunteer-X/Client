@@ -1,39 +1,30 @@
-// import 'react-native-gesture-handler';
 import 'react-native-url-polyfill/auto';
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
-import { PaperProvider } from 'react-native-paper';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { Provider } from 'react-redux';
-import { Auth0Provider } from 'react-native-auth0';
-import {
-  AUTH0_DOMAIN,
-  AUTH0_CLIENT,
-  MAPBOX_API,
-  DEV_FILE,
-  DEV_HOST,
-} from '@env';
+
+import { AUTH0_CLIENT, AUTH0_DOMAIN, MAPBOX_API } from '@env';
+import { AppThemeProvider, CustomIcon } from '@theme/index';
+import { PaperProvider, Text } from 'react-native-paper';
+import { persistor, store } from './app/store';
+
 import { ApolloProvider } from '@apollo/client';
-import { PersistGate } from 'redux-persist/integration/react';
-import Mapbox from '@rnmapbox/maps';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import { store, persistor } from './app/store';
-
-import { AppThemeProvider } from '@theme/index';
-import useAppTheme from '@hooks/useAppTheme';
-
-import apolloClient from '@services/apolloClient';
-
+import { Auth0Provider } from 'react-native-auth0';
 import { AuthProvider } from '@app/context/auth-context/AuthContext';
-import { RootNavController } from '@app/components';
-import { GeoLocationProvider } from '@app/context/geo-location';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { IconProps } from 'react-native-vector-icons/Icon';
-import { PermissionProvider } from '@app/context/permissions/permission';
-import { Notification } from '@app/notification/Notification';
+import DefualtErrorScreen from '@app/components/defualt-error';
+import { ErrorBoundary } from 'react-error-boundary';
 import { FileHandlerClient } from '@app/context/file-handler';
+import { GeoLocationProvider } from '@app/context/geo-location';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Mapbox from '@rnmapbox/maps';
+import { NavigationContainer } from '@react-navigation/native';
+import { Notification } from '@app/notification/Notification';
+import { PermissionProvider } from '@app/context/permissions/permission';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Provider } from 'react-redux';
+import React from 'react';
+import { RootNavController } from '@app/components';
+import { StyleSheet } from 'react-native';
+import apolloClient from '@services/apolloClient';
+import useAppTheme from '@hooks/useAppTheme';
 
 /*
  */
@@ -41,50 +32,60 @@ const App = () => {
   const { themePreference, theme } = useAppTheme();
   Mapbox.setAccessToken(MAPBOX_API);
 
-  const customIcon = (
-    props: React.JSX.IntrinsicAttributes &
-      React.JSX.IntrinsicClassAttributes<Ionicons> &
-      Readonly<IconProps>,
-  ) => {
-    return <Ionicons {...props} />;
+  function Fallback({ error, resetErrorBoundary }) {
+    // Call resetErrorBoundary() to reset the error boundary and retry the render.
+
+    return (
+      <>
+        <Text>Something went wrong:</Text>
+        <Text style={{ color: 'red' }}>{error.message}</Text>
+      </>
+    );
+  }
+
+  const logError = (error: Error, info: { componentStack: string }) => {
+    // Do something with the error, e.g. log to an external API
+    console.log('error', error);
   };
 
   return (
-    <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
-      <ApolloProvider client={apolloClient}>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <PermissionProvider>
-              <AuthProvider>
-                <FileHandlerClient>
-                  <GeoLocationProvider>
-                    <Notification>
-                      <GestureHandlerRootView
-                        style={styles.gestureHandlerRootView}>
-                        <BottomSheetModalProvider>
-                          <AppThemeProvider value={themePreference}>
-                            <PaperProvider
-                              theme={theme}
-                              settings={{
-                                rippleEffectEnabled: false,
-                                icon: customIcon,
-                              }}>
-                              <NavigationContainer theme={theme}>
-                                <RootNavController />
-                              </NavigationContainer>
-                            </PaperProvider>
-                          </AppThemeProvider>
-                        </BottomSheetModalProvider>
-                      </GestureHandlerRootView>
-                    </Notification>
-                  </GeoLocationProvider>
-                </FileHandlerClient>
-              </AuthProvider>
-            </PermissionProvider>
-          </PersistGate>
-        </Provider>
-      </ApolloProvider>
-    </Auth0Provider>
+    <ErrorBoundary FallbackComponent={Fallback} onError={logError}>
+      <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+        <ApolloProvider client={apolloClient}>
+          <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+              <PermissionProvider>
+                <AuthProvider>
+                  <FileHandlerClient>
+                    <GeoLocationProvider>
+                      <Notification>
+                        <GestureHandlerRootView
+                          style={styles.gestureHandlerRootView}>
+                          <BottomSheetModalProvider>
+                            <AppThemeProvider value={themePreference}>
+                              <PaperProvider
+                                theme={theme}
+                                settings={{
+                                  rippleEffectEnabled: false,
+                                  icon: CustomIcon,
+                                }}>
+                                <NavigationContainer theme={theme}>
+                                  <RootNavController />
+                                </NavigationContainer>
+                              </PaperProvider>
+                            </AppThemeProvider>
+                          </BottomSheetModalProvider>
+                        </GestureHandlerRootView>
+                      </Notification>
+                    </GeoLocationProvider>
+                  </FileHandlerClient>
+                </AuthProvider>
+              </PermissionProvider>
+            </PersistGate>
+          </Provider>
+        </ApolloProvider>
+      </Auth0Provider>
+    </ErrorBoundary>
   );
 };
 

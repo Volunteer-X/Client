@@ -1,12 +1,12 @@
-import React, { useCallback } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
 
-import { useAppAuth } from '@app/context/auth-context';
-import useAppTheme from '@hooks/useAppTheme';
-import { StackScreenProps } from '@react-navigation/stack';
 import { AppTheme } from '@theme/index';
 import { AuthStackParamList } from '@ts-types/type';
+import { StackScreenProps } from '@react-navigation/stack';
+import { useAppAuth } from '@app/context/auth-context';
+import useAppTheme from '@hooks/useAppTheme';
 
 type Props = StackScreenProps<AuthStackParamList, 'AuthHome'>;
 
@@ -23,7 +23,7 @@ const AuthHome = ({
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const { auth0, error } = useAppAuth();
+  const { auth0, error, loading } = useAppAuth();
   // Handles login with auth0
   const onLogin = useCallback(async () => {
     try {
@@ -41,6 +41,12 @@ const AuthHome = ({
     }
   }, [auth0, navigation]);
 
+  useEffect(() => {
+    if (error) {
+      console.log('🚀 ~ file: AuthHome.tsx:43 ~ error', error);
+    }
+  }, [error]);
+
   return (
     <View style={styles.page}>
       <Image
@@ -54,6 +60,7 @@ const AuthHome = ({
         Connect to the world
       </Text>
       <Button
+        loading={loading}
         mode="contained"
         style={styles.loginStyle}
         contentStyle={styles.loginContentStyle}
@@ -85,6 +92,7 @@ const makeStyles = (theme: AppTheme) =>
     },
     loginContentStyle: {
       width: '100%',
+      flexDirection: 'row-reverse',
     },
     loginStyle: {
       borderRadius: 10,

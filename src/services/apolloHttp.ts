@@ -1,6 +1,3 @@
-import { createHttpLink } from '@apollo/client';
-import { ErrorResponse, onError } from '@apollo/client/link/error';
-import { setContext } from '@apollo/client/link/context';
 import {
   AUTH0_CLIENT,
   AUTH0_DOMAIN,
@@ -9,23 +6,16 @@ import {
   DEV_PORT,
   DEV_SCHEME,
 } from '@env';
+
 import Auth0 from 'react-native-auth0';
+import { createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 
-export const errorLink = onError(
-  ({ graphQLErrors, networkError }: ErrorResponse) => {
-    if (graphQLErrors) {
-      graphQLErrors?.forEach(({ message, locations, path }) => {
-        console.log(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-        );
-      });
-    }
+console.log('URL', `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`);
 
-    if (networkError) {
-      console.log(`[Network error]: ${networkError}`);
-    }
-  },
-);
+const link = createHttpLink({
+  uri: `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
+});
 
 // ! Possible bug
 const authLink = setContext(async (_, { headers }) => {
@@ -52,11 +42,4 @@ const authLink = setContext(async (_, { headers }) => {
     };
   }
 });
-
-console.log('URL', `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`);
-
-const link = createHttpLink({
-  uri: `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`,
-});
-
 export const httpLink = authLink.concat(link);

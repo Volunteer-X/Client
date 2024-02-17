@@ -8,8 +8,9 @@ import {
   DarkTheme as NavigationDarkTheme,
   DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
-import merge from 'deepmerge';
+
 import fontConfig from './font';
+import merge from 'deepmerge';
 
 const customDarkTheme = {
   ...MD3DarkTheme,
@@ -32,3 +33,5 @@ export const CombinedDarkTheme = merge(customDarkTheme, DarkTheme);
 export type AppTheme = typeof CombinedDefaultTheme;
 
 export { AppThemeProvider, ThemeContext } from './themeContext';
+
+export * from './CustomIcon';

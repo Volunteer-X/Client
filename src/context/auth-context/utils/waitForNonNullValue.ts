@@ -4,7 +4,7 @@ export function waitForNonNullValue(value: User | null): Promise<User> {
   return new Promise(resolve => {
     function checkValue() {
       if (value !== null && value !== undefined) {
-        console.log('value is not null', value);
+        // console.log('value is not null', value);
 
         resolve(value);
       } else {

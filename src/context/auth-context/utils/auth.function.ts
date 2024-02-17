@@ -1,6 +1,6 @@
-import { login } from '@app/features/auth/slices/auth.slice';
 import { AUTH0_SCOPE } from '@env';
 import { User } from 'react-native-auth0';
+import { login } from '@app/features/auth/slices/auth.slice';
 import { waitForNonNullValue } from './waitForNonNullValue';
 
 /**
@@ -78,6 +78,7 @@ export const authFunction = async (
         return user;
       } catch (error) {
         console.log('🚀 ~ file: AuthContext.tsx:118 ~ auth0 ~ error', error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }
