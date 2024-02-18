@@ -1,7 +1,5 @@
 import { ErrorResponse, onError } from '@apollo/client/link/error';
 
-import { RetryLink } from '@apollo/client/link/retry';
-
 export const errorLink = onError(
   ({ graphQLErrors, networkError }: ErrorResponse) => {
     if (graphQLErrors) {
@@ -21,5 +19,3 @@ export const errorLink = onError(
     return;
   },
 );
-
-export const retryLink = new RetryLink();

@@ -1,16 +1,15 @@
 import { ApolloClient, InMemoryCache, from, split } from '@apollo/client';
 import { Kind, OperationTypeNode } from 'graphql';
-import { errorLink, retryLink } from './errorLink';
+import {
+  webSocketLink as apolloWSLink,
+  errorLink,
+  httpLink,
+  retryLink,
+} from './links';
 import {
   getMainDefinition,
   relayStylePagination,
 } from '@apollo/client/utilities';
-
-import { webSocketLink as apolloWSLink } from './apolloWebSocket';
-import { httpLink } from './apolloHttp';
-
-// Todo include authMiddleware after it is implemented in the server
-// const apolloHttpLink = from([authMiddleware, errorLink, httpLink]);
 
 const apolloHttpLink = from([errorLink, retryLink, httpLink]);
 

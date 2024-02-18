@@ -1,8 +1,9 @@
+import { AUTH0_CLIENT, AUTH0_DOMAIN } from '@env';
+
 import { ApolloLink } from '@apollo/client';
 import Auth0 from 'react-native-auth0';
-import { clientName } from '../lib/constants/values';
-import { version } from '../../package.json';
-import { AUTH0_CLIENT, AUTH0_DOMAIN } from '@env';
+import { clientName } from '../../lib/constants/values';
+import { version } from '../../../package.json';
 
 export const authMiddleware = new ApolloLink((operation, foward) => {
   operation.setContext(async ({ headers = {} }) => {
