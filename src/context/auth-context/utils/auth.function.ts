@@ -31,6 +31,8 @@ export const authFunction = async (
     }
     const accessToken = credentials.accessToken;
 
+    // console.log('🚀 ~ credentials:', credentials);
+
     const user = await waitForNonNullValue(auth0User);
 
     if (!user) {

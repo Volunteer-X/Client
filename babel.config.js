@@ -24,7 +24,7 @@ module.exports = {
         [
           'module-resolver',
           {
-            root: ['./src'],
+            root: ['.'],
             extensions: [
               '.ios.js',
               '.android.js',
@@ -43,6 +43,7 @@ module.exports = {
               '@theme': './src/theme',
               '@features': './src/features',
               '@ts-types': './src/types',
+              '@redux': './app',
             },
           },
         ],

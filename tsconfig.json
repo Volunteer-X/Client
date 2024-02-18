@@ -31,6 +31,9 @@
       ],
       "@ts-types/*": [
         "src/types/*"
+      ],
+      "@redux/*": [
+        "app/*"
       ]
     },
     "resolveJsonModule": true,

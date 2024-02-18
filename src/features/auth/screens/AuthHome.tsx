@@ -1,6 +1,6 @@
 import { Button, Text } from 'react-native-paper';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 
 import { AppTheme } from '@theme/index';
 import { AuthStackParamList } from '@ts-types/type';
@@ -23,29 +23,24 @@ const AuthHome = ({
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const { auth0, error, loading } = useAppAuth();
+  const { auth0, loading } = useAppAuth();
+
   // Handles login with auth0
   const onLogin = useCallback(async () => {
     try {
       const user = auth0 && (await auth0());
 
       // check auth unsuccessful
-      if (user && user !== null) {
-        navigation.navigate('SetUsername', {
-          possibleUsername:
-            user.nickname || user.preferred_username || undefined,
-        });
-      }
+      // if (user && user !== null) {
+      //   navigation.navigate('SetUsername', {
+      //     possibleUsername:
+      //       user.nickname || user.preferred_username || undefined,
+      //   });
+      // }
     } catch (err) {
       console.log('🚀 ~ file: AuthHome.tsx:43 ~ onLogin ~ err:', err);
     }
   }, [auth0, navigation]);
-
-  useEffect(() => {
-    if (error) {
-      console.log('🚀 ~ file: AuthHome.tsx:43 ~ error', error);
-    }
-  }, [error]);
 
   return (
     <View style={styles.page}>
@@ -61,6 +56,7 @@ const AuthHome = ({
       </Text>
       <Button
         loading={loading}
+        disabled={loading}
         mode="contained"
         style={styles.loginStyle}
         contentStyle={styles.loginContentStyle}

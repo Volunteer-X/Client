@@ -11,11 +11,9 @@ export const errorLink = onError(
     }
 
     if (networkError) {
-      console.error(`[Network error]: ${networkError.message}`);
-
-      throw new Error(networkError.message);
+      console.error(`[Network error]: ${networkError}`);
     }
 
-    return;
+    // return;
   },
 );

@@ -22,6 +22,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { Provider } from 'react-redux';
 import React from 'react';
 import { RootNavController } from '@app/components';
+import { RootSiblingParent } from 'react-native-root-siblings';
 import { StyleSheet } from 'react-native';
 import apolloClient from '@services/apolloClient';
 import useAppTheme from '@hooks/useAppTheme';
@@ -32,24 +33,8 @@ const App = () => {
   const { themePreference, theme } = useAppTheme();
   Mapbox.setAccessToken(MAPBOX_API);
 
-  function Fallback({ error, resetErrorBoundary }) {
-    // Call resetErrorBoundary() to reset the error boundary and retry the render.
-
-    return (
-      <>
-        <Text>Something went wrong:</Text>
-        <Text style={{ color: 'red' }}>{error.message}</Text>
-      </>
-    );
-  }
-
-  const logError = (error: Error, info: { componentStack: string }) => {
-    // Do something with the error, e.g. log to an external API
-    console.log('error', error);
-  };
-
   return (
-    <ErrorBoundary FallbackComponent={Fallback} onError={logError}>
+    <RootSiblingParent>
       <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
         <ApolloProvider client={apolloClient}>
           <Provider store={store}>
@@ -85,7 +70,7 @@ const App = () => {
           </Provider>
         </ApolloProvider>
       </Auth0Provider>
-    </ErrorBoundary>
+    </RootSiblingParent>
   );
 };
 

@@ -4,11 +4,11 @@ import { authFunction, loginFunction } from './utils';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { AuthProps } from './AuthContext.type';
+import { AuthType } from './AuthContext.type';
 import { GeoCoordinates } from 'react-native-geolocation-service';
 import { useAuth0 } from 'react-native-auth0';
 
-const initialState: AuthProps = {
+const initialState: AuthType = {
   isAuthenticated: false,
   loading: true,
 };
@@ -16,7 +16,7 @@ const initialState: AuthProps = {
 /**
  * Context for managing authentication state.
  */
-const AuthContext = createContext<AuthProps>(initialState);
+const AuthContext = createContext<AuthType>(initialState);
 
 /**
  * Provides authentication functionality to the application.
@@ -87,7 +87,7 @@ const AuthProvider = ({ children }: any) => {
     });
   }, [clearSession, dispatch]);
 
-  const value: AuthProps = {
+  const value: AuthType = {
     isAuthenticated,
     loading: isLoading || loading,
     logout: _logout,
