@@ -27,13 +27,14 @@ const config: CodegenConfig = {
       ],
       preset: 'client',
       config: {
+        mappers: {},
         scalars: {
           ...scalars,
         },
         skipTypename: true,
         strictScalars: true,
       },
-      plugins: [],
+      plugins: [{ add: { content: '/* eslint-disable */' } }],
       presetConfig: {
         gqlTagName: 'gql',
       },

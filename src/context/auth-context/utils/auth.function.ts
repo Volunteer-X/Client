@@ -1,6 +1,6 @@
 import { AUTH0_SCOPE } from '@env';
 import { User } from 'react-native-auth0';
-import { login } from '@app/features/auth/slices/auth.slice';
+import { login } from '@app/features/auth';
 import { waitForNonNullValue } from './waitForNonNullValue';
 
 /**
@@ -31,8 +31,6 @@ export const authFunction = async (
     }
     const accessToken = credentials.accessToken;
 
-    // console.log('🚀 ~ credentials:', credentials);
-
     const user = await waitForNonNullValue(auth0User);
 
     if (!user) {
@@ -52,7 +50,6 @@ export const authFunction = async (
         // if user exists in db
         if (res.data?.getUserByEmail) {
           let _user = res.data.getUserByEmail;
-          // setIsAuthenticated(true);
 
           console.log('user exists in db', true);
 

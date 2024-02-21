@@ -11,7 +11,7 @@ import {
   relayStylePagination,
 } from '@apollo/client/utilities';
 
-const apolloHttpLink = from([errorLink, retryLink, httpLink]);
+const apolloHttpLink = from([retryLink, errorLink, httpLink]);
 
 const link = split(
   ({ query }) => {

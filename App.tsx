@@ -25,6 +25,7 @@ import { RootNavController } from '@app/components';
 import { RootSiblingParent } from 'react-native-root-siblings';
 import { StyleSheet } from 'react-native';
 import apolloClient from '@services/apolloClient';
+import { showToast } from '@app/features/toast';
 import useAppTheme from '@hooks/useAppTheme';
 
 /*
@@ -35,10 +36,10 @@ const App = () => {
 
   return (
     <RootSiblingParent>
-      <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
-        <ApolloProvider client={apolloClient}>
-          <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <Auth0Provider domain={AUTH0_DOMAIN} clientId={AUTH0_CLIENT}>
+            <ApolloProvider client={apolloClient}>
               <PermissionProvider>
                 <AuthProvider>
                   <FileHandlerClient>
@@ -66,10 +67,10 @@ const App = () => {
                   </FileHandlerClient>
                 </AuthProvider>
               </PermissionProvider>
-            </PersistGate>
-          </Provider>
-        </ApolloProvider>
-      </Auth0Provider>
+            </ApolloProvider>
+          </Auth0Provider>
+        </PersistGate>
+      </Provider>
     </RootSiblingParent>
   );
 };

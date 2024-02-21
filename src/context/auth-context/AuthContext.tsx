@@ -1,11 +1,12 @@
-import { CREATE_USER, GET_USER_BY_EMAIL, logout } from '@features/auth';
+import { CREATE_USER, GET_USER_BY_EMAIL, login, logout } from '@features/auth';
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { authFunction, loginFunction } from './utils';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
+import { AUTH0_SCOPE } from '@env';
 import { AuthType } from './AuthContext.type';
 import { GeoCoordinates } from 'react-native-geolocation-service';
+import { loginFunction } from './utils';
 import { useAuth0 } from 'react-native-auth0';
 
 const initialState: AuthType = {
@@ -30,7 +31,9 @@ const AuthProvider = ({ children }: any) => {
   const dispatch = useAppDispatch();
 
   // GraphQL Client
-  const [getUserByEmail, checkQuery] = useLazyQuery(GET_USER_BY_EMAIL);
+  const [getUserByEmail, checkQuery] = useLazyQuery(GET_USER_BY_EMAIL, {
+    errorPolicy: 'none',
+  });
   const [createUser, createQuery] = useMutation(CREATE_USER);
   // Auth0
   const {
@@ -49,11 +52,88 @@ const AuthProvider = ({ children }: any) => {
    * Callback function for authentication using Auth0.
    * @returns {void}
    */
-  const auth0 = useCallback(
-    () =>
-      authFunction(authorize, auth0User, setLoading, getUserByEmail, dispatch),
-    [auth0User, authorize, dispatch, getUserByEmail],
-  );
+  const auth0 = useCallback(() =>
+    // authFunction(authorize, auth0User, setLoading, getUserByEmail, dispatch),
+
+    {
+      authorize({
+        scope: AUTH0_SCOPE,
+        audience: 'https://api.volunteerX.module',
+      })
+        .then(cred => {
+          setLoading(true);
+          if (!cred) {
+            throw new Error('credentials is null');
+          }
+
+          if (!auth0User) {
+            throw new Error('Autherization failed, auth0User is null');
+          }
+
+          console.log('🚀 ~ AuthProvider ~ auth0User:', cred.accessToken);
+
+          if (auth0User.email) {
+            return {
+              email: auth0User.email,
+              accessToken: cred.accessToken,
+              refreshToken: cred.refreshToken,
+            };
+          } else {
+            throw new Error('Email is invalid');
+          }
+        })
+        .then(async ({ email, ...val }) => {
+          return {
+            result: await getUserByEmail({
+              variables: {
+                email,
+              },
+            }),
+            ...val,
+          };
+        })
+        .then(({ result, accessToken, refreshToken }) => {
+          if (result.error) {
+            throw new Error('Error getting user by email');
+          }
+
+          const user = result.data?.getUserByEmail;
+
+          if (!user) {
+            throw new Error('User not found');
+          }
+
+          const { id, username, email, name, picture, picks, activityCount } =
+            user;
+
+          dispatch(
+            login({
+              isAuthenticated: true,
+              accessToken,
+              user: {
+                id,
+                username,
+                email,
+                firstName: name?.firstName,
+                lastName: name?.lastName,
+                middleName: name?.middleName,
+                picture: picture,
+                picks: picks,
+                // activityCount:
+                // activityCount === null ? undefined : activityCount,
+              },
+            }),
+          );
+        })
+        .catch(err => {
+          console.log('🚀 ~ AuthProvider ~ error:', err);
+          return;
+        })
+        .finally(() => {
+          setLoading(false);
+          return auth0User;
+        });
+    }, [auth0User, authorize, dispatch, getUserByEmail]);
 
   // Login
   /**
