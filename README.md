@@ -9,9 +9,9 @@
 > [!WARNING]
 > Project currently under active development.
 
-# VolunteerX App
+# VolunteerX
 
-
+VolunteerX, a local community-based social networking mobile app.
 
 ## Tech Stack
 
