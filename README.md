@@ -11,7 +11,7 @@
 
 # VolunteerX
 
-VolunteerX, a local community-based social networking mobile app.
+VolunteerX a quasi localized social networking for volunteers. It is a platform where we sync the innovative minds to resolve real-life problems and bring changes to the world. We collaborate with local people to bring the difference they want to see. 
 
 ## Tech Stack
 
