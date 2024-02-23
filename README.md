@@ -122,7 +122,7 @@ Port
 
 Here are some related projects
 
-[Server README](https://github.com/Volunteer-X/Server/blob/master/README.md)
+[Server](https://github.com/volunteer-x/client)
 
 
 ## License
