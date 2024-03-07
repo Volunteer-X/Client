@@ -1,4 +1,4 @@
-import { CREATE_USER, GET_USER_BY_EMAIL, login, logout } from '@features/auth';
+import { CREATE_USER, USER, login, logout } from '@features/auth';
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useLazyQuery, useMutation } from '@apollo/client';
@@ -6,8 +6,10 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { AUTH0_SCOPE } from '@env';
 import { AuthType } from './AuthContext.type';
 import { GeoCoordinates } from 'react-native-geolocation-service';
+import { User } from '@app/__generated__/gql/graphql';
 import { loginFunction } from './utils';
 import { useAuth0 } from 'react-native-auth0';
+import { wrapResultByTypename } from '@app/lib';
 
 const initialState: AuthType = {
   isAuthenticated: false,
@@ -31,8 +33,8 @@ const AuthProvider = ({ children }: any) => {
   const dispatch = useAppDispatch();
 
   // GraphQL Client
-  const [getUserByEmail, checkQuery] = useLazyQuery(GET_USER_BY_EMAIL, {
-    errorPolicy: 'none',
+  const [getUser, checkQuery] = useLazyQuery(USER, {
+    notifyOnNetworkStatusChange: true,
   });
   const [createUser, createQuery] = useMutation(CREATE_USER);
   // Auth0
@@ -66,29 +68,21 @@ const AuthProvider = ({ children }: any) => {
             throw new Error('credentials is null');
           }
 
-          if (!auth0User) {
-            throw new Error('Autherization failed, auth0User is null');
-          }
+          const accessToken = cred.accessToken;
+          const refreshToken = cred.refreshToken;
 
-          console.log('🚀 ~ AuthProvider ~ auth0User:', cred.accessToken);
-
-          if (auth0User.email) {
+          if (accessToken) {
             return {
-              email: auth0User.email,
-              accessToken: cred.accessToken,
-              refreshToken: cred.refreshToken,
+              accessToken,
+              refreshToken,
             };
           } else {
-            throw new Error('Email is invalid');
+            throw new Error("User doesn't have access token");
           }
         })
-        .then(async ({ email, ...val }) => {
+        .then(async val => {
           return {
-            result: await getUserByEmail({
-              variables: {
-                email,
-              },
-            }),
+            result: await getUser(),
             ...val,
           };
         })
@@ -97,11 +91,7 @@ const AuthProvider = ({ children }: any) => {
             throw new Error('Error getting user by email');
           }
 
-          const user = result.data?.getUserByEmail;
-
-          if (!user) {
-            throw new Error('User not found');
-          }
+          const user = wrapResultByTypename<User>(result.data?.user);
 
           const { id, username, email, name, picture, picks, activityCount } =
             user;
@@ -119,8 +109,7 @@ const AuthProvider = ({ children }: any) => {
                 middleName: name?.middleName,
                 picture: picture,
                 picks: picks,
-                // activityCount:
-                // activityCount === null ? undefined : activityCount,
+                activityCount: activityCount ? 0 : activityCount?.valueOf(),
               },
             }),
           );
@@ -133,7 +122,7 @@ const AuthProvider = ({ children }: any) => {
           setLoading(false);
           return auth0User;
         });
-    }, [auth0User, authorize, dispatch, getUserByEmail]);
+    }, [auth0User, authorize, dispatch, getUser]);
 
   // Login
   /**

@@ -1,8 +1,9 @@
-import { useAppSelector } from '@app/hooks';
-import FileHandlerApi from '@app/services/fileHandler';
 import axios, { AxiosInstance } from 'axios';
-import React from 'react';
 import { createContext, useContext } from 'react';
+
+import FileHandlerApi from '@app/services/fileHandler';
+import React from 'react';
+import { useAppSelector } from '@app/hooks';
 
 type FilehandlerContextType = {
   client: AxiosInstance;
@@ -20,7 +21,11 @@ const FileHandlerClient = ({ children }: any) => {
 
   const authorize = () => {
     if (!isAuthenticated) {
-      console.log('User is not loggedIn');
+      console.log(
+        '🚀 ~ file: file-handler.tsx:23 ~ authorize ~ isAuthenticated:',
+        'User is not loggedIn',
+      );
+
       // throw new Error('User is not logged in');
     }
 

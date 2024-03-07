@@ -3,6 +3,7 @@ import 'react-native-url-polyfill/auto';
 import { AUTH0_CLIENT, AUTH0_DOMAIN, MAPBOX_API } from '@env';
 import { AppThemeProvider, CustomIcon } from '@theme/index';
 import { PaperProvider, Text } from 'react-native-paper';
+import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev';
 import { persistor, store } from './app/store';
 
 import { ApolloProvider } from '@apollo/client';
@@ -33,6 +34,11 @@ import useAppTheme from '@hooks/useAppTheme';
 const App = () => {
   const { themePreference, theme } = useAppTheme();
   Mapbox.setAccessToken(MAPBOX_API);
+
+  if (__DEV__) {
+    loadDevMessages();
+    loadErrorMessages();
+  }
 
   return (
     <RootSiblingParent>

@@ -8,11 +8,6 @@ export const Defaults = {
   MAX_LEN_USERNAME: 20,
 };
 
-export const FINE_LOCATION_PERMISSION_NOT_SET =
-  'Fine location permission not set';
-export const COARSE_LOCATION_PERMISSION_NOT_SET =
-  'Coarse location permission not set';
-
 let clientName: string;
 if (Platform.OS === 'android') {
   clientName = 'VolunteerX App [Android]';

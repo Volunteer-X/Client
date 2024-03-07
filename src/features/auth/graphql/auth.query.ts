@@ -6,23 +6,38 @@ const CHECK_USERNAME_AVAILABILITY = gql(`
   }
 `);
 
-const GET_USER_BY_EMAIL = gql(`
-query GetUserByEmail($email: EmailAddress!) {
-  getUserByEmail(email: $email) {
-    id
-    email
-    username
-    name {
-      firstName
-      lastName
-      middleName
+const USER = gql(`
+query User {
+  user {
+    ... on User {
+      id
+      email
+      username
+      name {
+        firstName
+        lastName
+        middleName
+      }
+      picture
+      createdAt
+      picks
+      activityCount
+      devices
     }
-    picture
-    picks
-    createdAt
-    activityCount
+    ... on NotFoundError {
+      message
+    }
+    ... on UnauthorizedError {
+      message
+    }
+    ... on UnknownError {
+      message
+    }
+    ... on InternalServerError {
+      message
+    }
   }
 }
 `);
 
-export { CHECK_USERNAME_AVAILABILITY, GET_USER_BY_EMAIL };
+export { CHECK_USERNAME_AVAILABILITY, USER };

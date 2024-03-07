@@ -31,7 +31,7 @@ const config: CodegenConfig = {
         scalars: {
           ...scalars,
         },
-        skipTypename: true,
+        // skipTypename: true,
         strictScalars: true,
       },
       plugins: [{ add: { content: '/* eslint-disable */' } }],
