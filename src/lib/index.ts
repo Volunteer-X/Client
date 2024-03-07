@@ -11,3 +11,5 @@ export * from './fragments/user.fragment';
 export * from './fragments/ping.fragment';
 
 export * from './errors/graphqlError';
+
+export * from './keychain';

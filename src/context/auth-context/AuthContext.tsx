@@ -1,5 +1,11 @@
 import { CREATE_USER, USER, login, logout } from '@features/auth';
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import {
+  getSecureValue,
+  removeSecureValue,
+  setSecureValue,
+  wrapResultByTypename,
+} from '@app/lib';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
@@ -9,7 +15,6 @@ import { GeoCoordinates } from 'react-native-geolocation-service';
 import { User } from '@app/__generated__/gql/graphql';
 import { loginFunction } from './utils';
 import { useAuth0 } from 'react-native-auth0';
-import { wrapResultByTypename } from '@app/lib';
 
 const initialState: AuthType = {
   isAuthenticated: false,
@@ -49,7 +54,6 @@ const AuthProvider = ({ children }: any) => {
   } = useAuth0();
   const [loading, setLoading] = useState(false);
 
-  // ! Bug fix for auth0User being null on first render
   /**
    * Callback function for authentication using Auth0.
    * @returns {void}
