@@ -9,9 +9,9 @@
 > [!WARNING]
 > Project currently under active development.
 
-# VolunteerX App
+# VolunteerX
 
-A brief description of what this project does and who it's for
+VolunteerX a quasi localized social networking for volunteers. It is a platform where we sync the innovative minds to resolve real-life problems and bring changes to the world. We collaborate with local people to bring the difference they want to see. 
 
 ## Tech Stack
 
@@ -67,7 +67,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd client
 ```
 
 Install dependencies
@@ -122,7 +122,7 @@ Port
 
 Here are some related projects
 
-[Server README](https://github.com/Volunteer-X/Server/blob/master/README.md)
+[Server](https://github.com/volunteer-x/client)
 
 
 ## License
