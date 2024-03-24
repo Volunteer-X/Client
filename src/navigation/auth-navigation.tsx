@@ -1,11 +1,12 @@
+import { AuthHome, LoadingScreen, SetPicks, SetUsername } from '@features/auth';
+
+import { AppTheme } from '@theme/index';
+import { AuthStackParamList } from '@ts-types/type';
+import { PicksLabel } from '@app/lib';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { withTheme } from 'react-native-paper';
-
-import { AppTheme } from '@theme/index';
-import { AuthStackParamList } from '@ts-types/type';
-import { AuthHome, SetPicks, SetUsername, LoadingScreen } from '@features/auth';
 
 const AuthNavigation = ({ theme }: { theme: AppTheme }) => {
   const Stack = createStackNavigator<AuthStackParamList>();
@@ -14,7 +15,7 @@ const AuthNavigation = ({ theme }: { theme: AppTheme }) => {
 
   return (
     <>
-      <Stack.Navigator initialRouteName="AuthHome">
+      <Stack.Navigator initialRouteName="LoadingScreen">
         <Stack.Screen
           name="AuthHome"
           component={AuthHome}
@@ -41,6 +42,7 @@ const AuthNavigation = ({ theme }: { theme: AppTheme }) => {
         <Stack.Screen
           name="LoadingScreen"
           component={LoadingScreen}
+          initialParams={{ picks: [PicksLabel.Art], username: 'amilmohd155' }}
           options={{
             headerShown: false,
             // headerTitle: '',

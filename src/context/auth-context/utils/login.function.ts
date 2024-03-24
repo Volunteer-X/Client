@@ -1,6 +1,7 @@
 import { Credentials, User } from 'react-native-auth0';
 
 import { GeoCoordinates } from 'react-native-geolocation-service';
+import { getSecureValue } from '@app/lib';
 import { login } from '@app/features/auth/slices/auth.slice';
 import messaging from '@react-native-firebase/messaging';
 
@@ -18,23 +19,11 @@ export const loginFunction = async (
   // console.log(auth0User);
   setLoading(true);
 
-  if (auth0User === undefined || auth0User === null) {
+  if (!auth0User || auth0User === null) {
     throw new Error('Autherization failed, auth0User is undefined or null');
   }
 
-  const loggedIn = await hasValidCredentials();
-
-  let accessToken: string | undefined;
-
-  if (loggedIn) {
-    const credentials = await getCredentials();
-
-    if (!credentials) {
-      throw new Error('credentials is null');
-    }
-
-    accessToken = credentials.accessToken;
-  }
+  const accessToken = await getSecureValue('accessToken');
 
   const {
     email,
@@ -44,7 +33,7 @@ export const loginFunction = async (
     picture,
   } = auth0User;
 
-  if (!email || !firstName || !lastName || !picture) {
+  if (!email || !firstName || !lastName) {
     throw new Error('email or firstName or lastName or middleName is null');
   }
 
@@ -94,7 +83,6 @@ export const loginFunction = async (
 
     dispatch(
       login({
-        accessToken,
         isAuthenticated: true,
         user: {
           id,

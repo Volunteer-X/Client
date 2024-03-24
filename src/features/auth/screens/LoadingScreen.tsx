@@ -1,43 +1,79 @@
 import { Dimensions, StatusBar, StyleSheet, View } from 'react-native';
-import React, { useEffect } from 'react';
-import LottieView from 'lottie-react-native';
-import { Text } from 'react-native-paper';
+import React, { useEffect, useState } from 'react';
 
-import anim from '@assets/anims/anim-get-ready.json';
-
-import useAppTheme from '@app/hooks/useAppTheme';
-import { AppTheme } from '@app/theme';
-
-import { StackScreenProps } from '@react-navigation/stack';
-import { AuthStackParamList } from '@app/types/type';
-import { useAppAuth } from '@app/context/auth-context';
 import { APP_NAME } from '@app/lib';
+import { AppTheme } from '@app/theme';
+import { AuthStackParamList } from '@app/types/type';
+import { LoadingLottieView } from '../components/LoadingLottieView';
+import { StackScreenProps } from '@react-navigation/stack';
+import { Text } from 'react-native-paper';
+import { useAppAuth } from '@app/context/auth-context';
+import useAppTheme from '@app/hooks/useAppTheme';
 import { useGeoLocation } from '@app/context/geo-location';
 
 type Props = StackScreenProps<AuthStackParamList, 'LoadingScreen'>;
 
 const { height, width } = Dimensions.get('window');
 
+enum State {
+  Location,
+  Profile,
+  Final,
+}
+
+const DELAY = 2000;
+
 const LoadingScreen = (props: Props) => {
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  // const [createUser, { data, loading, error }] = useMutation(CREATE_USER);
-
   // * Params from the router
   const { username, picks } = props.route.params;
 
-  console.log('username', username);
+  // const { coords, geoLoading } = useGeoLocation();
 
-  const { coords, geoLoading } = useGeoLocation();
+  // const { loading, error, login } = useAppAuth();
 
-  const { loading, error, login } = useAppAuth();
+  const [loading, setLoading] = useState(false);
+  const [geoLoading, setGeoLoading] = useState(true);
+  const error = false;
 
   useEffect(() => {
-    if (!geoLoading && login && coords) {
-      login(username, picks, coords);
+    const timeout = setTimeout(() => {
+      // setLoading(false);
+      setGeoLoading(false);
+      setLoading(true);
+    }, 5000);
+
+    return () => clearInterval(timeout);
+  }, []);
+
+  const simulatedDelay = () => {
+    return new Promise<void>(resolve => {
+      setTimeout(() => {
+        resolve();
+      }, DELAY);
+    });
+  };
+
+  const determineLoadingState = (
+    locationLoading: boolean,
+    apiLoading: boolean,
+  ) => {
+    if (locationLoading && !apiLoading) {
+      return State.Location;
+    } else if (!locationLoading && apiLoading) {
+      return State.Profile;
+    } else {
+      return State.Final;
     }
-  }, [coords, geoLoading, login, picks, username]);
+  };
+
+  // useEffect(() => {
+  //   if (!geoLoading && login && coords) {
+  //     login(username, picks, coords);
+  //   }
+  // }, [coords, geoLoading, login, picks, username]);
 
   return (
     <View style={styles.container}>
@@ -49,38 +85,16 @@ const LoadingScreen = (props: Props) => {
         {APP_NAME}
       </Text>
       <View style={styles.subContainer}>
-        <LottieView
-          style={styles.lottieView}
-          source={anim}
-          resizeMode="cover"
-          autoPlay
-          loop
-          colorFilters={[
-            {
-              keypath: 'Layer 2',
-              color: theme.colors.primaryContainer,
-            },
-            { keypath: 'Layer 3', color: theme.colors.onTertiaryContainer },
-            { keypath: 'Layer 4', color: theme.colors.tertiaryContainer },
-            { keypath: 'Layer 5', color: theme.colors.onTertiaryContainer },
-            { keypath: 'Layer 6', color: theme.colors.tertiaryContainer },
-            { keypath: 'Layer 7', color: theme.colors.tertiaryContainer },
-          ]}
-        />
-        {geoLoading && (
-          <Text variant="titleMedium" style={styles.message}>
-            Getting your location...
-          </Text>
-        )}
-        {loading ? (
-          <Text variant="titleMedium" style={styles.message}>
-            Getting your profile ready...
-          </Text>
-        ) : (
-          <Text variant="titleMedium" style={styles.message}>
-            Adding final touch up...
-          </Text>
-        )}
+        <LoadingLottieView style={styles.lottieView} theme={theme} />
+
+        <Text variant="titleMedium" style={styles.message}>
+          {geoLoading
+            ? 'Getting your location...'
+            : loading
+            ? 'Getting your profile ready...'
+            : 'Adding final touch up...'}
+        </Text>
+
         {error && (
           <Text variant="titleMedium" style={[styles.error, styles.message]}>
             Oops something wrong happened!!

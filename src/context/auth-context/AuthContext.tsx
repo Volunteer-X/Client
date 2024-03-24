@@ -1,30 +1,44 @@
-import { CREATE_USER, USER, login, logout } from '@features/auth';
-import React, { createContext, useCallback, useContext, useState } from 'react';
 import {
+  AUTH0_AUDIENCE,
+  AUTH0_SCOPE,
   getSecureValue,
   removeSecureValue,
   setSecureValue,
   wrapResultByTypename,
 } from '@app/lib';
+import {
+  CREATE_USER,
+  USER,
+  login,
+  logout,
+  setAuthentication,
+} from '@features/auth';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
-import { AUTH0_SCOPE } from '@env';
-import { AuthType } from './AuthContext.type';
-import { GeoCoordinates } from 'react-native-geolocation-service';
-import { User } from '@app/__generated__/gql/graphql';
-import { loginFunction } from './utils';
+import { AuthContextInterface } from './AuthContext.interface';
+import { showToast } from '@app/features/toast';
 import { useAuth0 } from 'react-native-auth0';
+import { useGeoLocation } from '../geo-location';
+import messaging from '@react-native-firebase/messaging';
 
-const initialState: AuthType = {
+const initialState: AuthContextInterface = {
   isAuthenticated: false,
   loading: true,
+  authorize: () => Promise.resolve(undefined),
 };
 
 /**
  * Context for managing authentication state.
  */
-const AuthContext = createContext<AuthType>(initialState);
+const AuthContext = createContext<AuthContextInterface>(initialState);
 
 /**
  * Provides authentication functionality to the application.
@@ -34,6 +48,7 @@ const AuthContext = createContext<AuthType>(initialState);
 const AuthProvider = ({ children }: any) => {
   // Redux
   const { isAuthenticated } = useAppSelector(state => state.root.auth);
+  const { coords, geoloading } = useGeoLocation();
 
   const dispatch = useAppDispatch();
 
@@ -54,79 +69,113 @@ const AuthProvider = ({ children }: any) => {
   } = useAuth0();
   const [loading, setLoading] = useState(false);
 
+  const checkIfAuthenticated = useCallback(async () => {
+    hasValidCredentials()
+      .then(val => {
+        setLoading(true);
+        if (val) {
+          getCredentials().then(cred => {
+            console.log(
+              '🚀 ~ file: AuthContext.tsx:81 ~ getCredentials ~ accessToken:',
+              cred?.accessToken,
+            );
+            cred?.accessToken &&
+              setSecureValue('accessToken', cred.accessToken);
+          });
+        }
+
+        dispatch(setAuthentication(val));
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [dispatch, getCredentials, hasValidCredentials]);
+
+  useEffect(() => {
+    checkIfAuthenticated();
+  }, [checkIfAuthenticated]);
+
   /**
    * Callback function for authentication using Auth0.
    * @returns {void}
    */
-  const auth0 = useCallback(() =>
-    // authFunction(authorize, auth0User, setLoading, getUserByEmail, dispatch),
-
-    {
-      authorize({
+  const handleAuthorize = useCallback(async () => {
+    try {
+      setLoading(true);
+      const cred = await authorize({
         scope: AUTH0_SCOPE,
-        audience: 'https://api.volunteerX.module',
-      })
-        .then(cred => {
-          setLoading(true);
-          if (!cred) {
-            throw new Error('credentials is null');
+        audience: AUTH0_AUDIENCE,
+      });
+
+      if (!cred) {
+        throw new Error('Auth0: Got no authorized credentials from Auth0');
+      }
+
+      const accessToken = cred.accessToken;
+
+      if (!accessToken) {
+        throw new Error("Auth0: User doesn't have access token");
+      }
+
+      setSecureValue('accessToken', accessToken);
+
+      const { data, error: queryError } = await getUser();
+
+      if (queryError || !data?.user) {
+        console.error('🚀 ~ file: AuthContext.tsx ~ queryError:', queryError);
+
+        throw new Error('Error getting user by email');
+      }
+
+      switch (data.user.__typename) {
+        case 'User':
+          {
+            const user = data.user;
+            const { id, username, email, name, picture, picks, activityCount } =
+              user;
+
+            dispatch(
+              login({
+                isAuthenticated: true,
+                user: {
+                  id,
+                  username,
+                  email,
+                  firstName: name?.firstName,
+                  lastName: name?.lastName,
+                  middleName: name?.middleName,
+                  picture: picture,
+                  picks: picks,
+                  activityCount: activityCount ? 0 : activityCount?.valueOf(),
+                },
+              }),
+            );
           }
+          return false;
 
-          const accessToken = cred.accessToken;
-          const refreshToken = cred.refreshToken;
-
-          if (accessToken) {
-            return {
-              accessToken,
-              refreshToken,
-            };
-          } else {
-            throw new Error("User doesn't have access token");
+        case 'NotFoundError':
+          if (auth0User === null) {
+            throw new Error(
+              'Autherization failed, auth0User is undefined or null',
+            );
           }
-        })
-        .then(async val => {
-          return {
-            result: await getUser(),
-            ...val,
-          };
-        })
-        .then(({ result, accessToken, refreshToken }) => {
-          if (result.error) {
-            throw new Error('Error getting user by email');
-          }
-
-          const user = wrapResultByTypename<User>(result.data?.user);
-
-          const { id, username, email, name, picture, picks, activityCount } =
-            user;
-
-          dispatch(
-            login({
-              isAuthenticated: true,
-              accessToken,
-              user: {
-                id,
-                username,
-                email,
-                firstName: name?.firstName,
-                lastName: name?.lastName,
-                middleName: name?.middleName,
-                picture: picture,
-                picks: picks,
-                activityCount: activityCount ? 0 : activityCount?.valueOf(),
-              },
-            }),
-          );
-        })
-        .catch(err => {
-          console.log('🚀 ~ AuthProvider ~ error:', err);
-          return;
-        })
-        .finally(() => {
-          setLoading(false);
           return auth0User;
-        });
-    }, [auth0User, authorize, dispatch, getUser]);
+
+        case 'InternalServerError':
+        case 'UnauthorizedError':
+        case 'UnknownError':
+        default:
+          wrapResultByTypename(data.user);
+      }
+    } catch (err) {
+      console.log('🚀 ~ AuthProvider ~ error:', err);
+      dispatch(
+        showToast("Opps!! Couldn't get started, Try again after sometime "),
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [authorize, auth0User, dispatch, getUser]);
 
   // Login
   /**
@@ -135,37 +184,91 @@ const AuthProvider = ({ children }: any) => {
    * @param {string[]} picks - The picks of the user.
    * @param {GeoCoordinates} coords - The coordinates of the user.
    */
-  const _login = useCallback(
-    (username: string, picks: string[], coords: GeoCoordinates) =>
-      loginFunction(
-        setLoading,
-        auth0User,
-        hasValidCredentials,
-        getCredentials,
-        createUser,
-        dispatch,
-        username,
-        picks,
-        coords,
-      ),
-    [auth0User, createUser, dispatch, getCredentials, hasValidCredentials],
+  const handleLogin = useCallback(
+    async (incomingUsername: string, picks: string[]) => {
+      try {
+        // const accessToken = await getSecureValue('accessToken');
+
+        if (auth0User === null) {
+          throw new Error(
+            'Autherization failed, auth0User is undefined or null',
+          );
+        }
+
+        const {
+          email,
+          givenName: firstName,
+          familyName: lastName,
+          middleName,
+          picture,
+        } = auth0User;
+
+        if (!email || !firstName || !lastName) {
+          throw new Error('Verified details are required');
+        }
+
+        const { latitude, longitude } = coords;
+
+        if (!messaging().isDeviceRegisteredForRemoteMessages) {
+          await messaging().registerDeviceForRemoteMessages();
+        }
+
+        const device = await messaging().getToken();
+
+        const { data } = await createUser({
+          variables: {
+            createUserInput: {
+              username: incomingUsername,
+              email,
+              firstName,
+              lastName,
+              middleName,
+              picture,
+              picks,
+              latitude,
+              longitude,
+              device,
+            },
+          },
+        });
+
+        if (!data) {
+          throw new Error('Api Grab failed to create user');
+        }
+
+        const { id, username, email } = data.createUser;
+      } catch (err) {}
+    },
+    // loginFunction(
+    //   setLoading,
+    //   auth0User,
+    //   hasValidCredentials,
+    //   getCredentials,
+    //   createUser,
+    //   dispatch,
+    //   username,
+    //   picks,
+    //   coords,
+    // ),
+    [auth0User, coords, createUser],
   );
 
   /**
    * Logs out the user by clearing the session and dispatching the logout action.
    */
-  const _logout = useCallback(() => {
+  const handleLogout = useCallback(() => {
     clearSession().then(() => {
+      removeSecureValue('accessToken');
       dispatch(logout());
     });
   }, [clearSession, dispatch]);
 
-  const value: AuthType = {
+  const value: AuthContextInterface = {
     isAuthenticated,
     loading: isLoading || loading,
-    logout: _logout,
-    login: _login,
-    auth0,
+    logout: handleLogout,
+    login: handleLogin,
+    authorize: handleAuthorize,
     error: auth0Error || checkQuery.error || createQuery.error,
   };
 

@@ -1,93 +1,64 @@
-/*
- Copyright 2023 Amil Muhammed Hamza
-
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
-
-      https://www.apache.org/licenses/LICENSE-2.0
-
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
- */
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Button, TextInput as RNTextInput, Text } from 'react-native-paper';
 import {
-  Button,
-  Text,
-  withTheme,
-  TextInput as RNTextInput,
-} from 'react-native-paper';
-import { StackScreenProps } from '@react-navigation/stack';
-import {
-  useForm,
   FormProvider,
   SubmitErrorHandler,
   SubmitHandler,
-  useWatch,
+  useForm,
 } from 'react-hook-form';
-import { InferType } from 'yup';
-import { useLazyQuery } from '@apollo/client';
+import React, { useCallback, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { AuthStackParamList } from '@ts-types/type';
-import { TextInput } from '@components/index';
+import { AppIcons } from '@app/theme/icon';
 import { AppTheme } from '@theme/index';
+import { AuthStackParamList } from '@ts-types/type';
+import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.query';
+import { InferType } from 'yup';
+import { StackScreenProps } from '@react-navigation/stack';
+import { SuggestionsComponent } from '../components/SuggestionsComponent';
+import { TextInput } from '@components/index';
+import useAppTheme from '@app/hooks/useAppTheme';
+import { useLazyQuery } from '@apollo/client';
 import { useYupResolver } from '@hooks/index';
 import { yupScheme } from '../helpers/yupSchema';
-import { CHECK_USERNAME_AVAILABILITY } from '../graphql/auth.query';
-import { Query } from '@app/__generated__/gql/graphql';
-import { AppIcons } from '@app/theme/icon';
 
 type Props = StackScreenProps<AuthStackParamList, 'SetUsername'>;
 
 type FormValues = InferType<typeof yupScheme>;
 
 const SetUsername = ({
-  theme,
   route,
   navigation,
 }: {
-  theme: any;
   route: Props['route'];
   navigation: Props['navigation'];
 }) => {
+  const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const [username, setUsername] = useState('');
-  const { possibleUsername } = route.params;
+  const { suggestedUsername } = route.params;
+  // const suggestedUsername = 'amilmohd155';
 
-  /*   const {
-    data: queryData,
-    loading,
-    error: queryError,
-    refetch: queryRefetch,
-  } = useQuery<Query>(CHECK_USERNAME_AVAILABILITY, {
-    variables: { username: possibleUsername },
-  }); */
-
-  const [GetUsernameAvailability, query] = useLazyQuery<Query>(
+  const [getUsernameAvailability, { data, loading }] = useLazyQuery(
     CHECK_USERNAME_AVAILABILITY,
     {
-      variables: { username: possibleUsername },
+      variables: { username: suggestedUsername ? suggestedUsername : '' },
     },
   );
 
   /*  yup Validation && useForm hook */
   const resolver = useYupResolver<FormValues>(yupScheme);
-  const { control, trigger, formState, setError, ...methods } =
-    useForm<FormValues>({
-      resolver,
-    });
+
+  const { trigger, formState, ...methods } = useForm<FormValues>({
+    resolver,
+    defaultValues: {
+      username: suggestedUsername,
+    },
+  });
+
+  const { isValid, errors } = formState;
 
   /* useWatch to watch changes in the text field. */
-  const _username = useWatch({
-    control,
-    name: 'username',
-    defaultValue: possibleUsername ?? '',
-  });
+  const watchUsername = methods.watch('username');
 
   /* Tiggers revalidation based on the useWatch Hook */
   const triggerRevalidation = useCallback(async () => {
@@ -98,107 +69,86 @@ const SetUsername = ({
   useEffect(() => {
     triggerRevalidation().then(result => {
       if (result) {
-        // console.log(
-        //   '🚀 ~ file: SetUsername.tsx:99 ~ triggerRevalidation ~ result:',
-        //   result,
-        //   _username,
-        // );
-        GetUsernameAvailability({ variables: { username: _username } });
+        getUsernameAvailability({
+          variables: { username: watchUsername },
+          pollInterval: 10,
+        });
       }
     });
-  }, [GetUsernameAvailability, _username, triggerRevalidation]);
+  }, [getUsernameAvailability, triggerRevalidation, watchUsername]);
 
   useEffect(() => {
-    if (formState.isValid) {
-      if (query && query.data?.isUsernameAvailable !== undefined) {
-        if (!query.data?.isUsernameAvailable) {
-          setError('username', {
+    if (isValid) {
+      if (data?.isUsernameAvailable !== undefined) {
+        if (!data?.isUsernameAvailable) {
+          methods.setError('username', {
             type: 'manual',
             message: 'Username already exists',
           });
         }
       }
     }
-  }, [formState, setError, query]);
+  }, [methods, isValid, data?.isUsernameAvailable]);
 
   const onSubmit: SubmitHandler<FormValues> = formData => {
-    setUsername(formData.username);
-
     navigation.navigate('SetPicks', { username: formData.username });
   };
 
   // Todo handle onSubmition errors
-  const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-    console.log('🚀 ~ file: SetUsername.tsx:65 ~ errors:', errors);
+  const onError: SubmitErrorHandler<FormValues> = (submitionErrors, e) => {
+    console.error('🚀 ~ file: SetUsername.tsx:65 ~ errors:', submitionErrors);
   };
 
   // ! possible error of suggested username being an exisitng username
-  const subtitleText = possibleUsername ? (
-    <View style={styles.possibleUsernameContainer}>
-      <Text variant="titleMedium" style={styles.possibleUsername}>
-        {possibleUsername}
-      </Text>
-      <Text variant="bodySmall" style={styles.subtitle}>
-        Suggested username
-      </Text>
-    </View>
-  ) : null;
-
   return (
     <View style={styles.container}>
-      <View>
-        <Text variant="headlineLarge" style={styles.headline}>
-          Pick a username
-        </Text>
-        {subtitleText}
-      </View>
-      <FormProvider
-        trigger={trigger}
-        control={control}
-        formState={formState}
-        {...methods}>
+      <Text variant="headlineLarge" style={styles.headline}>
+        Pick a username
+      </Text>
+      <SuggestionsComponent username={suggestedUsername} styles={styles} />
+
+      <FormProvider trigger={trigger} formState={formState} {...methods}>
         <TextInput
           name="username"
           label="Username"
-          defaultValue={possibleUsername}
+          // defaultValue={defaultValue}
           mode="outlined"
-          left={<RNTextInput.Icon icon={AppIcons.PERSON} />}
-          // right={
-          //   queryData && queryData.isUsernameAvailable ? (
-          //     <RNTextInput.Icon icon="check-all" />
-          //   ) : (
-          //     methods.getValues().username !== '' && (
-          //       <RNTextInput.Icon
-          //         icon={formState.isValid ? 'check' : 'close'}
-          //       />
-          //     )
-          //   )
-          // }
+          placeholder="username..."
+          left={<RNTextInput.Icon icon={AppIcons.AT} />}
           right={
-            methods.getValues().username !== '' && (
-              <RNTextInput.Icon
-                icon={formState.isValid ? AppIcons.CHECK : AppIcons.CLOSE}
-              />
-            )
+            <RNTextInput.Icon
+              loading={loading}
+              color={
+                isValid && (data?.isUsernameAvailable || loading)
+                  ? '#75ed51'
+                  : theme.colors.error
+              }
+              icon={
+                isValid && data?.isUsernameAvailable
+                  ? AppIcons.CHECK_DONE
+                  : isValid
+                  ? AppIcons.CHECK
+                  : AppIcons.CLOSE
+              }
+            />
           }
           rules={{ required: true }}
           helperType="error"
-          helperText={formState.errors.username?.message}
+          helperText={errors.username?.message}
         />
       </FormProvider>
       <Button
         mode="contained"
         style={styles.buttonStyle}
         onPress={methods.handleSubmit(onSubmit, onError)}
-        disabled={!formState.isValid}
-        loading={query.loading}>
+        disabled={!formState.isValid}>
         Continue
       </Button>
     </View>
   );
 };
 
-export default withTheme(SetUsername);
+export default SetUsername;
 
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
@@ -219,10 +169,11 @@ const makeStyles = (theme: AppTheme) =>
       marginVertical: 10,
       gap: 5,
     },
-    subtitle: {},
+    subtitle: {
+      fontStyle: 'italic',
+    },
     possibleUsername: {
-      fontStyle: 'normal',
-      fontWeight: '900',
-      color: theme.colors.onTertiaryContainer,
+      // fontWeight: '900',
+      color: '#FFF',
     },
   });

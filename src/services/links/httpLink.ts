@@ -9,6 +9,7 @@ import {
 
 import Auth0 from 'react-native-auth0';
 import { createHttpLink } from '@apollo/client';
+import { getSecureValue } from '@app/lib';
 import { setContext } from '@apollo/client/link/context';
 
 console.log('URL', `${DEV_SCHEME}://${DEV_HOST}:${DEV_PORT}/${DEV_HTTP_PATH}`);
@@ -19,27 +20,28 @@ const link = createHttpLink({
 
 // ! Possible bug
 const authLink = setContext(async (_, { headers }) => {
-  const auth0 = new Auth0({
-    domain: AUTH0_DOMAIN,
-    clientId: AUTH0_CLIENT,
-  });
+  // const auth0 = new Auth0({
+  //   domain: AUTH0_DOMAIN,
+  //   clientId: AUTH0_CLIENT,
+  // });
 
-  const hasValidCredentials =
-    await auth0.credentialsManager.hasValidCredentials();
+  // const hasValidCredentials =
+  //   await auth0.credentialsManager.hasValidCredentials();
 
-  const credentials = await auth0.credentialsManager.getCredentials();
+  // const credentials = await auth0.credentialsManager.getCredentials();
 
-  let token;
+  const token = await getSecureValue('accessToken');
 
-  if (hasValidCredentials) {
-    token = credentials.accessToken;
+  // if (hasValidCredentials) {
+  //   token = credentials.accessToken;
 
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : '',
-      },
-    };
-  }
+  // console.log('🚀 ~ file: httpLink.ts ~ token', token);
+
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : '',
+    },
+  };
 });
 export const httpLink = authLink.concat(link);

@@ -23,24 +23,27 @@ const AuthHome = ({
   const { theme } = useAppTheme();
   const styles = makeStyles(theme);
 
-  const { auth0, loading } = useAppAuth();
+  const { authorize, loading } = useAppAuth();
 
   // Handles login with auth0
   const onLogin = useCallback(async () => {
     try {
-      const user = auth0 && (await auth0());
+      const user = await authorize();
 
-      // check auth unsuccessful
-      // if (user && user !== null) {
-      //   navigation.navigate('SetUsername', {
-      //     possibleUsername:
-      //       user.nickname || user.preferred_username || undefined,
-      //   });
-      // }
+      if (!user) {
+        return;
+      }
+
+      // if user is new
+      const { nickname, preferredUsername } = user;
+
+      navigation.navigate('SetUsername', {
+        suggestedUsername: nickname || preferredUsername || undefined,
+      });
     } catch (err) {
       console.log('🚀 ~ file: AuthHome.tsx:43 ~ onLogin ~ err:', err);
     }
-  }, [auth0, navigation]);
+  }, [authorize, navigation]);
 
   return (
     <View style={styles.page}>

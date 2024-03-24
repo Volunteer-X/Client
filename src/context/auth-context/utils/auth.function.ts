@@ -1,4 +1,4 @@
-import { AUTH0_SCOPE } from '@env';
+import { AUTH0_SCOPE } from '@app/lib';
 import { User } from 'react-native-auth0';
 import { login } from '@app/features/auth';
 import { waitForNonNullValue } from './waitForNonNullValue';

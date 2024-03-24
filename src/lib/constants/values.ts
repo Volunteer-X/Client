@@ -8,6 +8,9 @@ export const Defaults = {
   MAX_LEN_USERNAME: 20,
 };
 
+export const AUTH0_SCOPE = 'openid profile email offline_access' as const;
+export const AUTH0_AUDIENCE = 'https://api.volunteerX.module' as const;
+
 let clientName: string;
 if (Platform.OS === 'android') {
   clientName = 'VolunteerX App [Android]';

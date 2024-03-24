@@ -4,7 +4,7 @@ import { User } from 'react-native-auth0';
 /**
  * Represents the authentication type.
  */
-export type AuthType = {
+export interface AuthContextInterface {
   /**
    * Indicates whether the user is authenticated or not.
    */
@@ -32,7 +32,7 @@ export type AuthType = {
    * Function to authenticate the user using Auth0.
    * @returns A promise that resolves with the authenticated user or undefined.
    */
-  auth0?: () => Promise<User | undefined>;
+  authorize: () => Promise<User | false | undefined>;
 
   /**
    * Indicates whether the authentication is still loading.
@@ -43,4 +43,4 @@ export type AuthType = {
    * Represents any error that occurred during authentication.
    */
   error?: any;
-};
+}

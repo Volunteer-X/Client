@@ -1,2 +1,2 @@
-export * from './AuthContext.type';
+export * from './AuthContext.interface';
 export * from './AuthContext';

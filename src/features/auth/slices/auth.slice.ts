@@ -18,7 +18,6 @@ export interface User {
 type Auth = {
   user: User | null;
   isAuthenticated: boolean;
-  accessToken?: string;
 };
 
 const initialState: Auth = {
@@ -42,16 +41,17 @@ export const authSlice = createSlice({
 
       state.user = cloneDeep(action.payload.user);
       state.isAuthenticated = action.payload.isAuthenticated;
-      state.accessToken = action.payload.accessToken;
+    },
+    setAuthentication: (state, action: PayloadAction<boolean>) => {
+      state.isAuthenticated = action.payload;
     },
     logout: state => {
       state.user = null;
       state.isAuthenticated = false;
-      state.accessToken = undefined;
     },
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setAuthentication } = authSlice.actions;
 
 export default authSlice.reducer;

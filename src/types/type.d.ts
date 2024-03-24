@@ -32,7 +32,7 @@ export type PingStackScreenProps<T extends keyof PingStackParamList> =
  */
 export type AuthStackParamList = {
   AuthHome: undefined;
-  SetUsername: { possibleUsername?: string };
+  SetUsername: { suggestedUsername?: string };
   SetPicks: { username: string };
   LoadingScreen: { username: string; picks: Array<string> };
 };

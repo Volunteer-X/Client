@@ -1,5 +1,3 @@
-import React from 'react';
-import { View } from 'react-native';
 import {
   HelperText,
   TextInput as RNTextInput,
@@ -10,6 +8,9 @@ import {
   useController,
   useFormContext,
 } from 'react-hook-form';
+
+import React from 'react';
+import { View } from 'react-native';
 
 interface TextInputProps extends RNTextInputProps, UseControllerProps {
   label: string;
@@ -27,9 +28,10 @@ const ControlledInput = ({
   helperType = 'error',
   ...inputProps
 }: TextInputProps) => {
-  const { formState } = useFormContext();
-
-  const { field } = useController({ name, rules, defaultValue });
+  const {
+    field,
+    formState: { isValid },
+  } = useController({ name, rules, defaultValue });
 
   return (
     <View>
@@ -38,9 +40,10 @@ const ControlledInput = ({
         value={field.value}
         onChangeText={field.onChange}
         onBlur={field.onBlur}
+        ref={field.ref}
         {...inputProps}
       />
-      <HelperText type={helperType} visible={!formState.isValid}>
+      <HelperText type={helperType} visible={!isValid}>
         {helperText}
       </HelperText>
     </View>

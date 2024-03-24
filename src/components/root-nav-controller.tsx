@@ -9,13 +9,20 @@ import { useAppAuth } from '@app/context/auth-context/AuthContext';
 export const RootNavController = () => {
   const { isAuthenticated, loading } = useAppAuth();
 
+  // hasValidCredentials();
+
   const Stack = createStackNavigator<MainNavList>();
 
   useEffect(() => {
     if (!loading) {
       SplashScreen.hide();
     }
-  }, [loading]);
+
+    console.log(
+      '🚀 ~ file: root-nav-controller.tsx:12 ~ RootNavController ~ isAuthenticated:',
+      isAuthenticated,
+    );
+  }, [isAuthenticated, loading]);
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

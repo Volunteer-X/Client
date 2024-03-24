@@ -8,6 +8,7 @@ export enum AppIcons {
   FORUM = 'chatbox',
   CLOSE = 'close',
   CHECK = 'checkmark',
+  CHECK_DONE = 'checkmark-done',
   PENCIL = 'pencil',
   MENU_X = 'ellipsis-horizontal',
   ARROW_BACK = 'arrow-back',
@@ -28,4 +29,5 @@ export enum AppIcons {
   PING = 'megaphone',
   REFRESH = 'refresh',
   ACTIVITY = 'pulse',
+  AT = 'at',
 }

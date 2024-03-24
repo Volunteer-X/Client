@@ -1,4 +1,3 @@
-
 ![React Native](https://img.shields.io/badge/React_Native-v0.73-brightgreen?style=flat&logo=react&logoColor=%2361DAFB)
 ![Apollo GraphQL](https://img.shields.io/badge/Apollo_GraphQL-blue?style=flat&logo=apollographql&logoColor=%23311C87)
 ![Amazon S3](https://img.shields.io/badge/Amazon_S3-lightyellow?style=flat&logo=amazons3&logoColor=%23569A31)
@@ -11,7 +10,7 @@
 
 # VolunteerX
 
-VolunteerX a quasi localized social networking for volunteers. It is a platform where we sync the innovative minds to resolve real-life problems and bring changes to the world. We collaborate with local people to bring the difference they want to see. 
+VolunteerX a quasi localized social networking for volunteers. It is a platform where we sync the innovative minds to resolve real-life problems and bring changes to the world. We collaborate with local people to bring the difference they want to see.
 
 ## Tech Stack
 
@@ -33,7 +32,6 @@ VolunteerX a quasi localized social networking for volunteers. It is a platform 
 - Firebase Cloud Messaging
 - Cross platform
 
-
 ## Roadmap
 
 - Forums
@@ -48,11 +46,10 @@ VolunteerX a quasi localized social networking for volunteers. It is a platform 
 
 ## Screenshots
 
-<img src='Screenshots/Screenshot_1706067246.png' width='230' alt="Homepage">    <img src='Screenshots/Screenshot_1706067730.png' width='230' alt="Activity">      <img src='Screenshots/Screenshot_1706068618.png' width='230' alt="Create Ping"> 
-<img src='Screenshots/Screenshot_1706069681.png' width='230' alt="Select your picks">      <img src='Screenshots/Screenshot_1706090383.png' width='230' alt="Activities">     
+<img src='Screenshots/Screenshot_1706067246.png' width='230' alt="Homepage"> <img src='Screenshots/Screenshot_1706067730.png' width='230' alt="Activity"> <img src='Screenshots/Screenshot_1706068618.png' width='230' alt="Create Ping">
+<img src='Screenshots/Screenshot_1706069681.png' width='230' alt="Select your picks"> <img src='Screenshots/Screenshot_1706090383.png' width='230' alt="Activities">
 
 [More Screenshots!!](./Screenshots)
-
 
 ## Run Locally
 
@@ -81,12 +78,12 @@ Start metro
 ```bash
   npm run start
 ```
+
 ```bash
   android
-``` 
+```
 
 Currently only supports android. Not tested for IOS.
-
 
 ## Environment Variables
 
@@ -105,7 +102,6 @@ Auth0
 
 `AUTH0_CLIENT`
 `AUTH0_DOMAIN`
-`AUTH0_SCOPE`
 
 Port
 
@@ -124,16 +120,13 @@ Here are some related projects
 
 [Server](https://github.com/volunteer-x/client)
 
-
 ## License
 
 [MIT](./LICENSE)
 
-
 ## Feedback
 
 If you have any feedback, please reach out to us at amilmoh155@gmail.com.
-
 
 ## Authors
 
