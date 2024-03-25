@@ -1,15 +1,15 @@
 import { MD3Colors, MD3DarkTheme } from 'react-native-paper';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { DIMENSIONS } from '@app/lib';
-import Toast from 'react-native-root-toast';
-import { createSlice } from '@reduxjs/toolkit';
+import RNToast from 'react-native-root-toast';
 
-type ToastType = {
+type Toast = {
   message: string;
   type?: 'success' | 'error' | 'warning' | 'info';
 };
 
-const initialState: ToastType = {
+const initialState: Toast = {
   message: '',
   type: 'error',
 };
@@ -18,11 +18,11 @@ export const toastSlice = createSlice({
   name: 'toast',
   initialState,
   reducers: {
-    showToast: (state, action) => {
+    showToast: (state, action: PayloadAction<Toast>) => {
       state.message = action.payload.message;
       state.type = action.payload.type;
 
-      Toast.show(state.message, {
+      RNToast.show(state.message, {
         containerStyle: {
           borderRadius: 10,
           padding: 10,
@@ -32,8 +32,8 @@ export const toastSlice = createSlice({
           textAlign: 'center',
           fontWeight: '600',
         },
-        duration: Toast.durations.LONG,
-        position: Toast.positions.BOTTOM,
+        duration: RNToast.durations.LONG,
+        position: RNToast.positions.BOTTOM,
         shadow: false,
         animation: true,
         hideOnPress: true,

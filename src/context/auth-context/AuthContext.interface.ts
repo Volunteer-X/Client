@@ -22,11 +22,7 @@ export interface AuthContextInterface {
    * @param coords - The geographic coordinates of the user.
    * @returns A promise that resolves when the user is logged in.
    */
-  login?: (
-    username: string,
-    picks: string[],
-    coords: GeoCoordinates,
-  ) => Promise<any>;
+  login?: (username: string, picks: string[]) => Promise<any>;
 
   /**
    * Function to authenticate the user using Auth0.
@@ -42,5 +38,5 @@ export interface AuthContextInterface {
   /**
    * Represents any error that occurred during authentication.
    */
-  error?: any;
+  error?: boolean;
 }

@@ -27,9 +27,6 @@ query User {
     ... on NotFoundError {
       message
     }
-    ... on UnauthorizedError {
-      message
-    }
     ... on UnknownError {
       message
     }

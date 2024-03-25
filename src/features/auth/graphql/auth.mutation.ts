@@ -4,8 +4,9 @@ import { gql } from '@app/__generated__/gql';
 
 // * Possible area to add fragment for better reusability
 const CREATE_USER = gql(`
-  mutation createUser($createUserInput: CreateUserInput!) {
-    createUser(payload: $createUserInput) {
+mutation CreateUser($payload: CreateUserInput!) {
+  createUser(payload: $payload) {
+    ... on User {
       id
       email
       username
@@ -15,11 +16,22 @@ const CREATE_USER = gql(`
         middleName
       }
       picture
-      picks
       createdAt
+      picks
+      activityCount
       devices
     }
+    ... on NotFoundError {
+      message
+    }
+    ... on UnknownError {
+      message
+    }
+    ... on InternalServerError {
+      message
+    }
   }
+}
 `);
 
 export { CREATE_USER };

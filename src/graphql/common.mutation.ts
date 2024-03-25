@@ -3,18 +3,30 @@ import { gql } from '@app/__generated__/gql';
 const UPDATE_USER = gql(`
   mutation UpdateUser($payload: UpdateUserInput!) {
   updateUser(payload: $payload) {
-    id
-    devices
-    email
-    name {
-      firstName
-      lastName
-      middleName
+    ... on User {
+      id
+      email
+      username
+      name {
+        firstName
+        lastName
+        middleName
+      }
+      picture
+      createdAt
+      picks
+      activityCount
+      devices
     }
-    createdAt
-    picks
-    picture
-    username
+    ... on NotFoundError {
+      message
+    }
+    ... on UnknownError {
+      message
+    }
+    ... on InternalServerError {
+      message
+    }
   }
 }
 `);

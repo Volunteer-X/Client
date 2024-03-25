@@ -24,10 +24,10 @@ import { useAppDispatch, useAppSelector } from '@app/hooks';
 import { useLazyQuery, useMutation } from '@apollo/client';
 
 import { AuthContextInterface } from './AuthContext.interface';
+import messaging from '@react-native-firebase/messaging';
 import { showToast } from '@app/features/toast';
 import { useAuth0 } from 'react-native-auth0';
 import { useGeoLocation } from '../geo-location';
-import messaging from '@react-native-firebase/messaging';
 
 const initialState: AuthContextInterface = {
   isAuthenticated: false,
@@ -67,7 +67,9 @@ const AuthProvider = ({ children }: any) => {
     error: auth0Error,
     clearSession,
   } = useAuth0();
+
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const checkIfAuthenticated = useCallback(async () => {
     hasValidCredentials()
@@ -122,8 +124,6 @@ const AuthProvider = ({ children }: any) => {
       const { data, error: queryError } = await getUser();
 
       if (queryError || !data?.user) {
-        console.error('🚀 ~ file: AuthContext.tsx ~ queryError:', queryError);
-
         throw new Error('Error getting user by email');
       }
 
@@ -162,7 +162,6 @@ const AuthProvider = ({ children }: any) => {
           return auth0User;
 
         case 'InternalServerError':
-        case 'UnauthorizedError':
         case 'UnknownError':
         default:
           wrapResultByTypename(data.user);
@@ -170,8 +169,11 @@ const AuthProvider = ({ children }: any) => {
     } catch (err) {
       console.log('🚀 ~ AuthProvider ~ error:', err);
       dispatch(
-        showToast("Opps!! Couldn't get started, Try again after sometime "),
+        showToast({
+          message: "Opps!! Couldn't get started, Try again after sometime ",
+        }),
       );
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -182,12 +184,11 @@ const AuthProvider = ({ children }: any) => {
    * Logs in the user with the provided username, picks, and coordinates.
    * @param {string} username - The username of the user.
    * @param {string[]} picks - The picks of the user.
-   * @param {GeoCoordinates} coords - The coordinates of the user.
    */
   const handleLogin = useCallback(
-    async (incomingUsername: string, picks: string[]) => {
+    async (_username: string, _picks: string[]) => {
       try {
-        // const accessToken = await getSecureValue('accessToken');
+        setLoading(true);
 
         if (auth0User === null) {
           throw new Error(
@@ -196,14 +197,14 @@ const AuthProvider = ({ children }: any) => {
         }
 
         const {
-          email,
+          email: _email,
           givenName: firstName,
           familyName: lastName,
           middleName,
-          picture,
+          picture: _picture,
         } = auth0User;
 
-        if (!email || !firstName || !lastName) {
+        if (!_email || !firstName || !lastName) {
           throw new Error('Verified details are required');
         }
 
@@ -217,14 +218,14 @@ const AuthProvider = ({ children }: any) => {
 
         const { data } = await createUser({
           variables: {
-            createUserInput: {
-              username: incomingUsername,
-              email,
+            payload: {
+              username: _username,
+              email: _email,
               firstName,
               lastName,
               middleName,
-              picture,
-              picks,
+              picture: _picture,
+              _picks,
               latitude,
               longitude,
               device,
@@ -236,21 +237,42 @@ const AuthProvider = ({ children }: any) => {
           throw new Error('Api Grab failed to create user');
         }
 
-        const { id, username, email } = data.createUser;
-      } catch (err) {}
+        if (data.createUser.__typename !== 'User') {
+          throw new Error(`Error creating user ${data.createUser}`);
+        }
+
+        const { id, username, email, picks, picture, devices, name } =
+          data.createUser;
+
+        dispatch(
+          login({
+            isAuthenticated: true,
+            user: {
+              id,
+              username,
+              email,
+              firstName: name?.firstName,
+              lastName: name?.lastName,
+              middleName: name?.middleName,
+              picture,
+              picks,
+              activityCount: 0,
+            },
+          }),
+        );
+      } catch (err) {
+        console.log('🚀 ~ AuthProvider ~ error:', err);
+        dispatch(
+          showToast({
+            message: "Opps!! Couldn't get started, Try again after sometime ",
+          }),
+        );
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
     },
-    // loginFunction(
-    //   setLoading,
-    //   auth0User,
-    //   hasValidCredentials,
-    //   getCredentials,
-    //   createUser,
-    //   dispatch,
-    //   username,
-    //   picks,
-    //   coords,
-    // ),
-    [auth0User, coords, createUser],
+    [auth0User, coords, createUser, dispatch],
   );
 
   /**
@@ -269,7 +291,7 @@ const AuthProvider = ({ children }: any) => {
     logout: handleLogout,
     login: handleLogin,
     authorize: handleAuthorize,
-    error: auth0Error || checkQuery.error || createQuery.error,
+    error,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

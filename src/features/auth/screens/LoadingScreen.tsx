@@ -30,50 +30,17 @@ const LoadingScreen = (props: Props) => {
   // * Params from the router
   const { username, picks } = props.route.params;
 
-  // const { coords, geoLoading } = useGeoLocation();
-
-  // const { loading, error, login } = useAppAuth();
-
-  const [loading, setLoading] = useState(false);
-  const [geoLoading, setGeoLoading] = useState(true);
-  const error = false;
+  const { loading, error, login } = useAppAuth();
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      // setLoading(false);
-      setGeoLoading(false);
-      setLoading(true);
-    }, 5000);
-
-    return () => clearInterval(timeout);
-  }, []);
-
-  const simulatedDelay = () => {
-    return new Promise<void>(resolve => {
-      setTimeout(() => {
-        resolve();
-      }, DELAY);
-    });
-  };
-
-  const determineLoadingState = (
-    locationLoading: boolean,
-    apiLoading: boolean,
-  ) => {
-    if (locationLoading && !apiLoading) {
-      return State.Location;
-    } else if (!locationLoading && apiLoading) {
-      return State.Profile;
-    } else {
-      return State.Final;
+    if (error) {
+      props.navigation.navigate('AuthHome');
     }
-  };
 
-  // useEffect(() => {
-  //   if (!geoLoading && login && coords) {
-  //     login(username, picks, coords);
-  //   }
-  // }, [coords, geoLoading, login, picks, username]);
+    if (login) {
+      login(username, picks);
+    }
+  }, [error, login, picks, props.navigation, username]);
 
   return (
     <View style={styles.container}>
@@ -86,18 +53,14 @@ const LoadingScreen = (props: Props) => {
       </Text>
       <View style={styles.subContainer}>
         <LoadingLottieView style={styles.lottieView} theme={theme} />
-
-        <Text variant="titleMedium" style={styles.message}>
-          {geoLoading
-            ? 'Getting your location...'
-            : loading
-            ? 'Getting your profile ready...'
-            : 'Adding final touch up...'}
-        </Text>
-
-        {error && (
-          <Text variant="titleMedium" style={[styles.error, styles.message]}>
-            Oops something wrong happened!!
+        {!error && (
+          <Text variant="titleMedium" style={styles.message}>
+            {
+              // ? 'Getting your location...'
+              loading
+                ? 'Getting your profile ready...'
+                : 'Adding final touch up...'
+            }
           </Text>
         )}
       </View>
